@@ -2,7 +2,7 @@
   "meta": {
     "lastUpdate": "2026-06-11",
     "version": 1,
-    "savedAt": 1781213432946
+    "savedAt": 1781213629331
   },
   "messages": [
     {
@@ -79,7 +79,7 @@
         "minutes": 5
       },
       "math": {
-        "done": true,
+        "done": false,
         "minutes": 25
       },
       "note": "¡Muy bien! Tendiste tu cama antes de ir al cole."
