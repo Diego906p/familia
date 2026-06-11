@@ -23,12 +23,39 @@
     </div>
 
     <div class="toolbar">
-      <button class="btn small" id="exportBtn">⬇ Exportar data.json</button>
+      <button class="btn small" id="publishBtn">📤 Publicar cambios</button>
+      <button class="btn secondary small" id="ghCfgBtn">⚙ Configurar publicación</button>
+      <button class="btn secondary small" id="exportBtn">⬇ Exportar data.json</button>
       <label class="btn secondary small" style="cursor:pointer">
         ⬆ Importar data.json
         <input type="file" id="importFile" accept=".json" style="display:none">
       </label>
       <span class="save-ok" id="saveStatus"></span>
+    </div>
+
+    <!-- Configuración de publicación en GitHub (oculta por defecto) -->
+    <div class="section" id="ghCfgPanel" style="display:none">
+      <div class="section-title">⚙ PUBLICACIÓN EN GITHUB</div>
+      <p style="font-size:.85rem;color:var(--text-soft);margin-bottom:12px">
+        Con esto, el botón "📤 Publicar cambios" sube el <b>data.json</b> directo a tu repositorio
+        y en 1-2 minutos Luanna lo ve desde cualquier dispositivo. Solo se configura una vez en este navegador.
+      </p>
+      <div class="form-row">
+        <label style="width:110px">Repositorio:</label>
+        <input type="text" id="ghRepo" style="flex:1" placeholder="usuario/nombre-del-repo (ej: Diego906p/luanna)">
+      </div>
+      <div class="form-row">
+        <label style="width:110px">Rama:</label>
+        <input type="text" id="ghBranch" style="flex:1" placeholder="main">
+      </div>
+      <div class="form-row">
+        <label style="width:110px">Token:</label>
+        <input type="password" id="ghToken" style="flex:1" placeholder="github_pat_...">
+      </div>
+      <div class="form-row">
+        <button class="btn small" id="ghSaveBtn">Guardar configuración</button>
+        <span id="ghCfgStatus" style="font-size:.85rem;font-weight:700"></span>
+      </div>
     </div>
 
     <div class="admin-grid">
