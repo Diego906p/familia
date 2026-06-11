@@ -2,7 +2,7 @@
   "meta": {
     "lastUpdate": "2026-06-11",
     "version": 1,
-    "savedAt": 1781208572521
+    "savedAt": 1781213157119
   },
   "messages": [
     {
@@ -77,6 +77,10 @@
       "make_bed": {
         "done": true,
         "minutes": 5
+      },
+      "wash_utensils": {
+        "done": true,
+        "minutes": 0
       },
       "note": "¡Muy bien! Tendiste tu cama antes de ir al cole."
     },
