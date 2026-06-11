@@ -1,7 +1,8 @@
 {
   "meta": {
-    "lastUpdate": "2026-06-10",
-    "version": 1
+    "lastUpdate": "2026-06-11",
+    "version": 1,
+    "savedAt": 1781208572521
   },
   "messages": [
     {
@@ -11,32 +12,132 @@
   ],
   "records": {
     "2026-06-08": {
-      "make_bed": { "done": true, "minutes": 5 },
-      "organize_room": { "done": true, "minutes": 15 },
-      "wash_utensils": { "done": true, "minutes": 10 },
-      "brush_teeth": { "done": true, "minutes": 5 },
-      "reading": { "done": true, "minutes": 25 },
-      "reading_summary": { "done": true, "minutes": 15 },
-      "math": { "done": true, "minutes": 30 },
+      "make_bed": {
+        "done": true,
+        "minutes": 5
+      },
+      "organize_room": {
+        "done": true,
+        "minutes": 15
+      },
+      "wash_utensils": {
+        "done": true,
+        "minutes": 10
+      },
+      "brush_teeth": {
+        "done": true,
+        "minutes": 5
+      },
+      "reading": {
+        "done": true,
+        "minutes": 25
+      },
+      "reading_summary": {
+        "done": true,
+        "minutes": 15
+      },
+      "math": {
+        "done": true,
+        "minutes": 30
+      },
       "note": "Excelente día, muy concentrada en matemáticas."
     },
     "2026-06-09": {
-      "make_bed": { "done": true, "minutes": 5 },
-      "organize_room": { "done": true, "minutes": 10 },
-      "wash_utensils": { "done": true, "minutes": 8 },
-      "brush_teeth": { "done": true, "minutes": 5 },
-      "reading": { "done": true, "minutes": 30 },
-      "reading_summary": { "done": true, "minutes": 12 },
-      "math": { "done": true, "minutes": 25 },
+      "make_bed": {
+        "done": true,
+        "minutes": 5
+      },
+      "organize_room": {
+        "done": true,
+        "minutes": 10
+      },
+      "wash_utensils": {
+        "done": true,
+        "minutes": 8
+      },
+      "brush_teeth": {
+        "done": true,
+        "minutes": 5
+      },
+      "reading": {
+        "done": true,
+        "minutes": 30
+      },
+      "reading_summary": {
+        "done": true,
+        "minutes": 12
+      },
+      "math": {
+        "done": true,
+        "minutes": 25
+      },
       "note": "Terminó su lectura antes de tiempo."
+    },
+    "2026-06-11": {
+      "make_bed": {
+        "done": true,
+        "minutes": 5
+      },
+      "note": "¡Muy bien! Tendiste tu cama antes de ir al cole."
+    },
+    "2026-06-10": {
+      "make_bed": {
+        "done": true,
+        "minutes": 5
+      },
+      "organize_room": {
+        "done": true,
+        "minutes": 15
+      },
+      "wash_utensils": {
+        "done": true,
+        "minutes": 5
+      },
+      "brush_teeth": {
+        "done": true,
+        "minutes": 1
+      },
+      "reading": {
+        "done": true,
+        "minutes": 25
+      },
+      "reading_summary": {
+        "done": true,
+        "minutes": 25
+      },
+      "math": {
+        "done": true,
+        "minutes": 30
+      },
+      "note": "Hiciste muy bien todas tus sumas; faltó mejorar un poco el resumen de lectura."
     }
   },
   "readings": [
-    { "date": "2026-06-08", "title": "El Principito (cap. 1-2)" },
-    { "date": "2026-06-09", "title": "El Principito (cap. 3-4)" }
+    {
+      "date": "2026-06-08",
+      "title": "El Principito (cap. 1-2)"
+    },
+    {
+      "date": "2026-06-09",
+      "title": "El Principito (cap. 3-4)"
+    },
+    {
+      "date": "2026-06-10",
+      "title": "My Little Pony"
+    }
   ],
   "mathTopics": [
-    { "date": "2026-06-08", "topic": "Multiplicaciones de 2 cifras" },
-    { "date": "2026-06-09", "topic": "Divisiones simples" }
+    {
+      "date": "2026-06-08",
+      "topic": "Multiplicaciones de 2 cifras"
+    },
+    {
+      "date": "2026-06-09",
+      "topic": "Divisiones simples"
+    },
+    {
+      "date": "2026-06-10",
+      "topic": "Multiplicaciones,unidad, decena y centena."
+    }
   ]
 }
