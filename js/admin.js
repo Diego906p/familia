@@ -30,8 +30,95 @@ function renderPapaAvatar() {
   document.getElementById("addMsgBtn").addEventListener("click", addMessage);
   document.getElementById("exportBtn").addEventListener("click", () => exportData(DATA));
   document.getElementById("importFile").addEventListener("change", importFile);
+  document.getElementById("publishBtn").addEventListener("click", publishData);
+  document.getElementById("ghCfgBtn").addEventListener("click", toggleGhCfg);
+  document.getElementById("ghSaveBtn").addEventListener("click", saveGhCfg);
+  loadGhCfgIntoForm();
   renderAll();
 })();
+
+// ===== Publicación en GitHub =====
+// La configuración (repo, rama y token) se guarda solo en este navegador.
+
+const GH_CFG_KEY = "luanna_gh_cfg";
+
+function getGhCfg() {
+  try { return JSON.parse(localStorage.getItem(GH_CFG_KEY)) || {}; } catch { return {}; }
+}
+
+function loadGhCfgIntoForm() {
+  const cfg = getGhCfg();
+  document.getElementById("ghRepo").value = cfg.repo || "";
+  document.getElementById("ghBranch").value = cfg.branch || "main";
+  document.getElementById("ghToken").value = cfg.token || "";
+}
+
+function toggleGhCfg() {
+  const p = document.getElementById("ghCfgPanel");
+  p.style.display = p.style.display === "none" ? "" : "none";
+}
+
+function saveGhCfg() {
+  const cfg = {
+    repo: document.getElementById("ghRepo").value.trim(),
+    branch: document.getElementById("ghBranch").value.trim() || "main",
+    token: document.getElementById("ghToken").value.trim()
+  };
+  const st = document.getElementById("ghCfgStatus");
+  if (!cfg.repo.includes("/") || !cfg.token) {
+    st.style.color = "#e85a6e";
+    st.textContent = "Completa el repositorio (usuario/repo) y el token.";
+    return;
+  }
+  localStorage.setItem(GH_CFG_KEY, JSON.stringify(cfg));
+  st.style.color = "var(--green)";
+  st.textContent = "✔ Configuración guardada en este navegador.";
+}
+
+async function publishData() {
+  const cfg = getGhCfg();
+  const btn = document.getElementById("publishBtn");
+  if (!cfg.token || !cfg.repo) {
+    document.getElementById("ghCfgPanel").style.display = "";
+    flashSaved("⚙ Primero configura la publicación");
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = "⏳ Publicando...";
+  try {
+    const api = `https://api.github.com/repos/${cfg.repo}/contents/data/data.json`;
+    const headers = {
+      "Authorization": `Bearer ${cfg.token}`,
+      "Accept": "application/vnd.github+json"
+    };
+    // 1. Obtener el sha actual del archivo (necesario para actualizarlo)
+    let sha;
+    const cur = await fetch(`${api}?ref=${cfg.branch}`, { headers });
+    if (cur.ok) sha = (await cur.json()).sha;
+    else if (cur.status !== 404) throw new Error(`No se pudo leer el repo (HTTP ${cur.status})`);
+    // 2. Subir el data.json actualizado (contenido en base64, con soporte de tildes/emojis)
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(DATA, null, 2))));
+    const res = await fetch(api, {
+      method: "PUT",
+      headers,
+      body: JSON.stringify({
+        message: `Actualización de actividades — ${todayStr()}`,
+        content, sha, branch: cfg.branch
+      })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || `HTTP ${res.status}`);
+    }
+    flashSaved("✔ Publicado: en 1-2 min se verá en todos los dispositivos");
+  } catch (e) {
+    console.error(e);
+    flashSaved("✕ Error al publicar: " + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "📤 Publicar cambios";
+  }
+}
 
 function renderAll() {
   renderPapaAvatar();
