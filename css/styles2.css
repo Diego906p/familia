@@ -266,28 +266,34 @@ table.matrix { width: 100%; border-collapse: collapse; min-width: 760px; }
 .bottom-row { display: grid; grid-template-columns: 1.3fr 1fr; gap: 14px; margin-bottom: 16px; }
 @media (max-width: 900px) { .bottom-row { grid-template-columns: 1fr; } }
 
-.achievements-card { background: var(--card); border-radius: var(--radius); padding: 14px 12px; display: flex; flex-direction: column; }
+.achievements-card { background: var(--card); border-radius: var(--radius); padding: 12px 14px 14px; display: flex; flex-direction: column; }
 .ach-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 6px;
+  gap: 10px;
   justify-items: center;
   align-content: center;
   flex: 1;
 }
-.ach-item { max-width: 96px; text-align: center; }
-.ach-item .label { font-size: .7rem; font-weight: 800; margin-top: 5px; color: var(--text); line-height: 1.25; }
+.ach-item { max-width: 104px; text-align: center; }
+.ach-item .label { font-size: .74rem; font-weight: 800; margin-top: 6px; color: var(--text); line-height: 1.25; }
 .ach-item.locked { filter: grayscale(1); opacity: .4; }
 @media (max-width: 480px) { .ach-grid { grid-template-columns: repeat(3, 1fr); } }
 
 .soon-card {
-  background: #ececec; border-radius: var(--radius); padding: 14px 16px;
+  background: #ececec; border-radius: var(--radius); padding: 12px 14px 14px;
   filter: grayscale(1); position: relative;
   display: flex; flex-direction: column;
 }
 .soon-card .card-title { color: #555; display: flex; align-items: center; justify-content: center; gap: 8px; }
-.soon-inner { display: flex; align-items: center; gap: 10px; justify-content: space-between; flex: 1; }
-.soon-text { flex: 1; min-width: 120px; }
+.soon-inner { display: flex; align-items: center; gap: 8px; justify-content: space-between; flex: 1; }
+.soon-box {
+  display: flex; align-items: center; gap: 10px;
+  background: #f6f6f6; border: 1px solid #dedede; border-radius: 14px;
+  padding: 10px 12px; flex: 1; align-self: stretch;
+}
+.soon-box img, .soon-castle img { display: block; }
+.soon-text { flex: 1; min-width: 130px; }
 .soon-text h3 { font-size: 1.15rem; color: #444; margin-bottom: 5px; }
 .soon-text p { font-size: .82rem; font-weight: 700; color: #666; }
 .soon-text .keep { margin-top: 5px; font-weight: 900; color: #555; font-size: .82rem; }
