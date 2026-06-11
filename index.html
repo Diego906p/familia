@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Progreso de Luanna</title>
+  <style>
+    :root {
+      --purple: #7c5cff;
+      --purple-dark: #4f3a9e;
+      --purple-soft: #ece5ff;
+      --pink: #ff4f9a;
+      --pink-soft: #ffe9f3;
+      --text: #3c3160;
+      --text-soft: #8d83b5;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(160deg, #cfc3f5 0%, #e8d9f7 45%, #fbd9ec 100%);
+      padding: 16px;
+    }
+    .login-card {
+      background: #fff;
+      border-radius: 30px;
+      box-shadow: 0 18px 50px rgba(80, 50, 160, .3);
+      padding: 34px 30px 30px;
+      width: 100%; max-width: 420px;
+      text-align: center;
+    }
+    h1 { color: var(--purple-dark); font-size: 1.5rem; font-weight: 900; }
+    .tagline { color: var(--text-soft); font-weight: 700; font-size: .9rem; margin: 6px 0 22px; }
+
+    .role-switch { display: flex; gap: 14px; justify-content: center; margin-bottom: 22px; }
+    .role-btn {
+      background: none; border: none; cursor: pointer; font-family: inherit;
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      padding: 10px 14px; border-radius: 20px;
+      transition: transform .15s;
+    }
+    .role-btn .avatar-wrap {
+      width: 110px; height: 110px; border-radius: 50%;
+      border: 4px solid #e4ddf3;
+      background: #faf8ff;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+      filter: grayscale(.9) opacity(.65);
+      transition: all .2s;
+    }
+    .role-btn .avatar-wrap img { width: 100%; height: auto; display: block; }
+    .role-btn .role-name {
+      font-weight: 900; font-size: 1rem; color: var(--text-soft);
+      transition: color .2s;
+    }
+    .role-btn:hover { transform: translateY(-3px); }
+    .role-btn.active .avatar-wrap {
+      filter: none;
+      border-color: var(--pink);
+      box-shadow: 0 6px 18px rgba(255, 79, 154, .35);
+    }
+    .role-btn.active .role-name { color: var(--pink); }
+    .role-btn[data-role="admin"].active .avatar-wrap {
+      border-color: var(--purple);
+      box-shadow: 0 6px 18px rgba(124, 92, 255, .35);
+    }
+    .role-btn[data-role="admin"].active .role-name { color: var(--purple); }
+
+    input {
+      width: 100%;
+      padding: 13px 18px;
+      margin-bottom: 12px;
+      border: 2px solid var(--purple-soft);
+      border-radius: 16px;
+      font-size: 1rem; font-family: inherit; font-weight: 700;
+      color: var(--text);
+      outline: none;
+      text-align: center;
+      transition: border-color .15s;
+    }
+    input:focus { border-color: var(--purple); }
+    input::placeholder { color: #b9aede; font-weight: 700; }
+
+    .btn-enter {
+      width: 100%;
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      color: #fff; border: none; border-radius: 16px;
+      padding: 14px; font-size: 1.05rem; font-weight: 900; font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(124, 92, 255, .4);
+      transition: transform .15s, box-shadow .15s;
+      margin-top: 4px;
+    }
+    .btn-enter:hover { transform: translateY(-2px); box-shadow: 0 9px 22px rgba(124, 92, 255, .5); }
+
+    .login-error { color: var(--pink); font-weight: 800; font-size: .88rem; min-height: 1.5em; margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <h1>Panel de Actividades 🌟</h1>
+    <p class="tagline">Cada día avanzas un poquito más.<br>¡Sigue esforzándote! 💜</p>
+
+    <div class="role-switch">
+      <button type="button" class="role-btn active" data-role="child">
+        <span class="avatar-wrap"><img id="imgLuanna" alt="Luanna"></span>
+        <span class="role-name">Luanna</span>
+      </button>
+      <button type="button" class="role-btn" data-role="admin">
+        <span class="avatar-wrap"><img id="imgPapa" alt="Papá"></span>
+        <span class="role-name">Papá</span>
+      </button>
+    </div>
+
+    <form id="loginForm">
+      <input type="text" id="username" placeholder="Usuario" autocomplete="username" required>
+      <input type="password" id="password" placeholder="Contraseña" autocomplete="current-password" required>
+      <button type="submit" class="btn-enter">Entrar ✨</button>
+    </form>
+    <div class="login-error" id="loginError"></div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/images.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // Si ya hay sesión, ir directo a su panel
+    const s = getSession();
+    if (s) window.location.href = s.role === "admin" ? "admin.html" : "dashboard.html";
+
+    // Avatares (siempre la versión contenta en el login)
+    document.getElementById("imgLuanna").src = IMAGES.avatar_luanna.variants.replace("{n}", 1);
+    document.getElementById("imgPapa").src = IMAGES.avatar_papa.variants.replace("{n}", 1);
+
+    let selectedRole = "child";
+    const USERNAMES = { child: "luanna", admin: "admin" };
+    document.getElementById("username").value = USERNAMES[selectedRole];
+
+    document.querySelectorAll(".role-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".role-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        selectedRole = btn.dataset.role;
+        // Al elegir perfil se completa el usuario; solo queda escribir la contraseña
+        document.getElementById("username").value = USERNAMES[selectedRole];
+        document.getElementById("password").value = "";
+        document.getElementById("password").focus();
+        document.getElementById("loginError").textContent = "";
+      });
+    });
+
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const err = document.getElementById("loginError");
+      const session = await login(
+        document.getElementById("username").value,
+        document.getElementById("password").value
+      );
+      if (!session) {
+        err.textContent = "Usuario o contraseña incorrectos 😕";
+        return;
+      }
+      if (session.role !== selectedRole) {
+        sessionStorage.removeItem("luanna_session");
+        err.textContent = selectedRole === "admin"
+          ? "Esas credenciales no son de Papá 😕"
+          : "Esas credenciales no son de Luanna 😕";
+        return;
+      }
+      window.location.href = session.role === "admin" ? "admin.html" : "dashboard.html";
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+{
+  "meta": {
+    "lastUpdate": "2026-06-10",
+    "version": 1
+  },
+  "messages": [
+    {
+      "date": "2026-06-10",
+      "text": "Estoy muy orgulloso de tu esfuerzo, Luanna. ¡Sigue así!"
+    }
+  ],
+  "records": {
+    "2026-06-08": {
+      "make_bed": { "done": true, "minutes": 5 },
+      "organize_room": { "done": true, "minutes": 15 },
+      "wash_utensils": { "done": true, "minutes": 10 },
+      "brush_teeth": { "done": true, "minutes": 5 },
+      "reading": { "done": true, "minutes": 25 },
+      "reading_summary": { "done": true, "minutes": 15 },
+      "math": { "done": true, "minutes": 30 },
+      "note": "Excelente día, muy concentrada en matemáticas."
+    },
+    "2026-06-09": {
+      "make_bed": { "done": true, "minutes": 5 },
+      "organize_room": { "done": true, "minutes": 10 },
+      "wash_utensils": { "done": true, "minutes": 8 },
+      "brush_teeth": { "done": true, "minutes": 5 },
+      "reading": { "done": true, "minutes": 30 },
+      "reading_summary": { "done": true, "minutes": 12 },
+      "math": { "done": true, "minutes": 25 },
+      "note": "Terminó su lectura antes de tiempo."
+    }
+  },
+  "readings": [
+    { "date": "2026-06-08", "title": "El Principito (cap. 1-2)" },
+    { "date": "2026-06-09", "title": "El Principito (cap. 3-4)" }
+  ],
+  "mathTopics": [
+    { "date": "2026-06-08", "topic": "Multiplicaciones de 2 cifras" },
+    { "date": "2026-06-09", "topic": "Divisiones simples" }
+  ]
+}

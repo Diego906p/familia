@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administración — Panel de Luanna</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="container">
+
+    <div class="hero">
+      <div class="avatar" id="papaSlot">👨‍💼</div>
+      <div>
+        <h1>Panel de Administración</h1>
+        <p>Registra el progreso diario de Luanna</p>
+      </div>
+      <div class="spacer"></div>
+      <div class="session-actions">
+        <button class="btn secondary small" onclick="location.href='dashboard.html'">Ver panel de Luanna</button>
+        <button class="btn secondary small" onclick="logout()">Salir</button>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn small" id="exportBtn">⬇ Exportar data.json</button>
+      <label class="btn secondary small" style="cursor:pointer">
+        ⬆ Importar data.json
+        <input type="file" id="importFile" accept=".json" style="display:none">
+      </label>
+      <span class="save-ok" id="saveStatus"></span>
+    </div>
+
+    <div class="admin-grid">
+
+      <!-- Registro diario -->
+      <div class="section">
+        <div class="section-title">📝 REGISTRO DIARIO</div>
+        <div class="form-row">
+          <label for="recDate">Fecha:</label>
+          <input type="date" id="recDate">
+        </div>
+        <div id="activityForm"></div>
+        <div class="form-row" style="margin-top:10px">
+          <label style="width:100%">Observaciones del día:</label>
+          <textarea id="dayNote" rows="2" placeholder="¿Cómo le fue hoy a Luanna?"></textarea>
+        </div>
+        <div class="form-row">
+          <label style="width:100%">📖 Lectura realizada (título / capítulos):</label>
+          <input type="text" id="readingTitle" style="width:100%" placeholder="Ej: El Principito (cap. 5)">
+        </div>
+        <div class="form-row">
+          <label style="width:100%">🔢 Tema de matemáticas trabajado:</label>
+          <input type="text" id="mathTopic" style="width:100%" placeholder="Ej: Fracciones equivalentes">
+        </div>
+        <button class="btn full" id="saveDayBtn" style="margin-top:8px">💾 Guardar día</button>
+      </div>
+
+      <!-- Mensajes + estadísticas -->
+      <div>
+        <div class="section">
+          <div class="section-title">💌 MENSAJES MOTIVADORES</div>
+          <div id="msgList"></div>
+          <div class="form-row" style="margin-top:8px">
+            <input type="text" id="newMsg" style="flex:1" placeholder="Escribe un mensaje para Luanna...">
+            <button class="btn small" id="addMsgBtn">Agregar</button>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">📊 ESTADÍSTICAS</div>
+          <div id="statsBox"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Historial -->
+    <div class="section">
+      <div class="section-title">📜 HISTORIAL (últimos 30 días registrados)</div>
+      <div class="matrix-wrap">
+        <table class="history-table" id="historyTable"></table>
+      </div>
+    </div>
+
+    <footer>Panel de Progreso de Luanna · Administración</footer>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/images.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
