@@ -2,7 +2,7 @@
   "meta": {
     "lastUpdate": "2026-06-11",
     "version": 1,
-    "savedAt": 1781227435767
+    "savedAt": 1781227541946
   },
   "messages": [
     {
@@ -75,27 +75,16 @@
     },
     "2026-06-11": {
       "make_bed": {
-        "done": true,
-        "minutes": 5
-      },
-      "math": {
-        "done": false,
-        "minutes": 25
-      },
-      "note": "¡Muy bien! Tendiste tu cama antes de ir al cole."
-    },
-    "2026-06-10": {
-      "make_bed": {
-        "done": false
+        "done": true
       },
       "organize_room": {
-        "done": false
+        "done": true
       },
       "wash_utensils": {
-        "done": false
+        "done": true
       },
       "brush_teeth": {
-        "done": false
+        "done": true
       },
       "reading": {
         "done": false
@@ -105,6 +94,37 @@
       },
       "math": {
         "done": false
+      },
+      "note": "¡Muy bien! Tendiste tu cama antes de ir al cole."
+    },
+    "2026-06-10": {
+      "make_bed": {
+        "done": true,
+        "minutes": 5
+      },
+      "organize_room": {
+        "done": true,
+        "minutes": 15
+      },
+      "wash_utensils": {
+        "done": true,
+        "minutes": 5
+      },
+      "brush_teeth": {
+        "done": true,
+        "minutes": 1
+      },
+      "reading": {
+        "done": true,
+        "minutes": 25
+      },
+      "reading_summary": {
+        "done": true,
+        "minutes": 25
+      },
+      "math": {
+        "done": true,
+        "minutes": 30
       },
       "note": "Hiciste muy bien todas tus sumas; faltó mejorar un poco el resumen de lectura."
     }
