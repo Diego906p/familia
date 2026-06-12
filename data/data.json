@@ -2,7 +2,7 @@
   "meta": {
     "lastUpdate": "2026-06-11",
     "version": 1,
-    "savedAt": 1781232809426
+    "savedAt": 1781232820497
   },
   "messages": [
     {
@@ -85,32 +85,25 @@
     },
     "2026-06-10": {
       "make_bed": {
-        "done": true,
-        "minutes": 5
+        "done": false
       },
       "organize_room": {
-        "done": true,
-        "minutes": 15
+        "done": false
       },
       "wash_utensils": {
-        "done": true,
-        "minutes": 5
+        "done": false
       },
       "brush_teeth": {
-        "done": true,
-        "minutes": 1
+        "done": false
       },
       "reading": {
-        "done": true,
-        "minutes": 25
+        "done": false
       },
       "reading_summary": {
-        "done": true,
-        "minutes": 25
+        "done": false
       },
       "math": {
-        "done": true,
-        "minutes": 30
+        "done": false
       },
       "note": "Hiciste muy bien todas tus sumas; faltó mejorar un poco el resumen de lectura."
     }
