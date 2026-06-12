@@ -2,16 +2,12 @@
   "meta": {
     "lastUpdate": "2026-06-11",
     "version": 1,
-    "savedAt": 1781222722598
+    "savedAt": 1781227435767
   },
   "messages": [
     {
       "date": "2026-06-10",
       "text": "Estoy muy orgulloso de tu esfuerzo, Luanna. ¡Sigue así!"
-    },
-    {
-      "date": "2026-06-11",
-      "text": "\"💜 Lo estás haciendo bien, ¡sigue esforzándote! Estoy muy orgulloso de ti. 💜\""
     }
   ],
   "records": {
@@ -43,7 +39,8 @@
       "math": {
         "done": true,
         "minutes": 30
-      }
+      },
+      "note": "Excelente día, muy concentrada en matemáticas."
     },
     "2026-06-09": {
       "make_bed": {
@@ -73,51 +70,32 @@
       "math": {
         "done": true,
         "minutes": 25
-      }
-    },
-    "2026-06-10": {
-      "make_bed": {
-        "done": true,
-        "minutes": 0
       },
-      "organize_room": {
-        "done": true,
-        "minutes": 0
-      },
-      "wash_utensils": {
-        "done": true,
-        "minutes": 0
-      },
-      "brush_teeth": {
-        "done": true,
-        "minutes": 0
-      },
-      "reading": {
-        "done": true,
-        "minutes": 0
-      },
-      "reading_summary": {
-        "done": true,
-        "minutes": 0
-      },
-      "math": {
-        "done": true,
-        "minutes": 0
-      },
-      "note": "Hiciste muy bien todas tus sumas, faltó mejorar un poco el resumen de lectura."
+      "note": "Terminó su lectura antes de tiempo."
     },
     "2026-06-11": {
       "make_bed": {
-        "done": true
+        "done": true,
+        "minutes": 5
+      },
+      "math": {
+        "done": false,
+        "minutes": 25
+      },
+      "note": "¡Muy bien! Tendiste tu cama antes de ir al cole."
+    },
+    "2026-06-10": {
+      "make_bed": {
+        "done": false
       },
       "organize_room": {
-        "done": true
+        "done": false
       },
       "wash_utensils": {
-        "done": true
+        "done": false
       },
       "brush_teeth": {
-        "done": true
+        "done": false
       },
       "reading": {
         "done": false
@@ -127,19 +105,33 @@
       },
       "math": {
         "done": false
-      }
-    },
-    "2026-06-12": {},
-    "2026-06-13": {},
-    "2026-06-14": {}
+      },
+      "note": "Hiciste muy bien todas tus sumas; faltó mejorar un poco el resumen de lectura."
+    }
   },
   "readings": [
+    {
+      "date": "2026-06-08",
+      "title": "El Principito (cap. 1-2)"
+    },
+    {
+      "date": "2026-06-09",
+      "title": "El Principito (cap. 3-4)"
+    },
     {
       "date": "2026-06-10",
       "title": "My Little Pony"
     }
   ],
   "mathTopics": [
+    {
+      "date": "2026-06-08",
+      "topic": "Multiplicaciones de 2 cifras"
+    },
+    {
+      "date": "2026-06-09",
+      "topic": "Divisiones simples"
+    },
     {
       "date": "2026-06-10",
       "topic": "Multiplicaciones,unidad, decena y centena."
