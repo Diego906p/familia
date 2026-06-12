@@ -17,15 +17,15 @@ const CONFIG = {
   },
   activities: {
     responsibilities: [
-      { id: "make_bed", name: "Tender mi cama", icon: "🛏️", stars: 1 },
-      { id: "organize_room", name: "Ordenar mi cuarto", icon: "🧸", stars: 1 },
-      { id: "wash_utensils", name: "Lavar mis utensilios", icon: "🍽️", stars: 1 },
-      { id: "brush_teeth", name: "Cepillarme los dientes", icon: "🦷", stars: 1 }
+      { id: "make_bed", name: "Tender mi cama", short: "Cama", icon: "🛏️", stars: 1 },
+      { id: "organize_room", name: "Ordenar mi cuarto", short: "Cuarto", icon: "🧸", stars: 1 },
+      { id: "wash_utensils", name: "Lavar mis utensilios", short: "Platos", icon: "🍽️", stars: 1 },
+      { id: "brush_teeth", name: "Cepillarme los dientes", short: "Dientes", icon: "🦷", stars: 1 }
     ],
     learning: [
-      { id: "reading", name: "Lectura", icon: "📖", stars: 3, weekdaysOnly: true },
-      { id: "reading_summary", name: "Resumen de lectura", icon: "✏️", stars: 3, weekdaysOnly: true },
-      { id: "math", name: "Matemáticas", icon: "🔢", stars: 3, weekdaysOnly: true }
+      { id: "reading", name: "Lectura", short: "Lectura", icon: "📖", stars: 3, weekdaysOnly: true },
+      { id: "reading_summary", name: "Resumen de lectura", short: "Resumen", icon: "✏️", stars: 3, weekdaysOnly: true },
+      { id: "math", name: "Matemáticas", short: "Matemáticas", icon: "🔢", stars: 3, weekdaysOnly: true }
     ]
   },
   dailyMax: { weekday: 13, weekend: 4 },

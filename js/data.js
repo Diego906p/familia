@@ -101,12 +101,6 @@ function isDayComplete(data, dateStr) {
   return activitiesForDay(dateStr).every(a => rec[a.id]?.done);
 }
 
-function minutesForDay(data, dateStr) {
-  const rec = data.records[dateStr];
-  if (!rec) return 0;
-  return ALL_ACTIVITIES.reduce((sum, a) => sum + (rec[a.id]?.minutes || 0), 0);
-}
-
 function computeStats(data) {
   const dates = Object.keys(data.records).sort();
   let totalStars = 0, fullDays = 0, beds = 0, mathDays = 0;

@@ -33,6 +33,7 @@ function renderPapaAvatar() {
   document.getElementById("publishBtn").addEventListener("click", publishData);
   document.getElementById("ghCfgBtn").addEventListener("click", toggleGhCfg);
   document.getElementById("ghSaveBtn").addEventListener("click", saveGhCfg);
+  document.getElementById("histPeriod").addEventListener("change", renderHistory);
   loadGhCfgIntoForm();
   renderAll();
 })();
@@ -46,6 +47,8 @@ function getGhCfg() {
   try { return JSON.parse(localStorage.getItem(GH_CFG_KEY)) || {}; } catch { return {}; }
 }
 
+const GH_FIELDS = ["ghRepo", "ghBranch", "ghToken"];
+
 function loadGhCfgIntoForm() {
   const cfg = getGhCfg();
   document.getElementById("ghRepo").value = cfg.repo || "";
@@ -53,9 +56,11 @@ function loadGhCfgIntoForm() {
   document.getElementById("ghToken").value = cfg.token || "";
 }
 
+// "Configurar" habilita los campos para editar; "💾 Guardar" los protege de nuevo
 function toggleGhCfg() {
-  const p = document.getElementById("ghCfgPanel");
-  p.style.display = p.style.display === "none" ? "" : "none";
+  const enable = document.getElementById("ghRepo").disabled;
+  GH_FIELDS.forEach(id => document.getElementById(id).disabled = !enable);
+  if (enable) document.getElementById("ghRepo").focus();
 }
 
 function saveGhCfg() {
@@ -71,6 +76,7 @@ function saveGhCfg() {
     return;
   }
   localStorage.setItem(GH_CFG_KEY, JSON.stringify(cfg));
+  GH_FIELDS.forEach(id => document.getElementById(id).disabled = true);
   st.style.color = "var(--green)";
   st.textContent = "✔ Configuración guardada en este navegador.";
 }
@@ -79,7 +85,8 @@ async function publishData() {
   const cfg = getGhCfg();
   const btn = document.getElementById("publishBtn");
   if (!cfg.token || !cfg.repo) {
-    document.getElementById("ghCfgPanel").style.display = "";
+    GH_FIELDS.forEach(id => document.getElementById(id).disabled = false);
+    document.getElementById("ghRepo").focus();
     flashSaved("⚙ Primero configura la publicación");
     return;
   }
@@ -141,20 +148,65 @@ function renderDayForm() {
   const rec = DATA.records[d] || {};
   const weekend = isWeekend(d);
 
-  const row = (a, disabled) => `
+  // Tres estados: ✔ realizado · ✖ no realizado · sin marcar = sin información
+  const row = (a, disabled) => {
+    const st = rec[a.id]?.done;
+    return `
     <div class="activity-row" style="${disabled ? "opacity:.45" : ""}">
-      <input type="checkbox" data-act="${a.id}" ${rec[a.id]?.done ? "checked" : ""} ${disabled ? "disabled" : ""}>
       <span class="name">${a.icon} ${a.name} <small>(⭐${a.stars})</small></span>
-      <input type="number" min="0" max="600" data-min="${a.id}" value="${rec[a.id]?.minutes || ""}"
-        placeholder="0" ${disabled ? "disabled" : ""}>
-      <span class="min-label">min</span>
+      <label class="cb-cell" title="Realizado">
+        <input type="checkbox" class="cb-yes" data-yes="${a.id}" ${st === true ? "checked" : ""} ${disabled ? "disabled" : ""}>
+      </label>
+      <label class="cb-cell" title="No realizado">
+        <input type="checkbox" class="cb-no" data-no="${a.id}" ${st === false ? "checked" : ""} ${disabled ? "disabled" : ""}>
+      </label>
+      <label class="cb-cell" title="Sin marcar">
+        <input type="radio" class="cb-none" data-none="${a.id}" ${st === undefined ? "checked" : ""} ${disabled ? "disabled" : ""}>
+      </label>
+    </div>`;
+  };
+
+  const header = `
+    <div class="activity-row activity-head">
+      <span class="name"></span>
+      <span class="cb-cell head-yes" title="Realizado"><svg width="14" height="14" viewBox="0 0 12 12"><path d="M2 6.5L5 9.5L10 3" stroke="#2eb872" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span class="cb-cell head-no" title="No realizado"><svg width="13" height="13" viewBox="0 0 12 12"><path d="M2.5 2.5L9.5 9.5M9.5 2.5L2.5 9.5" stroke="#e85a6e" stroke-width="2.4" stroke-linecap="round"/></svg></span>
+      <span class="cb-cell head-none" title="Sin marcar"><svg width="14" height="14" viewBox="0 0 12 12"><circle cx="6" cy="6" r="4.5" stroke="#8d83b5" stroke-width="2" fill="none"/></svg></span>
     </div>`;
 
   document.getElementById("activityForm").innerHTML =
     `<p style="font-weight:700;color:var(--purple-dark);margin:6px 0">🏠 Responsabilidades</p>` +
+    header +
     CONFIG.activities.responsibilities.map(a => row(a, false)).join("") +
     `<p style="font-weight:700;color:#2563b0;margin:10px 0 6px">📚 Aprendizaje ${weekend ? "(no aplica en fin de semana)" : ""}</p>` +
+    header +
     CONFIG.activities.learning.map(a => row(a, weekend)).join("");
+
+  // Los tres estados son excluyentes entre sí
+  const syncNone = id => {
+    const yes = document.querySelector(`[data-yes="${id}"]`);
+    const no = document.querySelector(`[data-no="${id}"]`);
+    document.querySelector(`[data-none="${id}"]`).checked = !yes.checked && !no.checked;
+  };
+  document.querySelectorAll("[data-yes]").forEach(cb => {
+    cb.addEventListener("change", () => {
+      if (cb.checked) document.querySelector(`[data-no="${cb.dataset.yes}"]`).checked = false;
+      syncNone(cb.dataset.yes);
+    });
+  });
+  document.querySelectorAll("[data-no]").forEach(cb => {
+    cb.addEventListener("change", () => {
+      if (cb.checked) document.querySelector(`[data-yes="${cb.dataset.no}"]`).checked = false;
+      syncNone(cb.dataset.no);
+    });
+  });
+  document.querySelectorAll("[data-none]").forEach(rb => {
+    rb.addEventListener("click", () => {
+      document.querySelector(`[data-yes="${rb.dataset.none}"]`).checked = false;
+      document.querySelector(`[data-no="${rb.dataset.none}"]`).checked = false;
+      rb.checked = true;
+    });
+  });
 
   document.getElementById("dayNote").value = rec.note || "";
   document.getElementById("readingTitle").value =
@@ -167,10 +219,12 @@ function saveDay() {
   const d = recDate.value;
   if (!d) return;
   const rec = {};
-  document.querySelectorAll("[data-act]").forEach(cb => {
-    const id = cb.dataset.act;
-    const minutes = parseInt(document.querySelector(`[data-min="${id}"]`).value) || 0;
-    if (cb.checked || minutes) rec[id] = { done: cb.checked, minutes };
+  document.querySelectorAll("[data-yes]").forEach(cb => {
+    const id = cb.dataset.yes;
+    const noCb = document.querySelector(`[data-no="${id}"]`);
+    if (cb.checked) rec[id] = { done: true };
+    else if (noCb.checked) rec[id] = { done: false };
+    // sin marcar → no se guarda nada para esta actividad
   });
   const note = document.getElementById("dayNote").value.trim();
   if (note) rec.note = note;
@@ -232,14 +286,6 @@ function addMessage() {
 
 function renderStats() {
   const s = computeStats(DATA);
-  const dates = Object.keys(DATA.records).sort();
-  let readMin = 0, mathMin = 0, totalMin = 0;
-  for (const d of dates) {
-    readMin += DATA.records[d].reading?.minutes || 0;
-    mathMin += DATA.records[d].math?.minutes || 0;
-    totalMin += minutesForDay(DATA, d);
-  }
-  const h = m => m >= 60 ? `${Math.floor(m / 60)}h ${m % 60}min` : `${m} min`;
 
   document.getElementById("statsBox").innerHTML = `
     <table class="history-table">
@@ -247,9 +293,8 @@ function renderStats() {
       <tr><td style="text-align:left">✅ Días completos</td><td><b>${s.fullDays}</b> de ${s.daysRecorded} registrados</td></tr>
       <tr><td style="text-align:left">🔥 Racha actual / mejor</td><td><b>${s.currentStreak}</b> / ${s.bestStreak} días</td></tr>
       <tr><td style="text-align:left">🏆 Semanas perfectas</td><td><b>${s.perfectWeeks}</b></td></tr>
-      <tr><td style="text-align:left">📖 Lecturas registradas / tiempo</td><td><b>${s.readings}</b> · ${h(readMin)}</td></tr>
-      <tr><td style="text-align:left">🔢 Días de matemáticas / tiempo</td><td><b>${s.mathDays}</b> · ${h(mathMin)}</td></tr>
-      <tr><td style="text-align:left">⏱️ Tiempo total de estudio</td><td><b>${h(totalMin)}</b></td></tr>
+      <tr><td style="text-align:left">📖 Lecturas registradas</td><td><b>${s.readings}</b></td></tr>
+      <tr><td style="text-align:left">🔢 Días de matemáticas</td><td><b>${s.mathDays}</b></td></tr>
       <tr><td style="text-align:left">🏅 Nivel actual</td><td><b>${s.level.name}</b> (Nivel ${s.level.level})</td></tr>
     </table>`;
 }
@@ -257,26 +302,41 @@ function renderStats() {
 // ----- Historial -----
 
 function renderHistory() {
-  const dates = Object.keys(DATA.records).sort().reverse().slice(0, 30);
+  // Selector de periodo: últimos 30 días o un mes específico
+  const sel = document.getElementById("histPeriod");
+  const allDates = Object.keys(DATA.records).sort().reverse();
+  const months = [...new Set(allDates.map(d => d.slice(0, 7)))];
+  const current = sel.value || "last30";
+  const monthName = m => {
+    const [y, mo] = m.split("-");
+    const n = new Date(y, mo - 1, 1).toLocaleDateString("es", { month: "long" });
+    return n.charAt(0).toUpperCase() + n.slice(1) + " " + y;
+  };
+  sel.innerHTML = `<option value="last30">Últimos 30 días</option>` +
+    months.map(m => `<option value="${m}">${monthName(m)}</option>`).join("");
+  sel.value = months.includes(current) || current === "last30" ? current : "last30";
+
+  const dates = sel.value === "last30"
+    ? allDates.slice(0, 30)
+    : allDates.filter(d => d.startsWith(sel.value));
+
   if (!dates.length) {
     document.getElementById("historyTable").innerHTML = "<tr><td>Sin registros aún.</td></tr>";
     return;
   }
   const today = todayStr();
-  const head = `<tr><th style="text-align:left">Fecha</th>${ALL_ACTIVITIES.map(a => `<th title="${a.name}">${a.icon}</th>`).join("")}<th>⭐</th><th>⏱️</th><th style="text-align:left">Nota</th></tr>`;
+  const head = `<tr><th style="text-align:left">Fecha</th>${ALL_ACTIVITIES.map(a => `<th title="${a.name}">${a.icon}</th>`).join("")}<th>⭐</th><th style="text-align:left">Nota</th></tr>`;
   const rows = dates.map(d => {
     const rec = DATA.records[d];
     const cells = ALL_ACTIVITIES.map(a => {
       if (a.weekdaysOnly && isWeekend(d)) return "<td>—</td>";
-      if (rec[a.id]?.done) return `<td style="color:var(--green);font-weight:900">✔</td>`;
-      // Día ya terminado sin cumplir la actividad → ✘ · Hoy (aún en curso) → punto neutro
-      if (d < today) return `<td style="color:#e85a6e;font-weight:900">✘</td>`;
+      if (rec[a.id]?.done === true) return `<td style="color:var(--green);font-weight:900">✔</td>`;
+      if (rec[a.id]?.done === false) return `<td style="color:#e85a6e;font-weight:900">✘</td>`;
       return "<td>·</td>";
     }).join("");
     return `<tr>
       <td style="text-align:left"><b>${d}</b></td>${cells}
       <td><b>${starsForDay(DATA, d)}</b></td>
-      <td>${minutesForDay(DATA, d) || "—"}</td>
       <td style="text-align:left;font-size:.8rem">${escapeHtml(rec.note || "")}</td>
     </tr>`;
   }).join("");

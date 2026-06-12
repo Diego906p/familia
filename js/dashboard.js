@@ -127,16 +127,13 @@ function renderWeek() {
     `<img src="${IMAGES.star_level.url}" width="${size}" height="${size}" alt="estrella" class="star-ico">`;
 
   const rowsFor = (acts, color) => acts.map(a => {
-    let totalMin = 0, earned = 0;
+    let earned = 0;
     const cells = days.map((d, i) => {
       if (a.weekdaysOnly && i >= 5) return `<td class="cell-na">—</td>`;
-      const dayRec = DATA.records[d];
-      const rec = dayRec?.[a.id];
-      if (rec?.minutes) totalMin += rec.minutes;
-      if (rec?.done) { earned += a.stars; return `<td><span class="chk ${color}">✔</span></td>`; }
-      // X roja solo en días ya terminados (antes de hoy) con registro guardado.
-      // Hoy y días futuros, o días sin guardar → círculo gris vacío (aún puede completarse).
-      if (dayRec && d < today) return `<td><span class="chk red"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2.5 2.5 L9.5 9.5 M9.5 2.5 L2.5 9.5" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></span></td>`;
+      const rec = DATA.records[d]?.[a.id];
+      // Tres estados: ✔ realizado · ✘ marcado como no realizado · vacío = sin información
+      if (rec?.done === true) { earned += a.stars; return `<td><span class="chk ${color}">✔</span></td>`; }
+      if (rec?.done === false) return `<td><span class="chk red"><svg width="11" height="11" viewBox="0 0 12 12"><path d="M2.5 2.5 L9.5 9.5 M9.5 2.5 L2.5 9.5" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/></svg></span></td>`;
       return `<td><span class="chk empty"></span></td>`;
     }).join("");
     const nDays = a.weekdaysOnly ? 5 : 7;
@@ -146,7 +143,6 @@ function renderWeek() {
         <small class="act-val">${starImg(12)} ${a.stars} por día</small>
       </span></td>
       ${cells}
-      <td class="time-cell">${totalMin ? totalMin + " min 🕐" : "—"}</td>
       <td class="stars-cell">${earned} ${starImg(18)} <small>/ ${a.stars * nDays}</small></td>
     </tr>`;
   }).join("");
@@ -161,16 +157,14 @@ function renderWeek() {
     <tr>
       <th style="text-align:left;padding-left:16px">Actividad</th>
       ${dayNames.map((n, i) => `<th class="${days[i] === today ? "today-col" : ""}">${n}<span class="date-sub">${dd(days[i])}</span></th>`).join("")}
-      <th class="time-col">Tiempo<br>total 🕐</th>
       <th>Estrellas<br>de la semana</th>
     </tr>
-    <tr class="group-row resp"><td colspan="10">${imgOrPlaceholder("house_chores")} RESPONSABILIDADES</td></tr>
+    <tr class="group-row resp"><td colspan="9">${imgOrPlaceholder("house_chores")} RESPONSABILIDADES</td></tr>
     ${rowsFor(CONFIG.activities.responsibilities, "green")}
-    <tr class="group-row learn"><td colspan="10">${imgOrPlaceholder("learning_c")} APRENDIZAJE <small>(Lunes a Viernes)</small></td></tr>
+    <tr class="group-row learn"><td colspan="9">${imgOrPlaceholder("learning_c")} APRENDIZAJE <small>(Lunes a Viernes)</small></td></tr>
     ${rowsFor(CONFIG.activities.learning, "purple")}
     <tr class="totals-row">
       <td>Estrellas por día</td>${totalsCells}
-      <td style="font-size:.78rem">Máx. por semana</td>
       <td class="big">${weekTotal} ${starImg(20)} <small>/ ${CONFIG.weeklyMax}</small></td>
     </tr>`;
 }
