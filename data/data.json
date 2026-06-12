@@ -2,7 +2,7 @@
   "meta": {
     "lastUpdate": "2026-06-11",
     "version": 1,
-    "savedAt": 1781227541946
+    "savedAt": 1781232627144
   },
   "messages": [
     {
@@ -44,32 +44,25 @@
     },
     "2026-06-09": {
       "make_bed": {
-        "done": true,
-        "minutes": 5
+        "done": false
       },
       "organize_room": {
-        "done": true,
-        "minutes": 10
+        "done": false
       },
       "wash_utensils": {
-        "done": true,
-        "minutes": 8
+        "done": false
       },
       "brush_teeth": {
-        "done": true,
-        "minutes": 5
+        "done": false
       },
       "reading": {
-        "done": true,
-        "minutes": 30
+        "done": false
       },
       "reading_summary": {
-        "done": true,
-        "minutes": 12
+        "done": false
       },
       "math": {
-        "done": true,
-        "minutes": 25
+        "done": false
       },
       "note": "Terminó su lectura antes de tiempo."
     },
