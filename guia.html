@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guía y Manual — Panel de Actividades de Luanna</title>
+  <style>
+    :root {
+      --purple: #7c5cff;
+      --purple-dark: #4f3a9e;
+      --purple-soft: #ece5ff;
+      --pink: #ff4f9a;
+      --pink-soft: #ffe9f3;
+      --green: #2eb872;
+      --green-soft: #e6f8ee;
+      --yellow: #ffc83d;
+      --cream: #fff8e6;
+      --text: #3c3160;
+      --text-soft: #8d83b5;
+      --card: #ffffff;
+      --radius: 22px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
+      background: linear-gradient(160deg, #cfc3f5 0%, #e8d9f7 45%, #fbd9ec 100%);
+      background-attachment: fixed;
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px 14px 60px;
+      line-height: 1.55;
+    }
+    .wrap { max-width: 920px; margin: 0 auto; }
+
+    /* ===== Encabezado ===== */
+    .doc-hero {
+      background: linear-gradient(135deg, #8e5cff 0%, #c44df0 55%, #ff5fa2 100%);
+      color: #fff;
+      border-radius: 28px;
+      padding: 34px 30px;
+      text-align: center;
+      box-shadow: 0 16px 44px rgba(80, 50, 160, .3);
+      margin-bottom: 22px;
+    }
+    .doc-hero .emoji { font-size: 3rem; }
+    .doc-hero h1 { font-size: clamp(1.5rem, 4vw, 2.1rem); font-weight: 900; margin: 6px 0; }
+    .doc-hero p { font-weight: 700; opacity: .95; font-size: .95rem; }
+
+    /* ===== Índice ===== */
+    .toc {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      box-shadow: 0 8px 26px rgba(80, 50, 160, .12);
+      margin-bottom: 22px;
+    }
+    .toc h2 { font-size: 1rem; color: var(--purple-dark); margin-bottom: 12px; font-weight: 900; }
+    .toc ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 18px; }
+    .toc a {
+      color: var(--purple); text-decoration: none; font-weight: 700; font-size: .9rem;
+      display: block; padding: 5px 8px; border-radius: 10px; transition: background .15s;
+    }
+    .toc a:hover { background: var(--purple-soft); }
+    @media (max-width: 560px) { .toc ul { grid-template-columns: 1fr; } }
+
+    /* ===== Tarjetas de sección ===== */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 26px 28px;
+      box-shadow: 0 8px 26px rgba(80, 50, 160, .12);
+      margin-bottom: 20px;
+    }
+    .card h2 {
+      font-size: 1.3rem; color: var(--purple-dark); font-weight: 900;
+      display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+      scroll-margin-top: 16px;
+    }
+    .card h3 { font-size: 1rem; color: var(--pink); font-weight: 800; margin: 18px 0 8px; }
+    .card p { margin-bottom: 10px; }
+    .card ul, .card ol { margin: 0 0 12px 22px; }
+    .card li { margin-bottom: 6px; }
+    .card strong { color: var(--purple-dark); }
+    a { color: var(--purple); }
+
+    code {
+      background: var(--purple-soft); color: var(--purple-dark);
+      padding: 2px 7px; border-radius: 6px; font-family: "Consolas", monospace;
+      font-size: .88em; font-weight: 700;
+      overflow-wrap: anywhere; word-break: break-word;
+    }
+    pre {
+      background: #2d2350; color: #e8e2ff;
+      border-radius: 14px; padding: 16px 18px; overflow-x: auto;
+      font-family: "Consolas", monospace; font-size: .84rem; line-height: 1.6;
+      margin: 8px 0 14px;
+    }
+    pre code { background: none; color: inherit; padding: 0; font-weight: 400; }
+
+    table {
+      width: 100%; border-collapse: collapse; margin: 8px 0 16px;
+      font-size: .9rem;
+    }
+    th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--purple-soft); }
+    th { background: var(--purple-soft); color: var(--purple-dark); font-weight: 800; }
+    td code { font-size: .85em; }
+
+    .callout {
+      border-radius: 14px; padding: 14px 18px; margin: 12px 0;
+      font-weight: 600; font-size: .9rem;
+      display: flex; gap: 10px; align-items: flex-start;
+    }
+    .callout .ico { font-size: 1.2rem; flex-shrink: 0; }
+    .callout.info { background: var(--purple-soft); color: var(--purple-dark); }
+    .callout.warn { background: var(--cream); border: 1px solid #f0d98a; color: #8a6d1a; }
+    .callout.ok { background: var(--green-soft); color: #1d7a4d; }
+    .callout.tip { background: var(--pink-soft); color: #b0345f; }
+
+    .step-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--purple); color: #fff; font-weight: 900; font-size: .82rem;
+      margin-right: 8px; flex-shrink: 0;
+    }
+    .steps { list-style: none; margin-left: 0 !important; }
+    .steps > li { display: flex; gap: 4px; align-items: flex-start; margin-bottom: 12px; }
+
+    .pill {
+      display: inline-block; background: var(--green-soft); color: var(--green);
+      border-radius: 99px; padding: 2px 12px; font-weight: 800; font-size: .8rem;
+    }
+    .pill.star { background: var(--cream); color: #b8860b; }
+
+    footer {
+      text-align: center; color: var(--purple-dark); font-weight: 700;
+      font-size: .85rem; padding: 18px; opacity: .8;
+    }
+    .top-link {
+      display: inline-block; margin-top: 8px; font-size: .82rem;
+      color: var(--text-soft); text-decoration: none; font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="doc-hero" id="inicio">
+    <div class="emoji">🌟</div>
+    <h1>Panel de Actividades de Luanna</h1>
+    <p>Guía completa · Manual de uso y desarrollo</p>
+  </div>
+
+  <!-- Índice -->
+  <nav class="toc">
+    <h2>📑 Contenido</h2>
+    <ul>
+      <li><a href="#que-es">1. ¿Qué es esta app?</a></li>
+      <li><a href="#estructura">2. Estructura de archivos</a></li>
+      <li><a href="#usuarios">3. Usuarios y acceso</a></li>
+      <li><a href="#uso-diario">4. Uso diario (admin)</a></li>
+      <li><a href="#marcaje">5. Sistema de marcaje</a></li>
+      <li><a href="#publicacion">6. Publicar en GitHub</a></li>
+      <li><a href="#token">7. Crear el token de GitHub</a></li>
+      <li><a href="#reglas">8. Reglas: estrellas y niveles</a></li>
+      <li><a href="#imagenes">9. Sistema de imágenes</a></li>
+      <li><a href="#datos">10. Cómo se guardan los datos</a></li>
+      <li><a href="#mantenimiento">11. Mantenimiento y dudas</a></li>
+    </ul>
+  </nav>
+
+  <!-- 1 -->
+  <section class="card">
+    <h2 id="que-es">💜 1. ¿Qué es esta app?</h2>
+    <p>Es una aplicación web para acompañar a <strong>Luanna</strong> en el desarrollo de hábitos,
+      responsabilidades y aprendizaje. No es una agenda ni un sistema de control: es un espacio
+      personal donde ella ve su esfuerzo reflejado de forma positiva y motivadora.</p>
+    <p>La idea principal es que pueda <strong>compararse consigo misma</strong> y ver cuánto ha
+      avanzado con el tiempo. La recompensa es el progreso visible: estrellas acumuladas, rachas,
+      niveles y logros. No castiga incumplimientos ni mide rapidez.</p>
+    <div class="callout info"><span class="ico">🏗️</span>
+      <span>Es un sitio <strong>estático</strong> (solo HTML, CSS y JavaScript), pensado para
+      publicarse gratis en <strong>GitHub Pages</strong> y verse desde la tablet de Luanna o el celular de papá.</span>
+    </div>
+    <a class="top-link" href="#inicio">↑ Volver al índice</a>
+  </section>
+
+  <!-- 2 -->
+  <section class="card">
+    <h2 id="estructura">📁 2. Estructura de archivos</h2>
+    <pre><code>index.html        → Login (elige Luanna o Papá)
+dashboard.html    → Panel de Luanna (solo lectura)
+admin.html        → Panel de administración (papá)
+guia.html         → Esta guía
+
+css/styles.css    → Estilos del login y panel admin
+css/styles2.css   → Estilos del dashboard de Luanna
+
+js/config.js      → Actividades, estrellas, niveles, logros y usuarios
+js/auth.js        → Autenticación (login / sesión)
+js/data.js        → Carga, guardado y cálculos (rachas, niveles…)
+js/images.js      → Mapa de imágenes y variantes por ánimo
+js/svgs.js        → Ilustraciones SVG de respaldo (desactivadas)
+js/dashboard.js   → Lógica del panel de Luanna
+js/admin.js       → Lógica del panel de administración
+
+data/data.json    → Los datos (registros, mensajes, lecturas, temas)
+img/              → Carpeta local de imágenes (también en repo aparte)</code></pre>
+    <div class="callout tip"><span class="ico">🖼️</span>
+      <span>Las ilustraciones se sirven desde un repositorio de imágenes en GitHub
+      (<code>raw.githubusercontent.com/Diego906p/imagenes/…</code>). Ver la
+      <a href="#imagenes">sección 9</a>.</span>
+    </div>
+    <a class="top-link" href="#inicio">↑ Volver al índice</a>
+  </section>
+
+  <!-- 3 -->
+  <section class="card">
+    <h2 id="usuarios">🔑 3. Usuarios y acceso</h2>
+    <p>En <code>index.html</code> se elige el perfil (👧 <strong>Luanna</strong> o 👨‍💼 <strong>Papá</strong>);
+      al elegirlo se completa el usuario y solo queda escribir la contraseña.</p>
+    <table>
+      <tr><th>Perfil</th><th>Usuario</th><th>Contraseña</th><th>Permisos</th></tr>
+      <tr><td>👧 Luanna</td><td><code>luanna</code></td><td><code>estrella</code></td><td>Solo ver su progreso</td></tr>
+      <tr><td>👨‍💼 Papá</td><td><code>admin</code></td><td><code>papa2026</code></td><td>Registrar y administrar</td></tr>
+    </table>
+    <h3>Cambiar una contraseña</h3>
+    <p>Las contraseñas se guardan como hash <strong>SHA-256</strong> en <code>js/config.js</code>.
+      Para cambiarlas hay que generar el hash de la nueva clave y reemplazarlo ahí.</p>
+    <div class="callout warn"><span class="ico">⚠️</span>
+      <span>Al ser un sitio estático, el login es una <strong>barrera de acceso ligera</strong>
+      (suficiente para uso familiar), no una seguridad de nivel bancario.</span>
+    </div>
+    <a class="top-link" href="#inicio">↑ Volver al índice</a>
+  </section>
+
+  <!-- 4 -->
+  <section class="card">
+    <h2 id="uso-diario">📝 4. Uso diario (papá)</h2>
+    <p>Esta es la rutina de cada día desde el <strong>Panel de Administración</strong>:</p>
+    <ul class="steps">
+      <li><span class="step-num">1</span><span>Entra como <strong>Papá</strong> y selecciona la <strong>fecha</strong> (por defecto, hoy).</span></li>
+      <li><span class="step-num">2</span><span>Marca cada actividad como <strong>Realizado ✔</strong> o <strong>No realizado ✖</strong> (ver <a href="#marcaje">sección 5</a>).</span></li>
+      <li><span class="step-num">3</span><span>Opcional: escribe una observación, la lectura realizada o el tema de matemáticas.</span></li>
+      <li><span class="step-num">4</span><span>Pulsa <strong>💾 Guardar día</strong>.</span></li>
+      <li><span class="step-num">5</span><span>Pulsa <strong>📤 Publicar cambios</strong> para que Luanna lo vea desde su tablet.</span></li>
+    </ul>
+    <h3>Mensajes motivadores</h3>
+    <p>Papá puede dejar mensajes (“Estoy orgulloso de tu esfuerzo”, etc.). Aparecen destacados en el panel de Luanna.</p>
+    <h3>Estadísticas e historial</h3>
+    <p>El panel muestra estrellas totales, días completos, rachas, semanas perfectas, nivel actual,
+      y un <strong>historial</strong> con un selector que permite ver cualquier mes registrado (no solo los últimos 30 días).</p>
+    <a class="top-link" href="#inicio">↑ Volver al índice</a>
+  </section>
+
+  <!-- 5 -->
+  <section class="card">
+    <h2 id="marcaje">✔️ 5. Sistema de marcaje (3 estados)</h2>
+    <p>Cada actividad puede quedar en uno de tres estados:</p>
+    <table>
+      <tr><th>Estado</th><th>En el panel de Luanna</th><th>Significado</th></tr>
+      <tr><td><strong>Realizado ✔</strong></td><td>Círculo verde con ✔</td><td>La cumplió → suma estrellas</td></tr>
+      <tr><td><strong>No realizado ✖</strong></td><td>Círculo rojo con ✖</td><td>No la cumplió</td></tr>
+      <tr><td><strong>Sin marcar</strong></td><td>Círculo gris vacío</td><td>Sin información de ese día</td></tr>
+    </table>
+    <div class="callout info"><span class="ico">🧭</span>
+      <span>La filosofía: nunca se marca “fallaste” por sí solo. Si un día no se registró,
+      queda en gris (sin información), no en rojo. El rojo solo aparece cuando papá lo marca a propósito.</span>
+    </div>
+    <a class="top-link" href="#inicio">↑ Volver al índice</a>
+  </section>
+
+  <!-- 6 -->
+  <section class="card">
+    <h2 id="publicacion">📤 6. Publicar cambios en GitHub</h2>
+    <p>Como el sitio es estático, los datos viven en <code>data/data.json</code>. El botón
+      <strong>📤 Publicar cambios</strong> sube ese archivo directo al repositorio usando la API de
+      GitHub; en 1–2 minutos se actualiza en todos los dispositivos.</p>
+    <p>Esto requiere configurarlo <strong>una sola vez por navegador</strong> en la tarjeta
+      <strong>⚙ Publicación en GitHub</strong> (botón <em>Configurar</em>):</p>
+    <table>
+      <tr><th>Campo</th><th>Qué poner</th></tr>
+      <tr><td>Repositorio</td><td><code>Diego906p/familia</code></td></tr>
+      <tr><td>Rama</td><td><code>main</code></td></tr>
+      <tr><td>Token</td><td>La “llave” <code>github_pat_…</code> (ver <a href="#token">sección 7</a>)</td></tr>
+    </table>
+    <div class="callout ok"><span class="ico">✅</span>
+      <span>Si todo está bien, al publicar aparece: <em>“✔ Publicado: en 1-2 min se verá en todos los dispositivos”</em>.</span>
+    </div>
+    <a class="top-link" href="#inicio">↑ Volver al índice</a>
+  </section>
+
+  <!-- 7 -->
+  <section class="card">
+    <h2 id="token">🗝️ 7. Crear el token de GitHub</h2>
+    <p>El token es una llave que le permite a la página escribir en tu repositorio. Se crea una vez:</p>
+    <ul class="steps">
+      <li><span class="step-num">1</span><span>Entra a <code>github.com/settings/personal-access-tokens/new</code></span></li>
+      <li><span class="step-num">2</span><span><strong>Token name:</strong> <code>panel-luanna</code> · <strong>Expiration:</strong> Custom, dentro de 1 año.</span></li>
+      <li><span class="step-num">3</span><span><strong>Repository access:</strong> “Only select repositories” → elige el repo <code>familia</code>.</span></li>
+      <li><span class="step-num">4</span><span>En <strong>Repository permissions → Contents</strong> → ponlo en <strong>“Read and write”</strong>.</span></li>
+      <li><span class="step-num">5</span><span>Pulsa <strong>Generate token</strong> y copia el código <code>github_pat_…</code> (solo se muestra una vez).</span></li>
+      <li><span class="step-num">6</span><span>Pégalo en el campo <strong>Token</strong> del panel y pulsa <strong>💾 Guardar</strong>.</span></li>
+    </ul>
+    <div class="callout warn"><span class="ico">🔒</span>
+      <span>El token es como una contraseña: nunca lo subas al repositorio ni lo compartas.
+      Se guarda solo en tu navegador. Por eso lo limitamos a un repo y un solo permiso.</span>
+    </div>
+    <a class="top-link" href="#inicio">↑ Volver al índice</a>
+  </section>
+
+  <!-- 8 -->
+  <section class="card">
+    <h2 id="reglas">⭐ 8. Reglas: estrellas y niveles</h2>
+    <h3>Estrellas por actividad</h3>
+    <ul>
+      <li><strong>Responsabilidades</strong> (los 7 días): cama, cuarto, utensilios, dientes → <span class="pill star">⭐ 1 c/u</span></li>
+      <li><strong>Aprendizaje</strong> (lunes a viernes): lectura, resumen, matemáticas → <span class="pill star">⭐ 3 c/u</span></li>
+    </ul>
+    <table>
+      <tr><th>Periodo</th><th>Máximo</th></tr>
+      <tr><td>Día entre semana</td><td>⭐ 13</td></tr>
+      <tr><td>Día de fin de semana</td><td>⭐ 4</td></tr>
+      <tr><td>Semana completa</td><td>⭐ 73</td></tr>
+    </table>
+    <div class="callout info"><span class="ico">📅</span>
+      <span>Las actividades de aprendizaje <strong>no aparecen</strong> los sábados y domingos: la app lo reconoce automáticamente.</span>
+    </div>
+    <h3>Sistema de 3 niveles</h3>
+    <p>Los indicadores (avatar, estrella, racha, copa) cambian según el desempeño:</p>
+    <table>
+      <tr><th>Nivel</th><th>Rango</th><th>Sensación</th></tr>
+      <tr><td><strong>Excelente ⭐</strong></td><td>80% – 100%</td><td>¡Vas increíble!</td></tr>
+      <tr><td><strong>En progreso 😊</strong></td><td>50% – 79%</td><td>¡Vas muy bien!</td></tr>
+      <tr><td><strong>Necesita ayuda 😔</strong></td><td>0% – 49%</td><td>¡Tú puedes lograrlo!</td></tr>
+    </table>
+    <p>Además hay <strong>rachas</strong> (días consecutivos completos), <strong>niveles con nombre</strong>
+      (Semillita, Brote Brillante, Exploradora Estrella…) y <strong>logros</strong> automáticos que se conservan para siempre.</p>
+    <a class="top-link" href="#inicio">↑ Volver al índice</a>
+  </section>
+
+  <!-- 9 -->
+  <section class="card">
+    <h2 id="imagenes">🖼️ 9. Sistema de imágenes</h2>
+    <p>Todas las ilustraciones se definen en <code>js/images.js</code>, apuntando al repositorio de
+      imágenes en GitHub. Para cambiar un gráfico basta reemplazar el archivo en ese repo (mismo nombre).</p>
+    <h3>Variantes por ánimo</h3>
+    <p>Algunas imágenes tienen 3 versiones (1 = bien · 2 = medio · 3 = bajo) que cambian solas según el desempeño:</p>
+    <ul>
+      <li><code>avatar_luanna</code>, <code>star_happy</code>, <code>trophy</code> → según el <strong>% de la semana</strong></li>
+      <li><code>flame_streak</code>, <code>cat_streak</code> → según la <strong>racha</strong> (el hielito ❄️ es la variante 3)</li>
+      <li><code>avatar_papa</code> → reacciona en el panel de administración</li>
+    </ul>
+    <div class="callout tip"><span class="ico">🔁</span>
+      <span>En <code>js/images.js</code>, <code>USE_REMOTE_IMAGES = true</code> usa el repo de GitHub;
+      ponlo en <code>false</code> para usar la carpeta local <code>img/</code>.</span>
+    </div>
+    <a class="top-link" href="#inicio">↑ Volver al índice</a>
+  </section>
+
+  <!-- 10 -->
+  <section class="card">
+    <h2 id="datos">💾 10. Cómo se guardan los datos</h2>
+    <p>Cuando papá guarda un día, los datos quedan primero en el <strong>navegador</strong>
+      (almacenamiento local). Al pulsar <strong>Publicar cambios</strong>, se suben a
+      <code>data/data.json</code> en el repositorio.</p>
+    <p>El panel de Luanna lee ese <code>data.json</code> publicado, por eso ella ve los cambios
+      desde cualquier dispositivo una vez publicados.</p>
+    <h3>Respaldo manual</h3>
+    <p>En la barra sobre el historial están <strong>⬇ Exportar</strong> (descarga el <code>data.json</code>)
+      e <strong>⬆ Importar</strong> (carga uno guardado). Útil como copia de seguridad.</p>
+    <div class="callout warn"><span class="ico">🌐</span>
+      <span>Si registras un día y <strong>no</strong> publicas, los datos siguen en tu navegador,
+      pero la tablet de Luanna no los verá hasta que pulses <em>Publicar cambios</em>.</span>
+    </div>
+    <a class="top-link" href="#inicio">↑ Volver al índice</a>
+  </section>
+
+  <!-- 11 -->
+  <section class="card">
+    <h2 id="mantenimiento">🔧 11. Mantenimiento y dudas frecuentes</h2>
+    <h3>Publicar en GitHub Pages (primera vez)</h3>
+    <ol>
+      <li>Sube todo el contenido de la carpeta al repositorio.</li>
+      <li>En GitHub: <strong>Settings → Pages → Source: main branch / root</strong>.</li>
+      <li>La web queda en <code>https://&lt;usuario&gt;.github.io/&lt;repo&gt;/</code>
+        (en este caso, <a href="https://diego906p.github.io/familia/">diego906p.github.io/familia</a>).</li>
+    </ol>
+    <h3>Caché: ¿por qué a veces “no se ve” un cambio?</h3>
+    <p>Los navegadores guardan copias de los archivos para ir más rápido. Hay que distinguir dos casos:</p>
+    <ul>
+      <li><strong>Los datos del día</strong> (estrellas, marcas) → <span class="pill">automático</span>
+        El <code>data.json</code> se pide con una marca de tiempo única, así que siempre llega fresco.
+        Luanna solo cierra y reabre la página (o desliza hacia abajo para recargar). <strong>No necesita Ctrl+F5.</strong></li>
+      <li><strong>El código</strong> (diseño, HTML/CSS/JS) → cambia rara vez. Lleva versión <code>?v=3</code>;
+        al subir cambios grandes de código, sube ese número en los HTML.</li>
+    </ul>
+    <h3>Cómo forzar recarga en la tablet (equivalente a Ctrl + F5)</h3>
+    <p>Las tablets no tienen esa tecla. Si tras un cambio de diseño la tablet sigue mostrando lo viejo:</p>
+    <ul>
+      <li><strong>Más fácil:</strong> abre la web en una <strong>pestaña de incógnito/privada</strong>
+        (no usa caché, carga todo fresco).</li>
+      <li><strong>Borrar caché del sitio:</strong> Chrome → menú ⋮ → <em>Configuración → Privacidad →
+        Borrar datos de navegación</em> → solo “Imágenes y archivos en caché” → borrar, y reabrir.</li>
+      <li><strong>Recarga con tirón:</strong> desliza la pantalla hacia abajo; suele bastar para los datos.</li>
+    </ul>
+    <div class="callout ok"><span class="ico">😊</span>
+      <span>Para el uso diario no hace falta nada de esto: con la recarga normal ya aparecen las
+      estrellas nuevas. Lo de arriba solo se usa las pocas veces que se cambia el <em>diseño</em>.</span>
+    </div>
+    <h3>Responsive</h3>
+    <p>La app está adaptada a móvil (≤480px), tablet (481–1024px) y escritorio (≥1025px),
+      sin scroll horizontal y con la misma identidad visual.</p>
+    <div class="callout ok"><span class="ico">🌱</span>
+      <span>La sección <strong>“Próximamente: Jardín”</strong> está en gris a propósito: es espacio
+      reservado para una futura versión, sin funciones activas todavía.</span>
+    </div>
+    <a class="top-link" href="#inicio">↑ Volver al índice</a>
+  </section>
+
+  <footer>
+    Panel de Actividades de Luanna · Hecho con 💜 para que Luanna pueda decir: “He sido constante.”
+  </footer>
+
+</div>
+</body>
+</html>
