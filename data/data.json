@@ -2,7 +2,7 @@
   "meta": {
     "lastUpdate": "2026-06-12",
     "version": 1,
-    "savedAt": 1781324061591
+    "savedAt": 1781324196775
   },
   "messages": [
     {
@@ -11,7 +11,29 @@
     }
   ],
   "records": {
-    "2026-06-08": {},
+    "2026-06-08": {
+      "make_bed": {
+        "done": true
+      },
+      "organize_room": {
+        "done": true
+      },
+      "wash_utensils": {
+        "done": true
+      },
+      "brush_teeth": {
+        "done": true
+      },
+      "reading": {
+        "done": true
+      },
+      "reading_summary": {
+        "done": true
+      },
+      "math": {
+        "done": true
+      }
+    },
     "2026-06-09": {
       "make_bed": {
         "done": true
@@ -120,10 +142,6 @@
     }
   ],
   "mathTopics": [
-    {
-      "date": "2026-06-08",
-      "topic": "Multiplicaciones de 2 cifras"
-    },
     {
       "date": "2026-06-09",
       "topic": "Divisiones simples"
