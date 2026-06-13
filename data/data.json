@@ -2,12 +2,12 @@
   "meta": {
     "lastUpdate": "2026-06-12",
     "version": 1,
-    "savedAt": 1781278623682
+    "savedAt": 1781310789812
   },
   "messages": [
     {
-      "date": "2026-06-10",
-      "text": "Estoy muy orgulloso de tu esfuerzo, Luanna. ¡Sigue así!"
+      "date": "2026-06-12",
+      "text": "No estás cumpliendo lo que acordamos."
     }
   ],
   "records": {
@@ -83,6 +83,30 @@
         "done": false
       },
       "note": "Hiciste muy bien todas tus sumas; faltó mejorar un poco el resumen de lectura."
+    },
+    "2026-06-12": {
+      "make_bed": {
+        "done": true
+      },
+      "organize_room": {
+        "done": false
+      },
+      "wash_utensils": {
+        "done": false
+      },
+      "brush_teeth": {
+        "done": false
+      },
+      "reading": {
+        "done": false
+      },
+      "reading_summary": {
+        "done": false
+      },
+      "math": {
+        "done": false
+      },
+      "note": "Hoy solo tendiste tu cama, del resto te olvidaste."
     }
   },
   "readings": [
