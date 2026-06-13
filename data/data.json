@@ -1,110 +1,62 @@
 {
   "meta": {
-    "lastUpdate": "2026-06-11",
+    "lastUpdate": "2026-06-13",
     "version": 1,
-    "savedAt": 1781222722598
+    "savedAt": 1781334814295
   },
   "messages": [
     {
-      "date": "2026-06-10",
-      "text": "Estoy muy orgulloso de tu esfuerzo, Luanna. ¡Sigue así!"
-    },
-    {
-      "date": "2026-06-11",
-      "text": "\"💜 Lo estás haciendo bien, ¡sigue esforzándote! Estoy muy orgulloso de ti. 💜\""
+      "date": "2026-06-12",
+      "text": "No estás cumpliendo lo que acordamos."
     }
   ],
   "records": {
     "2026-06-08": {
       "make_bed": {
-        "done": true,
-        "minutes": 5
+        "done": true
       },
       "organize_room": {
-        "done": true,
-        "minutes": 15
+        "done": true
       },
       "wash_utensils": {
-        "done": true,
-        "minutes": 10
+        "done": true
       },
       "brush_teeth": {
-        "done": true,
-        "minutes": 5
+        "done": true
       },
       "reading": {
-        "done": true,
-        "minutes": 25
+        "done": true
       },
       "reading_summary": {
-        "done": true,
-        "minutes": 15
+        "done": true
       },
       "math": {
-        "done": true,
-        "minutes": 30
+        "done": true
       }
     },
     "2026-06-09": {
       "make_bed": {
-        "done": true,
-        "minutes": 5
+        "done": true
       },
       "organize_room": {
-        "done": true,
-        "minutes": 10
+        "done": true
       },
       "wash_utensils": {
-        "done": true,
-        "minutes": 8
+        "done": true
       },
       "brush_teeth": {
-        "done": true,
-        "minutes": 5
+        "done": true
       },
       "reading": {
-        "done": true,
-        "minutes": 30
+        "done": true
       },
       "reading_summary": {
-        "done": true,
-        "minutes": 12
+        "done": true
       },
       "math": {
-        "done": true,
-        "minutes": 25
-      }
-    },
-    "2026-06-10": {
-      "make_bed": {
-        "done": true,
-        "minutes": 0
+        "done": true
       },
-      "organize_room": {
-        "done": true,
-        "minutes": 0
-      },
-      "wash_utensils": {
-        "done": true,
-        "minutes": 0
-      },
-      "brush_teeth": {
-        "done": true,
-        "minutes": 0
-      },
-      "reading": {
-        "done": true,
-        "minutes": 0
-      },
-      "reading_summary": {
-        "done": true,
-        "minutes": 0
-      },
-      "math": {
-        "done": true,
-        "minutes": 0
-      },
-      "note": "Hiciste muy bien todas tus sumas, faltó mejorar un poco el resumen de lectura."
+      "note": "Terminó su lectura antes de tiempo."
     },
     "2026-06-11": {
       "make_bed": {
@@ -114,7 +66,7 @@
         "done": true
       },
       "wash_utensils": {
-        "done": true
+        "done": false
       },
       "brush_teeth": {
         "done": true
@@ -127,19 +79,73 @@
       },
       "math": {
         "done": false
-      }
+      },
+      "note": "¡Muy bien! Tendiste tu cama antes de ir al cole."
     },
-    "2026-06-12": {},
-    "2026-06-13": {},
-    "2026-06-14": {}
+    "2026-06-10": {
+      "make_bed": {
+        "done": true
+      },
+      "organize_room": {
+        "done": true
+      },
+      "wash_utensils": {
+        "done": true
+      },
+      "brush_teeth": {
+        "done": true
+      },
+      "reading": {
+        "done": true
+      },
+      "reading_summary": {
+        "done": true
+      },
+      "math": {
+        "done": true
+      },
+      "note": "Hiciste muy bien todas tus sumas; faltó mejorar un poco el resumen de lectura."
+    },
+    "2026-06-12": {
+      "make_bed": {
+        "done": true
+      },
+      "organize_room": {
+        "done": true
+      },
+      "wash_utensils": {
+        "done": true
+      },
+      "brush_teeth": {
+        "done": true
+      },
+      "reading": {
+        "done": true
+      },
+      "reading_summary": {
+        "done": true
+      },
+      "math": {
+        "done": true
+      },
+      "note": "Hoy solo tendiste tu cama; del resto te olvidaste."
+    }
   },
   "readings": [
+    {
+      "date": "2026-06-09",
+      "title": "El Principito (cap. 3-4)"
+    },
     {
       "date": "2026-06-10",
       "title": "My Little Pony"
     }
   ],
   "mathTopics": [
+    {
+      "date": "2026-06-09",
+      "topic": "Divisiones simples"
+    },
     {
       "date": "2026-06-10",
       "topic": "Multiplicaciones,unidad, decena y centena."
