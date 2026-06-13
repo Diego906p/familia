@@ -2,7 +2,7 @@
   "meta": {
     "lastUpdate": "2026-06-12",
     "version": 1,
-    "savedAt": 1781317600906
+    "savedAt": 1781321899923
   },
   "messages": [
     {
@@ -20,13 +20,13 @@
         "done": true
       },
       "organize_room": {
-        "done": false
+        "done": true
       },
       "wash_utensils": {
         "done": false
       },
       "brush_teeth": {
-        "done": false
+        "done": true
       },
       "reading": {
         "done": false
