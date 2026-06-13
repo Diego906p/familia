@@ -2,7 +2,7 @@
   "meta": {
     "lastUpdate": "2026-06-12",
     "version": 1,
-    "savedAt": 1781313610040
+    "savedAt": 1781313895102
   },
   "messages": [
     {
@@ -38,7 +38,7 @@
     },
     "2026-06-11": {
       "make_bed": {
-        "done": false
+        "done": true
       },
       "organize_room": {
         "done": false
