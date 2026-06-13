@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Firebase - Pizarra Luana</title>
+<style>
+body{
+    margin:0;
+    font-family:Segoe UI, Arial, sans-serif;
+    background:linear-gradient(135deg,#6a11cb,#2575fc);
+    color:#222;
+}
+.container{
+    max-width:1000px;
+    margin:40px auto;
+    padding:20px;
+}
+.card{
+    background:white;
+    border-radius:18px;
+    padding:24px;
+    margin-bottom:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+}
+h1{
+    color:white;
+    text-align:center;
+    margin-bottom:30px;
+}
+h2{
+    color:#5b3df5;
+    border-bottom:2px solid #eee;
+    padding-bottom:8px;
+}
+.code{
+    background:#111827;
+    color:#d1fae5;
+    padding:16px;
+    border-radius:10px;
+    overflow:auto;
+    white-space:pre-wrap;
+    font-family:Consolas, monospace;
+}
+.badge{
+    display:inline-block;
+    background:#eef2ff;
+    color:#4338ca;
+    padding:6px 12px;
+    border-radius:999px;
+    font-weight:bold;
+}
+ul li{
+    margin:8px 0;
+}
+.footer{
+    text-align:center;
+    color:white;
+    margin-top:20px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🔥 Firebase - Pizarra Luana</h1>
+
+<div class="card">
+<h2>Información general</h2>
+<p><strong>Proyecto:</strong> Pizarra Luana</p>
+<p><strong>Servicio:</strong> Realtime Database</p>
+<p><span class="badge">Configuración de respaldo</span></p>
+</div>
+
+<div class="card">
+<h2>URL de la Realtime Database</h2>
+<div class="code">https://pizarra-luana-default-rtdb.firebaseio.com</div>
+</div>
+
+<div class="card">
+<h2>Firebase Config</h2>
+<div class="code">const firebaseConfig = {
+  apiKey: "AIzaSyAWFb0vzkwWLiFS7a1RGN37cNJIlSpR6V4",
+  authDomain: "pizarra-luana.firebaseapp.com",
+  projectId: "pizarra-luana",
+  storageBucket: "pizarra-luana.firebasestorage.app",
+  messagingSenderId: "860985724021",
+  appId: "1:860985724021:web:d20e5f47e95ba27b037c3c"
+};</div>
+</div>
+
+<div class="card">
+<h2>Reglas actuales</h2>
+<div class="code">{
+  "rules": {
+    "rooms": {
+      ".read": true,
+      ".write": true
+    }
+  }
+}</div>
+</div>
+
+<div class="card">
+<h2>Notas importantes</h2>
+<ul>
+<li>La base de datos está alojada en los servidores de Google Firebase.</li>
+<li>No depende de que la computadora esté encendida.</li>
+<li>No es necesario mantener abierta la consola de Firebase.</li>
+<li>Se puede cerrar sesión en Firebase sin afectar el funcionamiento.</li>
+<li>Guardar este documento como respaldo de configuración.</li>
+<li>La sincronización de la pizarra depende de esta configuración.</li>
+</ul>
+</div>
+
+<div class="footer">
+Documento de referencia – Pizarra colaborativa Papá y Luana
+</div>
+</div>
+</body>
+</html>

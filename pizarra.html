@@ -4,35 +4,54 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pizarra — Panel de Luanna</title>
-  <link rel="stylesheet" href="css/pizarra.css?v=3">
+  <link rel="stylesheet" href="css/pizarra.css?v=5">
 </head>
 <body>
 
   <div class="pz-topbar">
     <h1>🎨 Pizarra colaborativa</h1>
-    <div class="pz-sync" id="pzSync"><span class="dot"></span><span id="pzSyncText">Local</span></div>
+    <div class="pz-presence-bar" id="pzPresence"></div>
     <div class="spacer"></div>
     <button class="pz-back" id="pzBack">‹ Volver</button>
   </div>
 
   <div class="pz-toolbar">
-    <button class="pz-tool active" data-tool="select" title="Mover / seleccionar">✋</button>
+    <button class="pz-tool active" data-tool="select" title="Seleccionar / mover">↖️</button>
+    <button class="pz-tool" data-tool="pan" title="Desplazar lienzo">🖐️</button>
     <button class="pz-tool" data-tool="pencil" title="Lápiz">✏️</button>
     <button class="pz-tool" data-tool="highlighter" title="Resaltador">🖍️</button>
-    <button class="pz-tool" data-tool="eraser" title="Borrador">🧽</button>
-    <button class="pz-tool" data-tool="text" title="Texto">🔤</button>
+    <button class="pz-tool" data-tool="eraser" data-perm="eraser" title="Borrador">🧽</button>
+    <button class="pz-tool" data-tool="text" data-perm="text" title="Texto">🔤</button>
+    <button class="pz-tool" data-tool="laser" title="Puntero láser">🔦</button>
     <span class="pz-sep"></span>
+
     <button class="pz-tool" data-tool="line" title="Línea">╱</button>
     <button class="pz-tool" data-tool="arrow" title="Flecha">➜</button>
     <button class="pz-tool" data-tool="rect" title="Rectángulo">▭</button>
     <button class="pz-tool" data-tool="circle" title="Círculo">◯</button>
+    <button class="pz-tool" id="pzStickerBtn" data-perm="stickers" title="Stickers y sellos">🏷️</button>
+    <span class="pz-sep"></span>
+
+    <button class="pz-tool" id="pzUndo" title="Deshacer">↶</button>
+    <button class="pz-tool" id="pzRedo" title="Rehacer">↷</button>
     <span class="pz-sep"></span>
 
     <button class="pz-tool" id="pzZoomOut" title="Alejar">➖</button>
     <button class="pz-tool" id="pzZoomReset" title="Restablecer zoom" style="font-size:.7rem;font-weight:800">100%</button>
     <button class="pz-tool" id="pzZoomIn" title="Acercar">➕</button>
+    <span class="pz-sep"></span>
+
     <button class="pz-tool" id="pzLock" title="Bloquear proporción de imagen">🔓</button>
-    <button class="pz-tool" id="pzCalc" title="Calculadora">🧮</button>
+    <button class="pz-tool" id="pzLockEl" title="Fijar / liberar elemento seleccionado">📌</button>
+    <button class="pz-tool" id="pzCalc" data-perm="calculator" title="Calculadora">🧮</button>
+    <button class="pz-tool" id="pzPerms" title="Permisos de Luanna" style="display:none">🛡️</button>
+    <span class="pz-sep"></span>
+
+    <select id="pzBg" class="pz-select" title="Fondo">
+      <option value="white">Fondo blanco</option>
+      <option value="grid">Cuadriculado</option>
+      <option value="lines">Rayado</option>
+    </select>
     <span class="pz-sep"></span>
 
     <div class="pz-swatches" id="pzSwatches"></div>
@@ -43,18 +62,18 @@
     </label>
     <span class="pz-sep"></span>
 
-    <label class="pz-label-btn">🖼️ Imagen
+    <label class="pz-label-btn" data-perm="image">🖼️ Imagen
       <input type="file" id="pzImage" accept="image/*" multiple style="display:none">
     </label>
-    <button class="pz-label-btn pz-danger" id="pzClear">🗑️ Limpiar todo</button>
+    <button class="pz-label-btn pz-danger" id="pzClear" data-perm="clear">🗑️ Limpiar todo</button>
   </div>
 
   <div class="pz-stage" id="pzStage">
     <canvas id="pzCanvas"></canvas>
     <input type="text" id="pzTextInput">
 
-    <!-- Participantes -->
-    <div class="pz-presence" id="pzPresence"></div>
+    <!-- Paleta de stickers -->
+    <div class="pz-stickers" id="pzStickerPalette"></div>
 
     <!-- Calculadora -->
     <div class="pz-calc" id="pzCalcPanel">
@@ -65,12 +84,21 @@
       <input type="text" id="pzCalcDisplay" readonly value="0">
       <div class="pz-calc-keys" id="pzCalcKeys"></div>
     </div>
+
+    <!-- Permisos (solo Papá) -->
+    <div class="pz-perms" id="pzPermsPanel">
+      <div class="pz-perms-head">
+        <span>🛡️ Permisos de Luanna</span>
+        <button id="pzPermsClose">✕</button>
+      </div>
+      <div class="pz-perms-body" id="pzPermsBody"></div>
+    </div>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
   <script src="js/config.js?v=3"></script>
   <script src="js/auth.js?v=3"></script>
-  <script src="js/pizarra.js?v=4"></script>
+  <script src="js/pizarra.js?v=5"></script>
 </body>
 </html>

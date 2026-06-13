@@ -367,8 +367,9 @@ img/              → Carpeta local de imágenes (también en repo aparte)</code
     <p>El panel de Luanna lee ese <code>data.json</code> publicado, por eso ella ve los cambios
       desde cualquier dispositivo una vez publicados.</p>
     <h3>Respaldo manual</h3>
-    <p>En la barra sobre el historial están <strong>⬇ Exportar</strong> (descarga el <code>data.json</code>)
-      e <strong>⬆ Importar</strong> (carga uno guardado). Útil como copia de seguridad.</p>
+    <p>En la barra sobre el historial está <strong>⬇ Exportar copia de seguridad</strong> (descarga el
+      <code>data.json</code> actual) como respaldo de emergencia. Cada vez que publicas, GitHub guarda
+      además una copia en el historial del repositorio, así que el repo ya es tu respaldo automático.</p>
     <div class="callout warn"><span class="ico">🌐</span>
       <span>Si registras un día y <strong>no</strong> publicas, los datos siguen en tu navegador,
       pero la tablet de Luanna no los verá hasta que pulses <em>Publicar cambios</em>.</span>
@@ -383,33 +384,45 @@ img/              → Carpeta local de imágenes (también en repo aparte)</code
       explicar matemáticas sobre una imagen. Se entra con el botón <strong>🎨 Pizarra</strong>
       desde el panel de Luanna o el de Papá.</p>
 
-    <h3>Herramientas</h3>
+    <h3>Herramientas de dibujo</h3>
     <ul>
-      <li><strong>✋ Mover</strong> — selecciona, mueve y (en imágenes) redimensiona con la manija de la esquina.</li>
-      <li><strong>✏️ Lápiz</strong>, <strong>🖍️ Resaltador</strong>, <strong>🧽 Borrador</strong> (borra el trazo que tocas), <strong>🔤 Texto</strong>.</li>
+      <li><strong>↖️ Seleccionar</strong> — clic en un elemento para moverlo; en imágenes, manija de la esquina para redimensionar. <strong>Arrastra sobre un área vacía</strong> para seleccionar varios a la vez (marco) y moverlos juntos.</li>
+      <li><strong>🖐️ Desplazar (pan)</strong> — arrastra para recorrer el lienzo, que es más grande que la pantalla.</li>
+      <li><strong>✏️ Lápiz</strong>, <strong>🖍️ Resaltador</strong>, <strong>🧽 Borrador</strong>, <strong>🔤 Texto</strong>, <strong>🔦 Puntero láser</strong> (señala temporalmente, sin dejar marca).</li>
       <li><strong>Figuras:</strong> línea, flecha, rectángulo, círculo.</li>
-      <li><strong>🖼️ Imagen</strong> — carga una o varias (ej. la foto de un ejercicio) para dibujar encima.</li>
-      <li><strong>Color</strong> (8 opciones) y <strong>grosor</strong> ajustable.</li>
+      <li><strong>🏷️ Stickers y sellos:</strong> ⭐ Excelente, 🎉 Muy bien, 🏆 Logrado y más, para felicitar con un clic.</li>
+      <li><strong>🖼️ Imagen</strong> — carga la foto de un ejercicio para dibujar encima · <strong>Color</strong> (8) y <strong>grosor</strong> ajustables.</li>
     </ul>
 
-    <h3>Zoom y proporción</h3>
+    <h3>Lienzo, zoom y fondos</h3>
     <ul>
-      <li><strong>➕ / ➖ / 100%</strong> para acercar, alejar y restablecer. En la tablet: pellizca con dos dedos para hacer zoom y arrástralos para desplazarte.</li>
-      <li><strong>🔓 / 🔒</strong> bloquea la proporción al redimensionar una imagen (no se deforma).</li>
+      <li><strong>➕ / ➖ / 100%</strong> para acercar, alejar y restablecer. En la tablet: pellizca con dos dedos para zoom y arrástralos para desplazarte.</li>
+      <li><strong>Fondo:</strong> blanco, cuadriculado o rayado (selector en la barra).</li>
+      <li><strong>↶ Deshacer / ↷ Rehacer</strong> cualquier acción (también con Ctrl+Z / Ctrl+Shift+Z).</li>
     </ul>
+
+    <h3>Bloqueos</h3>
+    <ul>
+      <li><strong>🔓 / 🔒 Proporción</strong> — al activarlo, redimensionar una imagen mantiene su forma (no se deforma).</li>
+      <li><strong>📌 Fijar elemento</strong> — selecciona un elemento y púlsalo para bloquearlo (aparece un 🔒). Los elementos fijados <strong>no se mueven ni se borran</strong> con el borrador, ideal para dejar un ejercicio de fondo. Solo se quitan al desbloquearlos o con “Limpiar todo”.</li>
+    </ul>
+
+    <h3>Permisos (solo Papá)</h3>
+    <p>El botón <strong>🛡️</strong> (visible únicamente para Papá) abre un panel para <strong>habilitar o restringir</strong>
+      a Luanna el uso de: calculadora, borrador, texto, imágenes, stickers y “Limpiar todo”. Los cambios se aplican al instante en la pizarra de Luanna.</p>
 
     <h3>Calculadora</h3>
-    <p>El botón <strong>🧮</strong> abre una calculadora flotante (se puede arrastrar) para ayudarse con cálculos. Se cierra con la ✕.</p>
+    <p>El botón <strong>🧮</strong> abre una calculadora flotante (arrastrable) para ayudarse con cálculos. Se cierra con la ✕.</p>
 
     <h3>Tiempo real y participantes</h3>
-    <p>Todo lo que se dibuja se sincroniza al instante entre los dispositivos conectados (vía Firebase).
-      Arriba a la derecha se ven los <strong>participantes</strong> con una luz
-      <span class="pill">verde = en línea</span> o gris = desconectado. El indicador
-      <strong>“En línea”</strong> de la barra superior confirma la conexión.</p>
+    <p>Todo se sincroniza al instante entre dispositivos (vía Firebase). En la <strong>barra superior</strong>, junto al título,
+      se ven los <strong>participantes conectados</strong> con luz <span class="pill">verde = en línea</span> o gris = desconectado.
+      Además, el <strong>cursor de cada uno</strong> se ve en vivo, identificado con su nombre (Papá en azul, Luanna en rosa).</p>
 
-    <div class="callout info"><span class="ico">🧽</span>
-      <span>La pizarra es <strong>temporal</strong>: no se guarda nada. Cada vez que entras arranca en blanco
-      y solo ves lo que se dibuja a partir de ese momento.</span>
+    <div class="callout info"><span class="ico">🔄</span>
+      <span>La pizarra conserva su contenido mientras alguien esté trabajando: quien entra <strong>ve todo lo
+      ya dibujado</strong> (dibujos, figuras, textos, imágenes). No se guarda historial permanente — todo se borra
+      únicamente cuando alguien usa <strong>🗑️ Limpiar todo</strong>.</span>
     </div>
     <a class="top-link" href="#inicio">↑ Volver al índice</a>
   </section>

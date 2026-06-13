@@ -10,35 +10,21 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
 html, body { height: 100%; overflow: hidden; }
-
 body {
   font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
-  background: #cfc3f5;
-  color: var(--text);
-  display: flex;
-  flex-direction: column;
+  background: #cfc3f5; color: var(--text);
+  display: flex; flex-direction: column;
 }
 
 /* ===== Barra superior ===== */
 .pz-topbar {
   background: linear-gradient(135deg, #8e5cff 0%, #c44df0 55%, #ff5fa2 100%);
-  color: #fff;
-  display: flex; align-items: center; gap: 12px;
-  padding: 10px 16px;
-  flex-shrink: 0;
-  flex-wrap: wrap;
+  color: #fff; display: flex; align-items: center; gap: 12px;
+  padding: 10px 16px; flex-shrink: 0; flex-wrap: wrap;
 }
-.pz-topbar h1 { font-size: 1.1rem; font-weight: 900; display: flex; align-items: center; gap: 8px; }
+.pz-topbar h1 { font-size: 1.1rem; font-weight: 900; display: flex; align-items: center; gap: 8px; white-space: nowrap; }
 .pz-topbar .spacer { flex: 1; }
-.pz-sync {
-  font-size: .8rem; font-weight: 800;
-  background: rgba(255,255,255,.18); padding: 5px 12px; border-radius: 99px;
-  display: flex; align-items: center; gap: 6px;
-}
-.pz-sync .dot { width: 9px; height: 9px; border-radius: 50%; background: #ffd23d; }
-.pz-sync.live .dot { background: #6dffa8; }
 .pz-back {
   background: rgba(255,255,255,.2); color: #fff; border: none;
   border-radius: 12px; padding: 8px 16px; font-weight: 800; font-size: .85rem;
@@ -46,32 +32,44 @@ body {
 }
 .pz-back:hover { background: rgba(255,255,255,.32); }
 
+/* Participantes en la barra superior */
+.pz-presence-bar { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.pz-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,.18); border-radius: 99px;
+  padding: 4px 11px; font-size: .8rem; font-weight: 800; color: #fff;
+}
+.pz-chip .pz-dot { width: 9px; height: 9px; border-radius: 50%; background: #c4bcd8; }
+.pz-chip.online .pz-dot { background: #6dffa8; box-shadow: 0 0 0 3px rgba(109,255,168,.3); }
+.pz-chip.offline { opacity: .6; }
+
 /* ===== Barra de herramientas ===== */
 .pz-toolbar {
-  background: #fff;
-  display: flex; align-items: center; gap: 6px;
-  padding: 8px 14px;
-  flex-shrink: 0;
-  flex-wrap: wrap;
-  box-shadow: 0 3px 10px rgba(80,50,160,.12);
-  z-index: 5;
+  background: #fff; display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px; flex-shrink: 0; flex-wrap: wrap;
+  box-shadow: 0 3px 10px rgba(80,50,160,.12); z-index: 5;
 }
 .pz-tool {
   width: 42px; height: 42px;
   border: 2px solid var(--purple-soft); background: #fff;
-  border-radius: 12px; cursor: pointer;
-  font-size: 1.2rem; display: flex; align-items: center; justify-content: center;
+  border-radius: 12px; cursor: pointer; font-size: 1.2rem;
+  display: flex; align-items: center; justify-content: center;
   transition: all .12s; flex-shrink: 0;
 }
 .pz-tool:hover { background: var(--purple-soft); }
 .pz-tool.active { background: var(--purple); border-color: var(--purple); box-shadow: 0 3px 8px rgba(124,92,255,.4); }
+.pz-tool.active#pzLock, .pz-tool.active#pzLockEl { background: var(--pink); border-color: var(--pink); }
+.pz-tool:disabled, .pz-label-btn.pz-disabled { opacity: .35; pointer-events: none; filter: grayscale(.5); }
 .pz-sep { width: 1px; height: 30px; background: var(--purple-soft); margin: 0 4px; flex-shrink: 0; }
 
-.pz-swatches { display: flex; gap: 5px; flex-wrap: wrap; }
-.pz-swatch {
-  width: 26px; height: 26px; border-radius: 50%;
-  border: 3px solid #fff; box-shadow: 0 0 0 1px #ddd; cursor: pointer;
+.pz-select {
+  height: 42px; border: 2px solid var(--purple-soft); border-radius: 12px;
+  padding: 0 10px; font-family: inherit; font-weight: 700; font-size: .82rem;
+  color: var(--purple-dark); background: #fff; cursor: pointer;
 }
+
+.pz-swatches { display: flex; gap: 5px; flex-wrap: wrap; }
+.pz-swatch { width: 26px; height: 26px; border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 1px #ddd; cursor: pointer; }
 .pz-swatch.active { box-shadow: 0 0 0 3px var(--purple); transform: scale(1.12); }
 
 .pz-size { display: flex; align-items: center; gap: 6px; font-size: .8rem; font-weight: 700; color: var(--text-soft); }
@@ -87,68 +85,77 @@ body {
 .pz-danger { color: var(--pink); border-color: #ffd0e2; }
 
 /* ===== Área de la pizarra ===== */
-.pz-stage { flex: 1; position: relative; overflow: hidden; background: #f4f1fb; }
+.pz-stage { flex: 1; position: relative; overflow: hidden; background: #e9e4f7; }
 #pzCanvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; }
 
-/* Entrada de texto flotante */
 #pzTextInput {
   position: absolute; z-index: 10; display: none;
   border: 2px dashed var(--purple); border-radius: 6px;
-  padding: 2px 6px; font-family: inherit; outline: none; background: rgba(255,255,255,.9);
-  min-width: 60px;
+  padding: 2px 6px; font-family: inherit; outline: none; background: rgba(255,255,255,.9); min-width: 60px;
 }
 
-.pz-tool.active#pzLock { background: var(--pink); border-color: var(--pink); }
-
-/* ===== Participantes ===== */
-.pz-presence {
-  position: absolute; top: 12px; right: 12px; z-index: 8;
-  background: rgba(255,255,255,.95); border-radius: 14px;
-  box-shadow: 0 4px 14px rgba(80,50,160,.18);
-  padding: 8px 12px; min-width: 130px; max-width: 200px;
+/* ===== Stickers ===== */
+.pz-stickers {
+  position: absolute; top: 10px; left: 10px; z-index: 11;
+  background: #fff; border-radius: 16px; box-shadow: 0 10px 30px rgba(80,50,160,.3);
+  padding: 12px; display: none; grid-template-columns: repeat(3, 1fr); gap: 8px; max-width: 340px;
 }
-.pz-presence .pz-pr-title { font-size: .68rem; font-weight: 800; color: var(--text-soft); text-transform: uppercase; margin-bottom: 5px; letter-spacing: .4px; }
-.pz-pr-item { display: flex; align-items: center; gap: 7px; font-size: .85rem; font-weight: 700; color: var(--text); padding: 2px 0; }
-.pz-pr-item .pz-pr-dot { width: 10px; height: 10px; border-radius: 50%; background: #c4bcd8; flex-shrink: 0; }
-.pz-pr-item.online .pz-pr-dot { background: #2eb872; box-shadow: 0 0 0 3px rgba(46,184,114,.2); }
+.pz-stickers.open { display: grid; }
+.pz-sticker-item {
+  border: 2px solid var(--purple-soft); border-radius: 12px; background: #faf8ff;
+  padding: 8px 6px; cursor: pointer; text-align: center; font-weight: 800; font-size: .72rem; color: var(--text);
+}
+.pz-sticker-item:hover { background: var(--purple-soft); }
+.pz-sticker-item .em { font-size: 1.6rem; display: block; }
 
 /* ===== Calculadora ===== */
 .pz-calc {
   position: absolute; bottom: 16px; right: 16px; z-index: 12;
   width: 230px; background: #fff; border-radius: 18px;
-  box-shadow: 0 12px 36px rgba(80,50,160,.35);
-  display: none; overflow: hidden;
+  box-shadow: 0 12px 36px rgba(80,50,160,.35); display: none; overflow: hidden;
 }
 .pz-calc.open { display: block; }
 .pz-calc-head {
-  background: linear-gradient(135deg, var(--purple), var(--pink));
-  color: #fff; font-weight: 800; font-size: .9rem;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 14px; cursor: move;
+  background: linear-gradient(135deg, var(--purple), var(--pink)); color: #fff;
+  font-weight: 800; font-size: .9rem; display: flex; align-items: center;
+  justify-content: space-between; padding: 10px 14px; cursor: move;
 }
-.pz-calc-head button { background: rgba(255,255,255,.25); border: none; color: #fff; width: 24px; height: 24px; border-radius: 7px; cursor: pointer; font-weight: 900; }
+.pz-calc-head button, .pz-perms-head button { background: rgba(255,255,255,.25); border: none; color: #fff; width: 24px; height: 24px; border-radius: 7px; cursor: pointer; font-weight: 900; }
 #pzCalcDisplay {
-  width: 100%; border: none; text-align: right;
-  font-size: 1.7rem; font-weight: 800; color: var(--purple-dark);
-  padding: 12px 16px; font-family: inherit; outline: none; background: #faf8ff;
+  width: 100%; border: none; text-align: right; font-size: 1.7rem; font-weight: 800;
+  color: var(--purple-dark); padding: 12px 16px; font-family: inherit; outline: none; background: #faf8ff;
 }
 .pz-calc-keys { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--purple-soft); }
-.pz-calc-keys button {
-  border: none; background: #fff; padding: 15px 0; font-size: 1.1rem; font-weight: 800;
-  color: var(--text); cursor: pointer; font-family: inherit;
-}
+.pz-calc-keys button { border: none; background: #fff; padding: 15px 0; font-size: 1.1rem; font-weight: 800; color: var(--text); cursor: pointer; font-family: inherit; }
 .pz-calc-keys button:hover { background: #f3eeff; }
 .pz-calc-keys button.op { color: var(--purple); }
 .pz-calc-keys button.eq { background: var(--purple); color: #fff; }
 .pz-calc-keys button.eq:hover { background: var(--purple-dark); }
 .pz-calc-keys button.clr { color: var(--pink); }
 
+/* ===== Permisos ===== */
+.pz-perms {
+  position: absolute; top: 16px; left: 50%; transform: translateX(-50%); z-index: 12;
+  width: 260px; background: #fff; border-radius: 18px;
+  box-shadow: 0 12px 36px rgba(80,50,160,.35); display: none; overflow: hidden;
+}
+.pz-perms.open { display: block; }
+.pz-perms-head {
+  background: linear-gradient(135deg, var(--purple), var(--pink)); color: #fff;
+  font-weight: 800; font-size: .9rem; display: flex; align-items: center;
+  justify-content: space-between; padding: 10px 14px;
+}
+.pz-perms-body { padding: 10px 16px 14px; }
+.pz-perm-row { display: flex; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--purple-soft); font-weight: 700; font-size: .9rem; }
+.pz-perm-row:last-child { border-bottom: none; }
+.pz-perm-row input { width: 20px; height: 20px; accent-color: var(--purple); cursor: pointer; }
+
 @media (max-width: 600px) {
-  .pz-topbar h1 { font-size: .95rem; }
+  .pz-topbar h1 { font-size: .9rem; }
   .pz-tool { width: 38px; height: 38px; font-size: 1.05rem; }
-  .pz-size input { width: 60px; }
-  .pz-presence { top: 8px; right: 8px; padding: 6px 10px; min-width: 110px; }
+  .pz-size input { width: 56px; }
   .pz-calc { width: 200px; bottom: 10px; right: 10px; }
   #pzCalcDisplay { font-size: 1.4rem; }
   .pz-calc-keys button { padding: 13px 0; font-size: 1rem; }
+  .pz-chip { font-size: .72rem; padding: 3px 9px; }
 }
