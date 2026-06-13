@@ -1,0 +1,154 @@
+/* ===== Pizarra colaborativa — estilos ===== */
+
+:root {
+  --purple: #7c5cff;
+  --purple-dark: #4f3a9e;
+  --purple-soft: #ece5ff;
+  --pink: #ff4f9a;
+  --text: #3c3160;
+  --text-soft: #8d83b5;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { height: 100%; overflow: hidden; }
+
+body {
+  font-family: "Nunito", "Segoe UI", system-ui, sans-serif;
+  background: #cfc3f5;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== Barra superior ===== */
+.pz-topbar {
+  background: linear-gradient(135deg, #8e5cff 0%, #c44df0 55%, #ff5fa2 100%);
+  color: #fff;
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 16px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+.pz-topbar h1 { font-size: 1.1rem; font-weight: 900; display: flex; align-items: center; gap: 8px; }
+.pz-topbar .spacer { flex: 1; }
+.pz-sync {
+  font-size: .8rem; font-weight: 800;
+  background: rgba(255,255,255,.18); padding: 5px 12px; border-radius: 99px;
+  display: flex; align-items: center; gap: 6px;
+}
+.pz-sync .dot { width: 9px; height: 9px; border-radius: 50%; background: #ffd23d; }
+.pz-sync.live .dot { background: #6dffa8; }
+.pz-back {
+  background: rgba(255,255,255,.2); color: #fff; border: none;
+  border-radius: 12px; padding: 8px 16px; font-weight: 800; font-size: .85rem;
+  cursor: pointer; font-family: inherit;
+}
+.pz-back:hover { background: rgba(255,255,255,.32); }
+
+/* ===== Barra de herramientas ===== */
+.pz-toolbar {
+  background: #fff;
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  box-shadow: 0 3px 10px rgba(80,50,160,.12);
+  z-index: 5;
+}
+.pz-tool {
+  width: 42px; height: 42px;
+  border: 2px solid var(--purple-soft); background: #fff;
+  border-radius: 12px; cursor: pointer;
+  font-size: 1.2rem; display: flex; align-items: center; justify-content: center;
+  transition: all .12s; flex-shrink: 0;
+}
+.pz-tool:hover { background: var(--purple-soft); }
+.pz-tool.active { background: var(--purple); border-color: var(--purple); box-shadow: 0 3px 8px rgba(124,92,255,.4); }
+.pz-sep { width: 1px; height: 30px; background: var(--purple-soft); margin: 0 4px; flex-shrink: 0; }
+
+.pz-swatches { display: flex; gap: 5px; flex-wrap: wrap; }
+.pz-swatch {
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 3px solid #fff; box-shadow: 0 0 0 1px #ddd; cursor: pointer;
+}
+.pz-swatch.active { box-shadow: 0 0 0 3px var(--purple); transform: scale(1.12); }
+
+.pz-size { display: flex; align-items: center; gap: 6px; font-size: .8rem; font-weight: 700; color: var(--text-soft); }
+.pz-size input { width: 90px; accent-color: var(--purple); }
+
+.pz-label-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  border: 2px solid var(--purple-soft); border-radius: 12px;
+  padding: 0 14px; height: 42px; cursor: pointer;
+  font-weight: 800; font-size: .82rem; color: var(--purple-dark); background: #fff;
+}
+.pz-label-btn:hover { background: var(--purple-soft); }
+.pz-danger { color: var(--pink); border-color: #ffd0e2; }
+
+/* ===== Área de la pizarra ===== */
+.pz-stage { flex: 1; position: relative; overflow: hidden; background: #f4f1fb; }
+#pzCanvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; }
+
+/* Entrada de texto flotante */
+#pzTextInput {
+  position: absolute; z-index: 10; display: none;
+  border: 2px dashed var(--purple); border-radius: 6px;
+  padding: 2px 6px; font-family: inherit; outline: none; background: rgba(255,255,255,.9);
+  min-width: 60px;
+}
+
+.pz-tool.active#pzLock { background: var(--pink); border-color: var(--pink); }
+
+/* ===== Participantes ===== */
+.pz-presence {
+  position: absolute; top: 12px; right: 12px; z-index: 8;
+  background: rgba(255,255,255,.95); border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(80,50,160,.18);
+  padding: 8px 12px; min-width: 130px; max-width: 200px;
+}
+.pz-presence .pz-pr-title { font-size: .68rem; font-weight: 800; color: var(--text-soft); text-transform: uppercase; margin-bottom: 5px; letter-spacing: .4px; }
+.pz-pr-item { display: flex; align-items: center; gap: 7px; font-size: .85rem; font-weight: 700; color: var(--text); padding: 2px 0; }
+.pz-pr-item .pz-pr-dot { width: 10px; height: 10px; border-radius: 50%; background: #c4bcd8; flex-shrink: 0; }
+.pz-pr-item.online .pz-pr-dot { background: #2eb872; box-shadow: 0 0 0 3px rgba(46,184,114,.2); }
+
+/* ===== Calculadora ===== */
+.pz-calc {
+  position: absolute; bottom: 16px; right: 16px; z-index: 12;
+  width: 230px; background: #fff; border-radius: 18px;
+  box-shadow: 0 12px 36px rgba(80,50,160,.35);
+  display: none; overflow: hidden;
+}
+.pz-calc.open { display: block; }
+.pz-calc-head {
+  background: linear-gradient(135deg, var(--purple), var(--pink));
+  color: #fff; font-weight: 800; font-size: .9rem;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; cursor: move;
+}
+.pz-calc-head button { background: rgba(255,255,255,.25); border: none; color: #fff; width: 24px; height: 24px; border-radius: 7px; cursor: pointer; font-weight: 900; }
+#pzCalcDisplay {
+  width: 100%; border: none; text-align: right;
+  font-size: 1.7rem; font-weight: 800; color: var(--purple-dark);
+  padding: 12px 16px; font-family: inherit; outline: none; background: #faf8ff;
+}
+.pz-calc-keys { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--purple-soft); }
+.pz-calc-keys button {
+  border: none; background: #fff; padding: 15px 0; font-size: 1.1rem; font-weight: 800;
+  color: var(--text); cursor: pointer; font-family: inherit;
+}
+.pz-calc-keys button:hover { background: #f3eeff; }
+.pz-calc-keys button.op { color: var(--purple); }
+.pz-calc-keys button.eq { background: var(--purple); color: #fff; }
+.pz-calc-keys button.eq:hover { background: var(--purple-dark); }
+.pz-calc-keys button.clr { color: var(--pink); }
+
+@media (max-width: 600px) {
+  .pz-topbar h1 { font-size: .95rem; }
+  .pz-tool { width: 38px; height: 38px; font-size: 1.05rem; }
+  .pz-size input { width: 60px; }
+  .pz-presence { top: 8px; right: 8px; padding: 6px 10px; min-width: 110px; }
+  .pz-calc { width: 200px; bottom: 10px; right: 10px; }
+  #pzCalcDisplay { font-size: 1.4rem; }
+  .pz-calc-keys button { padding: 13px 0; font-size: 1rem; }
+}

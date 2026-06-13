@@ -17,6 +17,7 @@
       </div>
       <div class="spacer"></div>
       <div class="session-actions">
+        <button class="btn secondary small" onclick="location.href='pizarra.html'">🎨 Pizarra</button>
         <button class="btn secondary small" onclick="location.href='dashboard.html'">Ver panel de Luanna</button>
         <button class="btn secondary small" onclick="logout()">Salir</button>
       </div>
@@ -96,11 +97,7 @@
 
     <!-- Exportar / Importar + notificaciones -->
     <div class="section toolbar-card">
-      <button class="btn secondary small" id="exportBtn">⬇ Exportar data.json</button>
-      <label class="btn secondary small" style="cursor:pointer">
-        ⬆ Importar data.json
-        <input type="file" id="importFile" accept=".json" style="display:none">
-      </label>
+      <button class="btn secondary small" id="exportBtn">⬇ Exportar copia de seguridad</button>
       <span class="save-ok" id="saveStatus"></span>
     </div>
 

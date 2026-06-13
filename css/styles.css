@@ -397,3 +397,51 @@ textarea { width: 100%; resize: vertical; }
   .hero h1 { font-size: 1.3rem; }
   .stat-card .value { font-size: 1.5rem; }
 }
+
+
+/* =====================================================
+   RESPONSIVE ADMIN — Mobile ≤480 · Tablet 481-1024
+   ===================================================== */
+
+img { max-width: 100%; }
+
+.hero h1 { font-size: clamp(1.15rem, 2.5vw, 1.7rem); }
+.section-title { font-size: clamp(.9rem, 1.5vw, 1rem); }
+
+@media (min-width: 481px) and (max-width: 1024px) {
+  .container { padding: 12px; }
+}
+
+@media (max-width: 480px) {
+  .container { padding: 8px; }
+
+  /* Hero apilado y centrado */
+  .hero { flex-direction: column; text-align: center; padding: 18px 14px; }
+  .hero .session-actions { justify-content: center; flex-wrap: wrap; }
+
+  /* Una sola columna */
+  .admin-grid { grid-template-columns: 1fr; }
+
+  /* Inputs y botones al 100% */
+  .form-row input[type="text"], .form-row input[type="password"],
+  .form-row input[type="date"], .form-row select { width: 100%; flex: 1 1 100% !important; }
+  .form-row label { width: auto !important; }
+  .btn { min-height: 44px; }
+  .btn.small, .section-title .btn { min-height: 40px; }
+  .toolbar-card .btn { flex: 1 1 45%; }
+
+  /* Filas de actividades: zona táctil de 44px en cada casilla */
+  .activity-row { grid-template-columns: 1fr 44px 44px 44px; gap: 2px; padding: 8px 10px; }
+  .cb-cell { min-height: 44px; min-width: 44px; }
+  .activity-row input[type="checkbox"], .activity-row input[type="radio"] { width: 24px; height: 24px; }
+  .activity-row .name { white-space: normal; line-height: 1.2; }
+
+  /* Historial con scroll interno (solo la tabla dentro del contenedor con scroll) */
+  .matrix-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .matrix-wrap .history-table { min-width: 560px; }
+  .admin-grid > *, .admin-col > * { min-width: 0; }
+
+  /* Mensajes */
+  .msg-admin-row { flex-wrap: wrap; }
+  .del-btn { min-height: 40px; min-width: 40px; }
+}

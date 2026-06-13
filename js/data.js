@@ -9,7 +9,9 @@ const ALL_ACTIVITIES = [...CONFIG.activities.responsibilities, ...CONFIG.activit
 async function loadData() {
   let base = { meta: {}, messages: [], records: {}, readings: [], mathTopics: [] };
   try {
-    const res = await fetch("data/data.json", { cache: "no-store" });
+    // El parámetro ?t= único evita cualquier caché (navegador y CDN de GitHub Pages),
+    // así Luanna siempre ve los datos recién publicados sin tener que refrescar.
+    const res = await fetch("data/data.json?t=" + Date.now(), { cache: "no-store" });
     if (res.ok) base = await res.json();
   } catch (e) {
     console.warn("No se pudo cargar data/data.json, usando datos locales.", e);

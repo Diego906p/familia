@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pizarra — Panel de Luanna</title>
+  <link rel="stylesheet" href="css/pizarra.css?v=3">
+</head>
+<body>
+
+  <div class="pz-topbar">
+    <h1>🎨 Pizarra colaborativa</h1>
+    <div class="pz-sync" id="pzSync"><span class="dot"></span><span id="pzSyncText">Local</span></div>
+    <div class="spacer"></div>
+    <button class="pz-back" id="pzBack">‹ Volver</button>
+  </div>
+
+  <div class="pz-toolbar">
+    <button class="pz-tool active" data-tool="select" title="Mover / seleccionar">✋</button>
+    <button class="pz-tool" data-tool="pencil" title="Lápiz">✏️</button>
+    <button class="pz-tool" data-tool="highlighter" title="Resaltador">🖍️</button>
+    <button class="pz-tool" data-tool="eraser" title="Borrador">🧽</button>
+    <button class="pz-tool" data-tool="text" title="Texto">🔤</button>
+    <span class="pz-sep"></span>
+    <button class="pz-tool" data-tool="line" title="Línea">╱</button>
+    <button class="pz-tool" data-tool="arrow" title="Flecha">➜</button>
+    <button class="pz-tool" data-tool="rect" title="Rectángulo">▭</button>
+    <button class="pz-tool" data-tool="circle" title="Círculo">◯</button>
+    <span class="pz-sep"></span>
+
+    <button class="pz-tool" id="pzZoomOut" title="Alejar">➖</button>
+    <button class="pz-tool" id="pzZoomReset" title="Restablecer zoom" style="font-size:.7rem;font-weight:800">100%</button>
+    <button class="pz-tool" id="pzZoomIn" title="Acercar">➕</button>
+    <button class="pz-tool" id="pzLock" title="Bloquear proporción de imagen">🔓</button>
+    <button class="pz-tool" id="pzCalc" title="Calculadora">🧮</button>
+    <span class="pz-sep"></span>
+
+    <div class="pz-swatches" id="pzSwatches"></div>
+    <span class="pz-sep"></span>
+
+    <label class="pz-size">Grosor
+      <input type="range" id="pzSize" min="1" max="40" value="4">
+    </label>
+    <span class="pz-sep"></span>
+
+    <label class="pz-label-btn">🖼️ Imagen
+      <input type="file" id="pzImage" accept="image/*" multiple style="display:none">
+    </label>
+    <button class="pz-label-btn pz-danger" id="pzClear">🗑️ Limpiar todo</button>
+  </div>
+
+  <div class="pz-stage" id="pzStage">
+    <canvas id="pzCanvas"></canvas>
+    <input type="text" id="pzTextInput">
+
+    <!-- Participantes -->
+    <div class="pz-presence" id="pzPresence"></div>
+
+    <!-- Calculadora -->
+    <div class="pz-calc" id="pzCalcPanel">
+      <div class="pz-calc-head">
+        <span>🧮 Calculadora</span>
+        <button id="pzCalcClose">✕</button>
+      </div>
+      <input type="text" id="pzCalcDisplay" readonly value="0">
+      <div class="pz-calc-keys" id="pzCalcKeys"></div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <script src="js/config.js?v=3"></script>
+  <script src="js/auth.js?v=3"></script>
+  <script src="js/pizarra.js?v=4"></script>
+</body>
+</html>

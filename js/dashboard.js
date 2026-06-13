@@ -27,7 +27,6 @@ function weekProgress() {
 
 (async function init() {
   if (!session) return;
-  if (session.role === "admin") document.getElementById("adminLink").style.display = "";
   DATA = await loadData();
   applyMoods(computeStats(DATA).currentStreak, weekProgress().pct);
   renderStatic();
@@ -82,6 +81,11 @@ const LEVEL_MSGS = {
     1: "¡Vamos por más! 💗",
     2: "¡Vamos bien, sigue así! 💗",
     3: "¡Tú puedes volver a empezar! 💪"
+  },
+  progress: {
+    1: "¡Excelente trabajo! 🎉",
+    2: "¡Vas muy bien, sigue así! ✨",
+    3: "¡Tú puedes lograrlo! ✨"
   }
 };
 
@@ -95,6 +99,7 @@ function renderKpis() {
   document.getElementById("kpiLevelMsg").innerHTML = LEVEL_MSGS.level[lvlWeek];
   document.getElementById("kpiStreakMsg").innerHTML = LEVEL_MSGS.streakKpi[lvlStreak];
   document.getElementById("streakCardMsg").innerHTML = LEVEL_MSGS.streakCard[lvlStreak];
+  document.getElementById("kpiProgressMsg").innerHTML = LEVEL_MSGS.progress[lvlWeek];
 
   document.getElementById("kpiLevelName").innerHTML =
     s.level.name.replace(" ", "<br>");

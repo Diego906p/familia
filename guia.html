@@ -164,7 +164,8 @@
       <li><a href="#reglas">8. Reglas: estrellas y niveles</a></li>
       <li><a href="#imagenes">9. Sistema de imágenes</a></li>
       <li><a href="#datos">10. Cómo se guardan los datos</a></li>
-      <li><a href="#mantenimiento">11. Mantenimiento y dudas</a></li>
+      <li><a href="#pizarra">11. Pizarra colaborativa</a></li>
+      <li><a href="#mantenimiento">12. Mantenimiento y dudas</a></li>
     </ul>
   </nav>
 
@@ -377,7 +378,45 @@ img/              → Carpeta local de imágenes (también en repo aparte)</code
 
   <!-- 11 -->
   <section class="card">
-    <h2 id="mantenimiento">🔧 11. Mantenimiento y dudas frecuentes</h2>
+    <h2 id="pizarra">🎨 11. Pizarra colaborativa</h2>
+    <p>Un módulo tipo pizarra para trabajar en tiempo real, ideal para resolver ejercicios o
+      explicar matemáticas sobre una imagen. Se entra con el botón <strong>🎨 Pizarra</strong>
+      desde el panel de Luanna o el de Papá.</p>
+
+    <h3>Herramientas</h3>
+    <ul>
+      <li><strong>✋ Mover</strong> — selecciona, mueve y (en imágenes) redimensiona con la manija de la esquina.</li>
+      <li><strong>✏️ Lápiz</strong>, <strong>🖍️ Resaltador</strong>, <strong>🧽 Borrador</strong> (borra el trazo que tocas), <strong>🔤 Texto</strong>.</li>
+      <li><strong>Figuras:</strong> línea, flecha, rectángulo, círculo.</li>
+      <li><strong>🖼️ Imagen</strong> — carga una o varias (ej. la foto de un ejercicio) para dibujar encima.</li>
+      <li><strong>Color</strong> (8 opciones) y <strong>grosor</strong> ajustable.</li>
+    </ul>
+
+    <h3>Zoom y proporción</h3>
+    <ul>
+      <li><strong>➕ / ➖ / 100%</strong> para acercar, alejar y restablecer. En la tablet: pellizca con dos dedos para hacer zoom y arrástralos para desplazarte.</li>
+      <li><strong>🔓 / 🔒</strong> bloquea la proporción al redimensionar una imagen (no se deforma).</li>
+    </ul>
+
+    <h3>Calculadora</h3>
+    <p>El botón <strong>🧮</strong> abre una calculadora flotante (se puede arrastrar) para ayudarse con cálculos. Se cierra con la ✕.</p>
+
+    <h3>Tiempo real y participantes</h3>
+    <p>Todo lo que se dibuja se sincroniza al instante entre los dispositivos conectados (vía Firebase).
+      Arriba a la derecha se ven los <strong>participantes</strong> con una luz
+      <span class="pill">verde = en línea</span> o gris = desconectado. El indicador
+      <strong>“En línea”</strong> de la barra superior confirma la conexión.</p>
+
+    <div class="callout info"><span class="ico">🧽</span>
+      <span>La pizarra es <strong>temporal</strong>: no se guarda nada. Cada vez que entras arranca en blanco
+      y solo ves lo que se dibuja a partir de ese momento.</span>
+    </div>
+    <a class="top-link" href="#inicio">↑ Volver al índice</a>
+  </section>
+
+  <!-- 12 -->
+  <section class="card">
+    <h2 id="mantenimiento">🔧 12. Mantenimiento y dudas frecuentes</h2>
     <h3>Publicar en GitHub Pages (primera vez)</h3>
     <ol>
       <li>Sube todo el contenido de la carpeta al repositorio.</li>

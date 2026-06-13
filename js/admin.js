@@ -29,7 +29,6 @@ function renderPapaAvatar() {
   document.getElementById("saveDayBtn").addEventListener("click", saveDay);
   document.getElementById("addMsgBtn").addEventListener("click", addMessage);
   document.getElementById("exportBtn").addEventListener("click", () => exportData(DATA));
-  document.getElementById("importFile").addEventListener("change", importFile);
   document.getElementById("publishBtn").addEventListener("click", publishData);
   document.getElementById("ghCfgBtn").addEventListener("click", toggleGhCfg);
   document.getElementById("ghSaveBtn").addEventListener("click", saveGhCfg);
@@ -98,21 +97,31 @@ async function publishData() {
       "Authorization": `Bearer ${cfg.token}`,
       "Accept": "application/vnd.github+json"
     };
-    // 1. Obtener el sha actual del archivo (necesario para actualizarlo)
+    // 1. Obtener el sha actual del archivo (necesario para actualizarlo).
+    //    Se fuerza sin caché (?t= único + no-store) para no recibir un sha viejo
+    //    que provocaría un conflicto 409 al publicar.
     let sha;
-    const cur = await fetch(`${api}?ref=${cfg.branch}`, { headers });
+    const cur = await fetch(`${api}?ref=${cfg.branch}&t=${Date.now()}`, {
+      headers, cache: "no-store"
+    });
     if (cur.ok) sha = (await cur.json()).sha;
     else if (cur.status !== 404) throw new Error(`No se pudo leer el repo (HTTP ${cur.status})`);
     // 2. Subir el data.json actualizado (contenido en base64, con soporte de tildes/emojis)
     const content = btoa(unescape(encodeURIComponent(JSON.stringify(DATA, null, 2))));
-    const res = await fetch(api, {
+    const put = (shaActual) => fetch(api, {
       method: "PUT",
       headers,
       body: JSON.stringify({
         message: `Actualización de actividades — ${todayStr()}`,
-        content, sha, branch: cfg.branch
+        content, sha: shaActual, branch: cfg.branch
       })
     });
+    let res = await put(sha);
+    // Si hubo conflicto de versión (409), releer el sha más reciente y reintentar una vez
+    if (res.status === 409) {
+      const re = await fetch(`${api}?ref=${cfg.branch}&t=${Date.now()}`, { headers, cache: "no-store" });
+      if (re.ok) res = await put((await re.json()).sha);
+    }
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
       throw new Error(err.message || `HTTP ${res.status}`);
@@ -341,28 +350,6 @@ function renderHistory() {
     </tr>`;
   }).join("");
   document.getElementById("historyTable").innerHTML = head + rows;
-}
-
-// ----- Importar -----
-
-function importFile(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    try {
-      const json = JSON.parse(reader.result);
-      if (!json.records) throw new Error("Formato inválido");
-      DATA = json;
-      saveData(DATA);
-      renderAll();
-      flashSaved("✔ Datos importados");
-    } catch {
-      flashSaved("✕ Archivo inválido");
-    }
-  };
-  reader.readAsText(file);
-  e.target.value = "";
 }
 
 function escapeHtml(t) {
