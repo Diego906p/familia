@@ -1,8 +1,8 @@
 {
   "meta": {
-    "lastUpdate": "2026-06-11",
+    "lastUpdate": "2026-06-12",
     "version": 1,
-    "savedAt": 1781232820497
+    "savedAt": 1781278623682
   },
   "messages": [
     {
@@ -11,30 +11,7 @@
     }
   ],
   "records": {
-    "2026-06-08": {
-      "make_bed": {
-        "done": false
-      },
-      "organize_room": {
-        "done": false
-      },
-      "wash_utensils": {
-        "done": false
-      },
-      "brush_teeth": {
-        "done": false
-      },
-      "reading": {
-        "done": false
-      },
-      "reading_summary": {
-        "done": false
-      },
-      "math": {
-        "done": false
-      },
-      "note": "Excelente día, muy concentrada en matemáticas."
-    },
+    "2026-06-08": {},
     "2026-06-09": {
       "make_bed": {
         "done": false
@@ -109,10 +86,6 @@
     }
   },
   "readings": [
-    {
-      "date": "2026-06-08",
-      "title": "El Principito (cap. 1-2)"
-    },
     {
       "date": "2026-06-09",
       "title": "El Principito (cap. 3-4)"
