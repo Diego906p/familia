@@ -139,6 +139,45 @@
       display: inline-block; margin-top: 8px; font-size: .82rem;
       color: var(--text-soft); text-decoration: none; font-weight: 700;
     }
+
+    /* ===== Ilustraciones (librería PNG) ===== */
+    .pic-row { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin: 14px 0 6px; }
+    .pic {
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      background: #faf8ff; border: 2px solid var(--purple-soft); border-radius: 16px;
+      padding: 12px 14px; min-width: 96px;
+    }
+    .pic img { object-fit: contain; }
+    .pic .cap { font-size: .74rem; font-weight: 800; color: var(--text-soft); text-align: center; line-height: 1.2; }
+    .pic .cap b { color: var(--purple-dark); display: block; font-size: .82rem; }
+
+    .act-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin: 12px 0; }
+    .act-card { display: flex; align-items: center; gap: 10px; background: #faf8ff; border: 2px solid var(--purple-soft); border-radius: 14px; padding: 8px 12px; }
+    .act-card img { width: 40px; height: auto; flex-shrink: 0; }
+    .act-card .t { font-weight: 800; font-size: .85rem; color: var(--text); }
+    .act-card .s { font-size: .75rem; font-weight: 800; color: #b8860b; }
+
+    .ach-row { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin: 12px 0; }
+    .ach { display: flex; flex-direction: column; align-items: center; gap: 5px; width: 110px; text-align: center; }
+    .ach img { width: 72px; height: 72px; }
+    .ach .cap { font-size: .72rem; font-weight: 800; color: var(--text-soft); line-height: 1.2; }
+
+    .mood-row { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0; }
+    .mood { flex: 1; min-width: 150px; border-radius: 16px; padding: 12px; text-align: center; }
+    .mood img { height: 64px; width: auto; }
+    .mood.l1 { background: var(--green-soft); }
+    .mood.l2 { background: var(--cream); }
+    .mood.l3 { background: var(--pink-soft); }
+    .mood .lv { font-weight: 900; margin-top: 6px; font-size: .9rem; }
+    .mood.l1 .lv { color: var(--green); }
+    .mood.l2 .lv { color: #b8860b; }
+    .mood.l3 .lv { color: var(--pink); }
+    .mood .rg { font-size: .74rem; font-weight: 700; color: var(--text-soft); }
+
+    .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 10px; margin: 12px 0; }
+    .gitem { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 6px; background: #faf8ff; border: 1px solid var(--purple-soft); border-radius: 12px; padding: 10px 6px; }
+    .gitem img { max-width: 64px; max-height: 56px; object-fit: contain; }
+    .gitem .gl { font-size: .68rem; font-weight: 700; color: var(--text-soft); text-align: center; line-height: 1.15; }
   </style>
 </head>
 <body>
@@ -178,6 +217,12 @@
     <p>La idea principal es que pueda <strong>compararse consigo misma</strong> y ver cuánto ha
       avanzado con el tiempo. La recompensa es el progreso visible: estrellas acumuladas, rachas,
       niveles y logros. No castiga incumplimientos ni mide rapidez.</p>
+    <div class="pic-row">
+      <div class="pic"><img src="https://raw.githubusercontent.com/Diego906p/imagenes/main/images/star_happy1.png" width="70" alt="estrella"><span class="cap"><b>Estrellas</b>se acumulan</span></div>
+      <div class="pic"><img src="https://raw.githubusercontent.com/Diego906p/imagenes/main/images/star_level.png" width="60" alt="nivel"><span class="cap"><b>Niveles</b>vas subiendo</span></div>
+      <div class="pic"><img src="https://raw.githubusercontent.com/Diego906p/imagenes/main/images/flame_streak1.png" width="60" alt="racha"><span class="cap"><b>Rachas</b>días seguidos</span></div>
+      <div class="pic"><img src="https://raw.githubusercontent.com/Diego906p/imagenes/main/images/trophy1.png" width="54" alt="trofeo"><span class="cap"><b>Logros</b>semanas perfectas</span></div>
+    </div>
     <div class="callout info"><span class="ico">🏗️</span>
       <span>Es un sitio <strong>estático</strong> (solo HTML, CSS y JavaScript), pensado para
       publicarse gratis en <strong>GitHub Pages</strong> y verse desde la tablet de Luanna o el celular de papá.</span>
@@ -219,6 +264,11 @@ img/              → Carpeta local de imágenes (también en repo aparte)</code
     <h2 id="usuarios">🔑 3. Usuarios y acceso</h2>
     <p>En <code>index.html</code> se elige el perfil (👧 <strong>Luanna</strong>, 👨‍💼 <strong>Papá</strong> o 🙋 <strong>Invitado</strong>);
       al elegir Luanna o Papá se completa el usuario y solo queda la contraseña.</p>
+    <div class="pic-row">
+      <div class="pic"><img src="https://raw.githubusercontent.com/Diego906p/imagenes/main/images/avatar_luanna1.png" width="92" alt="Luanna"><span class="cap"><b>Luanna</b>ve su progreso</span></div>
+      <div class="pic"><img src="https://raw.githubusercontent.com/Diego906p/imagenes/main/images/avatar_papa1.png" width="92" alt="Papá"><span class="cap"><b>Papá</b>administra todo</span></div>
+      <div class="pic"><img src="https://raw.githubusercontent.com/Diego906p/imagenes/main/images/avatar_xr1.png" width="92" alt="Invitado"><span class="cap"><b>Invitado</b>solo un nombre</span></div>
+    </div>
     <table>
       <tr><th>Perfil</th><th>Acceso</th><th>Permisos</th></tr>
       <tr><td>👧 Luanna</td><td><code>luanna</code> / <code>estrella</code></td><td>Ver su progreso · pizarra</td></tr>
@@ -318,10 +368,19 @@ img/              → Carpeta local de imágenes (también en repo aparte)</code
   <section class="card">
     <h2 id="reglas">⭐ 8. Reglas: estrellas y niveles</h2>
     <h3>Estrellas por actividad</h3>
-    <ul>
-      <li><strong>Responsabilidades</strong> (los 7 días): cama, cuarto, utensilios, dientes → <span class="pill star">⭐ 1 c/u</span></li>
-      <li><strong>Aprendizaje</strong> (lunes a viernes): lectura, resumen, matemáticas → <span class="pill star">⭐ 3 c/u</span></li>
-    </ul>
+    <p><strong>Responsabilidades</strong> (los 7 días) — ⭐ 1 cada una:</p>
+    <div class="act-list">
+      <div class="act-card"><img src="https://raw.githubusercontent.com/Diego906p/imagenes/main/images/act_bed.png" alt=""><div><div class="t">Tender mi cama</div><div class="s">⭐ 1</div></div></div>
+      <div class="act-card"><img src="https://raw.githubusercontent.com/Diego906p/imagenes/main/images/act_room.png" alt=""><div><div class="t">Ordenar mi cuarto</div><div class="s">⭐ 1</div></div></div>
+      <div class="act-card"><img src="https://raw.githubusercontent.com/Diego906p/imagenes/main/images/act_dishes.png" alt=""><div><div class="t">Lavar utensilios</div><div class="s">⭐ 1</div></div></div>
+      <div class="act-card"><img src="https://raw.githubusercontent.com/Diego906p/imagenes/main/images/act_teeth.png" alt=""><div><div class="t">Cepillar dientes</div><div class="s">⭐ 1</div></div></div>
+    </div>
+    <p><strong>Aprendizaje</strong> (lunes a viernes) — ⭐ 3 cada una:</p>
+    <div class="act-list">
+      <div class="act-card"><img src="https://raw.githubusercontent.com/Diego906p/imagenes/main/images/act_reading.png" alt=""><div><div class="t">Lectura</div><div class="s">⭐ 3</div></div></div>
+      <div class="act-card"><img src="https://raw.githubusercontent.com/Diego906p/imagenes/main/images/act_summary.png" alt=""><div><div class="t">Resumen de lectura</div><div class="s">⭐ 3</div></div></div>
+      <div class="act-card"><img src="https://raw.githubusercontent.com/Diego906p/imagenes/main/images/act_math.png" alt=""><div><div class="t">Matemáticas</div><div class="s">⭐ 3</div></div></div>
+    </div>
     <table>
       <tr><th>Periodo</th><th>Máximo</th></tr>
       <tr><td>Día entre semana</td><td>⭐ 13</td></tr>
@@ -332,15 +391,29 @@ img/              → Carpeta local de imágenes (también en repo aparte)</code
       <span>Las actividades de aprendizaje <strong>no aparecen</strong> los sábados y domingos: la app lo reconoce automáticamente.</span>
     </div>
     <h3>Sistema de 3 niveles</h3>
-    <p>Los indicadores (avatar, estrella, racha, copa) cambian según el desempeño:</p>
-    <table>
-      <tr><th>Nivel</th><th>Rango</th><th>Sensación</th></tr>
-      <tr><td><strong>Excelente ⭐</strong></td><td>80% – 100%</td><td>¡Vas increíble!</td></tr>
-      <tr><td><strong>En progreso 😊</strong></td><td>50% – 79%</td><td>¡Vas muy bien!</td></tr>
-      <tr><td><strong>Necesita ayuda 😔</strong></td><td>0% – 49%</td><td>¡Tú puedes lograrlo!</td></tr>
-    </table>
-    <p>Además hay <strong>rachas</strong> (días consecutivos completos), <strong>niveles con nombre</strong>
-      (Semillita, Brote Brillante, Exploradora Estrella…) y <strong>logros</strong> automáticos que se conservan para siempre.</p>
+    <p>Los indicadores (avatar, estrella, racha, copa) cambian de cara según el desempeño:</p>
+    <div class="mood-row">
+      <div class="mood l1"><img src="https://raw.githubusercontent.com/Diego906p/imagenes/main/images/star_happy1.png" alt=""><div class="lv">Excelente</div><div class="rg">80% – 100% · ¡Vas increíble!</div></div>
+      <div class="mood l2"><img src="https://raw.githubusercontent.com/Diego906p/imagenes/main/images/star_happy2.png" alt=""><div class="lv">En progreso</div><div class="rg">50% – 79% · ¡Vas muy bien!</div></div>
+      <div class="mood l3"><img src="https://raw.githubusercontent.com/Diego906p/imagenes/main/images/star_happy3.png" alt=""><div class="lv">Necesita ayuda</div><div class="rg">0% – 49% · ¡Tú puedes!</div></div>
+    </div>
+    <p>La <strong>racha</strong> usa la llamita 🔥 (y se vuelve hielo ❄️ cuando se rompe):</p>
+    <div class="mood-row">
+      <div class="mood l1"><img src="https://raw.githubusercontent.com/Diego906p/imagenes/main/images/flame_streak1.png" alt=""><div class="lv">3+ días</div><div class="rg">¡Llama encendida!</div></div>
+      <div class="mood l2"><img src="https://raw.githubusercontent.com/Diego906p/imagenes/main/images/flame_streak2.png" alt=""><div class="lv">1–2 días</div><div class="rg">Vas tomando ritmo</div></div>
+      <div class="mood l3"><img src="https://raw.githubusercontent.com/Diego906p/imagenes/main/images/flame_streak3.png" alt=""><div class="lv">Sin racha</div><div class="rg">¡Hoy puedes empezar!</div></div>
+    </div>
+
+    <h3>Logros especiales</h3>
+    <p>Se desbloquean solos y se conservan para siempre:</p>
+    <div class="ach-row">
+      <div class="ach"><img src="https://raw.githubusercontent.com/Diego906p/imagenes/main/images/ach_streak.png" alt=""><span class="cap">7 días seguidos</span></div>
+      <div class="ach"><img src="https://raw.githubusercontent.com/Diego906p/imagenes/main/images/ach_week.png" alt=""><span class="cap">Semana perfecta</span></div>
+      <div class="ach"><img src="https://raw.githubusercontent.com/Diego906p/imagenes/main/images/ach_reading.png" alt=""><span class="cap">Lecturas</span></div>
+      <div class="ach"><img src="https://raw.githubusercontent.com/Diego906p/imagenes/main/images/ach_summary.png" alt=""><span class="cap">Resúmenes</span></div>
+      <div class="ach"><img src="https://raw.githubusercontent.com/Diego906p/imagenes/main/images/ach_math.png" alt=""><span class="cap">Matemáticas</span></div>
+    </div>
+    <p>También hay <strong>niveles con nombre</strong> (Semillita, Brote Brillante, Exploradora Estrella…) que suben con las estrellas acumuladas.</p>
     <a class="top-link" href="#inicio">↑ Volver al índice</a>
   </section>
 
@@ -360,6 +433,11 @@ img/              → Carpeta local de imágenes (también en repo aparte)</code
       <span>En <code>js/images.js</code>, <code>USE_REMOTE_IMAGES = true</code> usa el repo de GitHub;
       ponlo en <code>false</code> para usar la carpeta local <code>img/</code>.</span>
     </div>
+
+    <h3>Galería de la librería</h3>
+    <p>Estas son las imágenes que usa la app (todas viven en el repo de imágenes):</p>
+    <div class="gallery" id="pngGallery"></div>
+
     <a class="top-link" href="#inicio">↑ Volver al índice</a>
   </section>
 
@@ -520,5 +598,30 @@ img/              → Carpeta local de imágenes (también en repo aparte)</code
   </footer>
 
 </div>
+
+<script>
+  // Galería de toda la librería de imágenes
+  (function () {
+    var BASE = "https://raw.githubusercontent.com/Diego906p/imagenes/main/images/";
+    var LIB = [
+      ["avatar_luanna1.png", "Luanna"], ["avatar_papa1.png", "Papá"], ["avatar_xr1.png", "Invitado"],
+      ["star_happy1.png", "Estrella"], ["star_level.png", "Nivel"], ["flame_streak1.png", "Racha 🔥"],
+      ["flame_streak3.png", "Racha rota ❄️"], ["cat_streak1.png", "Gatita"], ["trophy1.png", "Trofeo"],
+      ["act_bed.png", "Cama"], ["act_room.png", "Cuarto"], ["act_dishes.png", "Utensilios"], ["act_teeth.png", "Dientes"],
+      ["act_reading.png", "Lectura"], ["act_summary.png", "Resumen"], ["act_math.png", "Matemáticas"],
+      ["ach_streak.png", "Logro racha"], ["ach_week.png", "Logro semana"], ["ach_reading.png", "Logro lectura"],
+      ["ach_summary.png", "Logro resumen"], ["ach_math.png", "Logro mate"],
+      ["house_chores.png", "Responsab."], ["learning_c.png", "Aprendizaje"], ["my_progress.png", "Progreso"],
+      ["ac_medal.png", "Medalla"], ["calendar_1.png", "Calendario"], ["heart_lilac.png", "Corazón"],
+      ["house_progress.png", "Casita"], ["books_progress.png", "Libros"],
+      ["garden_character.png", "Jardín"], ["garden_castle.png", "Castillo"], ["footer_star.png", "Estrella pie"]
+    ];
+    var box = document.getElementById("pngGallery");
+    if (!box) return;
+    box.innerHTML = LIB.map(function (it) {
+      return '<div class="gitem"><img src="' + BASE + it[0] + '" alt="' + it[1] + '" loading="lazy"><span class="gl">' + it[1] + '</span></div>';
+    }).join("");
+  })();
+</script>
 </body>
 </html>

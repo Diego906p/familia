@@ -27,7 +27,7 @@
       border-radius: 30px;
       box-shadow: 0 18px 50px rgba(80, 50, 160, .3);
       padding: 34px 30px 30px;
-      width: 100%; max-width: 420px;
+      width: 100%; max-width: 480px;
       text-align: center;
     }
     h1 { color: var(--purple-dark); font-size: 1.5rem; font-weight: 900; }
@@ -116,7 +116,7 @@
         <span class="role-name">Papá</span>
       </button>
       <button type="button" class="role-btn" data-role="guest">
-        <span class="avatar-wrap emoji-av">🙋</span>
+        <span class="avatar-wrap"><img id="imgGuest" alt="Invitado"></span>
         <span class="role-name">Invitado</span>
       </button>
     </div>
@@ -141,6 +141,7 @@
     // Avatares (siempre la versión contenta en el login)
     document.getElementById("imgLuanna").src = IMAGES.avatar_luanna.variants.replace("{n}", 1);
     document.getElementById("imgPapa").src = IMAGES.avatar_papa.variants.replace("{n}", 1);
+    document.getElementById("imgGuest").src = "https://raw.githubusercontent.com/Diego906p/imagenes/main/images/avatar_xr1.png";
 
     let selectedRole = "child";
     const USERNAMES = { child: "luanna", admin: "admin" };
