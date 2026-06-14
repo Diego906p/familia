@@ -1,6 +1,6 @@
 // ===== Dashboard v2 — réplica de propuesta3.png =====
 
-const session = requireAuth(["child", "admin"]);
+const session = requireAuth(["child", "admin", "guest"]);
 let DATA = null;
 let currentMonday = mondayOf(new Date());
 

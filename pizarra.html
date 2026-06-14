@@ -4,101 +4,164 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pizarra — Panel de Luanna</title>
-  <link rel="stylesheet" href="css/pizarra.css?v=5">
+  <link rel="stylesheet" href="css/pizarra.css?v=8">
 </head>
 <body>
+<div class="pz-app" id="pzApp">
 
+  <!-- Barra superior -->
   <div class="pz-topbar">
     <h1>🎨 Pizarra colaborativa</h1>
     <div class="pz-presence-bar" id="pzPresence"></div>
+    <span class="pz-role-badge" id="pzRoleBadge" style="display:none">Administrador</span>
     <div class="spacer"></div>
+    <button class="pz-top-btn" data-tool="laser" id="pzLaserTop" title="Puntero láser">🔦 Láser</button>
     <button class="pz-back" id="pzBack">‹ Volver</button>
   </div>
 
-  <div class="pz-toolbar">
-    <button class="pz-tool active" data-tool="select" title="Seleccionar / mover">↖️</button>
-    <button class="pz-tool" data-tool="pan" title="Desplazar lienzo">🖐️</button>
-    <button class="pz-tool" data-tool="pencil" title="Lápiz">✏️</button>
-    <button class="pz-tool" data-tool="highlighter" title="Resaltador">🖍️</button>
-    <button class="pz-tool" data-tool="eraser" data-perm="eraser" title="Borrador">🧽</button>
-    <button class="pz-tool" data-tool="text" data-perm="text" title="Texto">🔤</button>
-    <button class="pz-tool" data-tool="laser" title="Puntero láser">🔦</button>
-    <span class="pz-sep"></span>
+  <div class="pz-body">
 
-    <button class="pz-tool" data-tool="line" title="Línea">╱</button>
-    <button class="pz-tool" data-tool="arrow" title="Flecha">➜</button>
-    <button class="pz-tool" data-tool="rect" title="Rectángulo">▭</button>
-    <button class="pz-tool" data-tool="circle" title="Círculo">◯</button>
-    <button class="pz-tool" id="pzStickerBtn" data-perm="stickers" title="Stickers y sellos">🏷️</button>
-    <span class="pz-sep"></span>
-
-    <button class="pz-tool" id="pzUndo" title="Deshacer">↶</button>
-    <button class="pz-tool" id="pzRedo" title="Rehacer">↷</button>
-    <span class="pz-sep"></span>
-
-    <button class="pz-tool" id="pzZoomOut" title="Alejar">➖</button>
-    <button class="pz-tool" id="pzZoomReset" title="Restablecer zoom" style="font-size:.7rem;font-weight:800">100%</button>
-    <button class="pz-tool" id="pzZoomIn" title="Acercar">➕</button>
-    <span class="pz-sep"></span>
-
-    <button class="pz-tool" id="pzLock" title="Bloquear proporción de imagen">🔓</button>
-    <button class="pz-tool" id="pzLockEl" title="Fijar / liberar elemento seleccionado">📌</button>
-    <button class="pz-tool" id="pzCalc" data-perm="calculator" title="Calculadora">🧮</button>
-    <button class="pz-tool" id="pzPerms" title="Permisos de Luanna" style="display:none">🛡️</button>
-    <span class="pz-sep"></span>
-
-    <select id="pzBg" class="pz-select" title="Fondo">
-      <option value="white">Fondo blanco</option>
-      <option value="grid">Cuadriculado</option>
-      <option value="lines">Rayado</option>
-    </select>
-    <span class="pz-sep"></span>
-
-    <div class="pz-swatches" id="pzSwatches"></div>
-    <span class="pz-sep"></span>
-
-    <label class="pz-size">Grosor
-      <input type="range" id="pzSize" min="1" max="40" value="4">
-    </label>
-    <span class="pz-sep"></span>
-
-    <label class="pz-label-btn" data-perm="image">🖼️ Imagen
-      <input type="file" id="pzImage" accept="image/*" multiple style="display:none">
-    </label>
-    <button class="pz-label-btn pz-danger" id="pzClear" data-perm="clear">🗑️ Limpiar todo</button>
-  </div>
-
-  <div class="pz-stage" id="pzStage">
-    <canvas id="pzCanvas"></canvas>
-    <input type="text" id="pzTextInput">
-
-    <!-- Paleta de stickers -->
-    <div class="pz-stickers" id="pzStickerPalette"></div>
-
-    <!-- Calculadora -->
-    <div class="pz-calc" id="pzCalcPanel">
-      <div class="pz-calc-head">
-        <span>🧮 Calculadora</span>
-        <button id="pzCalcClose">✕</button>
-      </div>
-      <input type="text" id="pzCalcDisplay" readonly value="0">
-      <div class="pz-calc-keys" id="pzCalcKeys"></div>
+    <!-- Barra lateral de herramientas -->
+    <div class="pz-sidebar">
+      <button class="pz-tool active" data-tool="select" title="Seleccionar (V)">↖️</button>
+      <button class="pz-tool" data-tool="directselect" title="Selección directa de nodos (A)">🧷</button>
+      <button class="pz-tool" data-tool="pan" title="Desplazar lienzo (H)">🖐️</button>
+      <span class="pz-sep-h"></span>
+      <button class="pz-tool" data-tool="pencil" title="Lápiz (B)">✏️</button>
+      <button class="pz-tool" data-tool="highlighter" title="Resaltador">🖍️</button>
+      <button class="pz-tool" data-tool="eraser" data-perm="eraser" title="Borrador (E)">🧽</button>
+      <button class="pz-tool" data-tool="fill" title="Bote de relleno">🪣</button>
+      <button class="pz-tool" data-tool="text" data-perm="text" title="Texto (T)">🔤</button>
+      <span class="pz-sep-h"></span>
+      <button class="pz-tool" data-tool="line" title="Línea">╱</button>
+      <button class="pz-tool" data-tool="arrow" title="Flecha">➜</button>
+      <button class="pz-tool" data-tool="rect" title="Rectángulo (M)">▭</button>
+      <button class="pz-tool" data-tool="circle" title="Círculo (L)">◯</button>
+      <button class="pz-tool" id="pzStickerBtn" data-perm="stickers" title="Stickers y sellos">🏷️</button>
+      <span class="pz-sep-h"></span>
+      <label class="pz-tool" data-perm="image" title="Insertar imagen">🖼️
+        <input type="file" id="pzImage" accept="image/*" multiple style="display:none">
+      </label>
+      <button class="pz-tool" id="pzCalc" data-perm="calculator" title="Calculadora">🧮</button>
+      <button class="pz-tool" id="pzLockEl" title="Fijar / liberar elemento">📌</button>
     </div>
 
-    <!-- Permisos (solo Papá) -->
-    <div class="pz-perms" id="pzPermsPanel">
-      <div class="pz-perms-head">
-        <span>🛡️ Permisos de Luanna</span>
-        <button id="pzPermsClose">✕</button>
+    <!-- Centro: subbarra contextual + lienzo -->
+    <div class="pz-center">
+      <div class="pz-subbar">
+        <button class="pz-tool sm" id="pzUndo" title="Deshacer (Ctrl+Z)">↶</button>
+        <button class="pz-tool sm" id="pzRedo" title="Rehacer (Ctrl+Y)">↷</button>
+        <span class="pz-sep"></span>
+        <div class="pz-swatches" id="pzSwatches"></div>
+        <button class="pz-tool sm" id="pzStyleBtn" title="Color y estilo">🎨</button>
+        <span class="pz-sep"></span>
+        <label class="pz-size">Grosor <input type="range" id="pzSize" min="1" max="40" value="4"></label>
+        <button class="pz-tool sm" id="pzLock" title="Bloquear proporción">🔓</button>
+        <span class="pz-sep"></span>
+        <button class="pz-tool sm" id="pzZoomOut" title="Alejar">➖</button>
+        <button class="pz-tool sm" id="pzZoomReset" title="Restablecer zoom" style="font-size:.7rem;font-weight:800">100%</button>
+        <button class="pz-tool sm" id="pzZoomIn" title="Acercar">➕</button>
+        <span class="spacer"></span>
+        <button class="pz-label-btn pz-danger sm" id="pzClear" data-perm="clear">🗑️ Limpiar todo</button>
       </div>
-      <div class="pz-perms-body" id="pzPermsBody"></div>
+
+      <div class="pz-stage" id="pzStage">
+        <canvas id="pzCanvas"></canvas>
+        <textarea id="pzTextInput" spellcheck="false"></textarea>
+
+        <!-- Barra de formato de texto -->
+        <div class="pz-textbar" id="pzTextBar">
+          <button id="pzTxtBold" title="Negrita"><b>B</b></button>
+          <button id="pzTxtItalic" title="Cursiva"><i>I</i></button>
+          <span class="pz-sep"></span>
+          <button id="pzTxtLeft" title="Izquierda">⬅</button>
+          <button id="pzTxtCenter" title="Centro">⬌</button>
+          <button id="pzTxtRight" title="Derecha">➡</button>
+          <span class="pz-sep"></span>
+          <button id="pzTxtMinus" title="Menos tamaño">A−</button>
+          <button id="pzTxtPlus" title="Más tamaño">A＋</button>
+          <input type="color" id="pzTxtColor" title="Color del texto" value="#3c3160">
+        </div>
+
+        <!-- Barra contextual de selección -->
+        <div class="pz-selbar" id="pzSelBar">
+          <span class="pz-selbar-count" id="pzSelCount"></span>
+          <span class="pz-sep"></span>
+          <label class="pz-op">Opacidad <input type="range" id="pzOpacity" min="0" max="100" value="100"></label>
+          <span class="pz-op-val" id="pzOpacityVal">100%</span>
+          <span class="pz-sep"></span>
+          <button class="pz-mini" id="pzFront" title="Traer al frente">⬆️</button>
+          <button class="pz-mini" id="pzForward" title="Adelantar">🔼</button>
+          <button class="pz-mini" id="pzBackward" title="Atrasar">🔽</button>
+          <button class="pz-mini" id="pzBack2" title="Enviar al fondo">⬇️</button>
+          <span class="pz-sep"></span>
+          <button class="pz-mini" id="pzGroup" title="Agrupar (Ctrl+G)">🔗</button>
+          <button class="pz-mini" id="pzUngroup" title="Desagrupar (Ctrl+Shift+G)">✂️</button>
+          <button class="pz-mini" id="pzDup" title="Duplicar (Ctrl+D)">⧉</button>
+          <button class="pz-mini" id="pzDel" title="Eliminar (Supr)">🗑️</button>
+        </div>
+
+        <!-- Panel de color y estilo -->
+        <div class="pz-style" id="pzStylePanel">
+          <div class="pz-style-head"><span>🎨 Color y estilo</span><button id="pzStyleClose">✕</button></div>
+          <div class="pz-style-body">
+            <div class="pz-style-row"><label>Borde</label><input type="color" id="pzStrokeColor" value="#3c3160"></div>
+            <div class="pz-style-row"><label>Relleno</label><input type="color" id="pzFillColor" value="#ffd23d">
+              <label class="pz-chk"><input type="checkbox" id="pzFillOn"> Sin relleno</label></div>
+            <div class="pz-style-row"><label>Estilo</label>
+              <select id="pzBorderStyle" class="pz-select">
+                <option value="solid">Sólido ───</option><option value="dashed">Guiones ┄┄</option><option value="dotted">Puntos ┈┈</option>
+              </select></div>
+            <div class="pz-style-row"><label>Pincel</label>
+              <select id="pzFidelity" class="pz-select">
+                <option value="precise">Precisión</option><option value="balanced" selected>Equilibrado</option><option value="smooth">Suavizado</option>
+              </select></div>
+            <div class="pz-style-recents"><span class="pz-recent-label">Recientes</span><div class="pz-recent-row" id="pzRecents"></div></div>
+          </div>
+        </div>
+
+        <!-- Paleta de stickers -->
+        <div class="pz-stickers" id="pzStickerPalette"></div>
+
+        <!-- Calculadora -->
+        <div class="pz-calc" id="pzCalcPanel">
+          <div class="pz-calc-head"><span>🧮 Calculadora</span><button id="pzCalcClose">✕</button></div>
+          <input type="text" id="pzCalcDisplay" readonly value="0">
+          <div class="pz-calc-keys" id="pzCalcKeys"></div>
+        </div>
+      </div>
     </div>
+
+    <!-- Panel derecho (solo Papá): Fondo · Capas · Permisos -->
+    <div class="pz-rightpanel" id="pzRightPanel" style="display:none">
+      <div class="pz-rp-section">
+        <div class="pz-rp-title">🎨 Fondo</div>
+        <select id="pzBg" class="pz-select" style="width:100%">
+          <option value="white">Fondo blanco</option>
+          <option value="grid">Cuadriculado</option>
+          <option value="lines">Rayado</option>
+        </select>
+      </div>
+      <div class="pz-rp-section pz-rp-layers">
+        <div class="pz-rp-title">🗂️ Capas</div>
+        <div class="pz-layers" id="pzLayers"></div>
+      </div>
+      <div class="pz-rp-section">
+        <div class="pz-rp-title">🛡️ Permisos de Luanna</div>
+        <div class="pz-perms-body" id="pzPermsBody"></div>
+      </div>
+    </div>
+
   </div>
+</div>
+
+  <!-- Botón oculto de permisos (compatibilidad con la lógica) -->
+  <button id="pzPerms" style="display:none"></button>
 
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
   <script src="js/config.js?v=3"></script>
-  <script src="js/auth.js?v=3"></script>
-  <script src="js/pizarra.js?v=5"></script>
+  <script src="js/auth.js?v=6"></script>
+  <script src="js/pizarra.js?v=8"></script>
 </body>
 </html>

@@ -50,6 +50,10 @@
       transition: all .2s;
     }
     .role-btn .avatar-wrap img { width: 100%; height: auto; display: block; }
+    .role-btn .avatar-wrap.emoji-av { font-size: 3.4rem; }
+    .role-btn[data-role="guest"].active .avatar-wrap { border-color: var(--purple); box-shadow: 0 6px 18px rgba(124, 92, 255, .35); }
+    .role-btn[data-role="guest"].active .role-name { color: var(--purple); }
+    @media (max-width: 420px) { .role-btn .avatar-wrap { width: 84px; height: 84px; } .role-btn .avatar-wrap.emoji-av { font-size: 2.6rem; } .role-switch { gap: 6px; } .role-btn { padding: 8px; } }
     .role-btn .role-name {
       font-weight: 900; font-size: 1rem; color: var(--text-soft);
       transition: color .2s;
@@ -111,11 +115,16 @@
         <span class="avatar-wrap"><img id="imgPapa" alt="Papá"></span>
         <span class="role-name">Papá</span>
       </button>
+      <button type="button" class="role-btn" data-role="guest">
+        <span class="avatar-wrap emoji-av">🙋</span>
+        <span class="role-name">Invitado</span>
+      </button>
     </div>
 
     <form id="loginForm">
-      <input type="text" id="username" placeholder="Usuario" autocomplete="username" required>
-      <input type="password" id="password" placeholder="Contraseña" autocomplete="current-password" required>
+      <input type="text" id="username" placeholder="Usuario" autocomplete="username">
+      <input type="password" id="password" placeholder="Contraseña" autocomplete="current-password">
+      <input type="text" id="guestName" placeholder="Tu nombre" maxlength="24" style="display:none">
       <button type="submit" class="btn-enter">Entrar ✨</button>
     </form>
     <div class="login-error" id="loginError"></div>
@@ -123,7 +132,7 @@
 
   <script src="js/config.js?v=3"></script>
   <script src="js/images.js?v=3"></script>
-  <script src="js/auth.js?v=3"></script>
+  <script src="js/auth.js?v=6"></script>
   <script>
     // Si ya hay sesión, ir directo a su panel
     const s = getSession();
@@ -135,37 +144,56 @@
 
     let selectedRole = "child";
     const USERNAMES = { child: "luanna", admin: "admin" };
-    document.getElementById("username").value = USERNAMES[selectedRole];
+    const userInput = document.getElementById("username");
+    const passInput = document.getElementById("password");
+    const guestInput = document.getElementById("guestName");
+    userInput.value = USERNAMES[selectedRole];
+
+    function applyRoleUI() {
+      const isGuest = selectedRole === "guest";
+      userInput.style.display = isGuest ? "none" : "";
+      passInput.style.display = isGuest ? "none" : "";
+      guestInput.style.display = isGuest ? "" : "none";
+      document.getElementById("loginError").textContent = "";
+      if (isGuest) {
+        // Nombre provisional sugerido (obligatorio cambiarlo o dejarlo)
+        if (!guestInput.value) guestInput.value = "Invitado " + Math.floor(100 + Math.random() * 900);
+        guestInput.focus(); guestInput.select();
+      } else {
+        userInput.value = USERNAMES[selectedRole];
+        passInput.value = "";
+        passInput.focus();
+      }
+    }
 
     document.querySelectorAll(".role-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         document.querySelectorAll(".role-btn").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         selectedRole = btn.dataset.role;
-        // Al elegir perfil se completa el usuario; solo queda escribir la contraseña
-        document.getElementById("username").value = USERNAMES[selectedRole];
-        document.getElementById("password").value = "";
-        document.getElementById("password").focus();
-        document.getElementById("loginError").textContent = "";
+        applyRoleUI();
       });
     });
 
     document.getElementById("loginForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const err = document.getElementById("loginError");
-      const session = await login(
-        document.getElementById("username").value,
-        document.getElementById("password").value
-      );
-      if (!session) {
-        err.textContent = "Usuario o contraseña incorrectos 😕";
+
+      // --- Invitado ---
+      if (selectedRole === "guest") {
+        const name = guestInput.value.trim();
+        if (!name) { err.textContent = "Por favor escribe tu nombre 😊"; return; }
+        loginGuest(name);
+        window.location.href = "dashboard.html";
         return;
       }
+
+      // --- Luanna / Papá ---
+      const session = await login(userInput.value, passInput.value);
+      if (!session) { err.textContent = "Usuario o contraseña incorrectos 😕"; return; }
       if (session.role !== selectedRole) {
         sessionStorage.removeItem("luanna_session");
-        err.textContent = selectedRole === "admin"
-          ? "Esas credenciales no son de Papá 😕"
-          : "Esas credenciales no son de Luanna 😕";
+        err.textContent = selectedRole === "admin" ? "Esas credenciales no son de Papá 😕" : "Esas credenciales no son de Luanna 😕";
         return;
       }
       window.location.href = session.role === "admin" ? "admin.html" : "dashboard.html";

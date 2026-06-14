@@ -15,6 +15,21 @@ async function login(username, password) {
   return session;
 }
 
+// Invitados: sin contraseña, solo un nombre obligatorio.
+function loginGuest(name) {
+  const clean = (name || "").trim().slice(0, 24);
+  if (!clean) return null;
+  const session = {
+    username: "guest",
+    role: "guest",
+    name: clean,
+    guestId: "g" + Math.random().toString(36).slice(2, 8),
+    ts: Date.now()
+  };
+  sessionStorage.setItem("luanna_session", JSON.stringify(session));
+  return session;
+}
+
 function getSession() {
   try {
     return JSON.parse(sessionStorage.getItem("luanna_session"));

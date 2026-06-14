@@ -99,9 +99,9 @@
 
     table {
       width: 100%; border-collapse: collapse; margin: 8px 0 16px;
-      font-size: .9rem;
+      font-size: .9rem; display: block; overflow-x: auto;
     }
-    th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--purple-soft); }
+    th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--purple-soft); white-space: nowrap; }
     th { background: var(--purple-soft); color: var(--purple-dark); font-weight: 800; }
     td code { font-size: .85em; }
 
@@ -217,13 +217,18 @@ img/              → Carpeta local de imágenes (también en repo aparte)</code
   <!-- 3 -->
   <section class="card">
     <h2 id="usuarios">🔑 3. Usuarios y acceso</h2>
-    <p>En <code>index.html</code> se elige el perfil (👧 <strong>Luanna</strong> o 👨‍💼 <strong>Papá</strong>);
-      al elegirlo se completa el usuario y solo queda escribir la contraseña.</p>
+    <p>En <code>index.html</code> se elige el perfil (👧 <strong>Luanna</strong>, 👨‍💼 <strong>Papá</strong> o 🙋 <strong>Invitado</strong>);
+      al elegir Luanna o Papá se completa el usuario y solo queda la contraseña.</p>
     <table>
-      <tr><th>Perfil</th><th>Usuario</th><th>Contraseña</th><th>Permisos</th></tr>
-      <tr><td>👧 Luanna</td><td><code>luanna</code></td><td><code>estrella</code></td><td>Solo ver su progreso</td></tr>
-      <tr><td>👨‍💼 Papá</td><td><code>admin</code></td><td><code>papa2026</code></td><td>Registrar y administrar</td></tr>
+      <tr><th>Perfil</th><th>Acceso</th><th>Permisos</th></tr>
+      <tr><td>👧 Luanna</td><td><code>luanna</code> / <code>estrella</code></td><td>Ver su progreso · pizarra</td></tr>
+      <tr><td>👨‍💼 Papá</td><td><code>admin</code> / <code>papa2026</code></td><td>Registrar, administrar · pizarra</td></tr>
+      <tr><td>🙋 Invitado</td><td>solo un nombre (sin contraseña)</td><td>Ver el dashboard · pizarra</td></tr>
     </table>
+    <h3>Invitados</h3>
+    <p>El perfil <strong>Invitado</strong> pide solo un <strong>nombre</strong> (obligatorio; se sugiere uno provisional como “Invitado 482”).
+      Sirve para que familiares o amigos se sumen a la <strong>pizarra</strong> y vean el dashboard, sin tocar la administración.
+      Pueden estar <strong>hasta 10 invitados</strong> a la vez en la pizarra; cada uno aparece con su nombre y un color propio.</p>
     <h3>Cambiar una contraseña</h3>
     <p>Las contraseñas se guardan como hash <strong>SHA-256</strong> en <code>js/config.js</code>.
       Para cambiarlas hay que generar el hash de la nueva clave y reemplazarlo ahí.</p>
@@ -394,6 +399,24 @@ img/              → Carpeta local de imágenes (también en repo aparte)</code
       <li><strong>🖼️ Imagen</strong> — carga la foto de un ejercicio para dibujar encima · <strong>Color</strong> (8) y <strong>grosor</strong> ajustables.</li>
     </ul>
 
+    <h3>Texto enriquecido</h3>
+    <ul>
+      <li>Con la herramienta <strong>🔤 Texto</strong>, <strong>arrastra</strong> para crear una caja de texto (o un clic para una caja estándar).</li>
+      <li>Mientras escribes aparece una barra para <strong>Negrita</strong>, <strong>Cursiva</strong>, <strong>alineación</strong> (izq/centro/der), <strong>tamaño</strong> (A− / A＋) y <strong>color</strong>.</li>
+      <li><strong>Doble clic</strong> sobre un texto para volver a editarlo.</li>
+      <li>Con la herramienta Seleccionar, arrastra la <strong>manija de la esquina</strong> para escalar el texto.</li>
+    </ul>
+
+    <h3>Color, relleno y estilo (botón 🎨)</h3>
+    <ul>
+      <li><strong>Color de borde</strong> y <strong>color de relleno</strong> independientes, con selector completo y <strong>colores recientes</strong>.</li>
+      <li><strong>Relleno de figuras</strong> (rectángulos, círculos): dibuja con relleno o usa el <strong>bote 🪣</strong> para pintar el interior de una figura existente.</li>
+      <li><strong>Estilo de borde:</strong> sólido, guiones o puntos · <strong>grosor</strong> ajustable.</li>
+      <li><strong>Opacidad</strong> por elemento (en la barra de selección).</li>
+      <li><strong>Fidelidad del pincel:</strong> Precisión (fiel al trazo), Equilibrado o Suavizado (líneas más fluidas).</li>
+    </ul>
+    <p>Con uno o varios elementos seleccionados, cambiar color/relleno/estilo/grosor los <strong>actualiza al instante</strong>.</p>
+
     <h3>Lienzo, zoom y fondos</h3>
     <ul>
       <li><strong>➕ / ➖ / 100%</strong> para acercar, alejar y restablecer. En la tablet: pellizca con dos dedos para zoom y arrástralos para desplazarte.</li>
@@ -410,6 +433,29 @@ img/              → Carpeta local de imágenes (también en repo aparte)</code
     <h3>Permisos (solo Papá)</h3>
     <p>El botón <strong>🛡️</strong> (visible únicamente para Papá) abre un panel para <strong>habilitar o restringir</strong>
       a Luanna el uso de: calculadora, borrador, texto, imágenes, stickers y “Limpiar todo”. Los cambios se aplican al instante en la pizarra de Luanna.</p>
+
+    <h3>Editar y organizar (selección)</h3>
+    <p>Al seleccionar uno o varios elementos aparece abajo una <strong>barra de edición</strong> con:</p>
+    <ul>
+      <li><strong>Opacidad</strong> (0–100%) para dibujos, formas, textos, imágenes y stickers.</li>
+      <li><strong>Orden de capas:</strong> traer al frente ⬆️, adelantar 🔼, atrasar 🔽, enviar al fondo ⬇️.</li>
+      <li><strong>Agrupar 🔗 / Desagrupar ✂️</strong> — un grupo se mueve, escala, duplica y bloquea como un solo objeto.</li>
+      <li><strong>Duplicar ⧉</strong> y <strong>eliminar 🗑️</strong> (respeta permisos y bloqueos).</li>
+    </ul>
+    <p>Selección múltiple: arrastra un marco sobre varios elementos, o <strong>Shift+clic</strong> para sumar/quitar. <strong>Alt+arrastrar</strong> duplica mientras mueves; <strong>Shift</strong> mantiene proporción/cuadrado.</p>
+
+    <h3>Atajos de teclado</h3>
+    <table>
+      <tr><th>Tecla</th><th>Acción</th><th>Tecla</th><th>Acción</th></tr>
+      <tr><td><code>V</code></td><td>Seleccionar</td><td><code>Ctrl+C/V/X</code></td><td>Copiar/Pegar/Cortar</td></tr>
+      <tr><td><code>B</code></td><td>Pincel</td><td><code>Ctrl+D</code></td><td>Duplicar</td></tr>
+      <tr><td><code>T</code></td><td>Texto</td><td><code>Ctrl+Z / Ctrl+Y</code></td><td>Deshacer/Rehacer</td></tr>
+      <tr><td><code>M</code> / <code>L</code></td><td>Rectángulo / Círculo</td><td><code>Ctrl+A</code></td><td>Seleccionar todo</td></tr>
+      <tr><td><code>E</code></td><td>Borrador</td><td><code>Ctrl+G</code></td><td>Agrupar</td></tr>
+      <tr><td><code>H</code></td><td>Mano (pan)</td><td><code>Ctrl+Shift+G</code></td><td>Desagrupar</td></tr>
+      <tr><td><code>Shift+L</code></td><td>Puntero láser</td><td><code>Supr</code></td><td>Eliminar selección</td></tr>
+    </table>
+    <p>Rueda del mouse = zoom · clic con la rueda = desplazamiento temporal.</p>
 
     <h3>Calculadora</h3>
     <p>El botón <strong>🧮</strong> abre una calculadora flotante (arrastrable) para ayudarse con cálculos. Se cierra con la ✕.</p>
