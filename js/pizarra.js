@@ -91,7 +91,7 @@ function render() {
 
   ctx.setTransform(dpr * scale, 0, 0, dpr * scale, dpr * tx, dpr * ty);
   drawBackground();
-  const ordered = [...elements].sort((a, b) => (a.z || 0) - (b.z || 0));
+  const ordered = [...elements].sort((a, b) => (layerRank(a.layer) - layerRank(b.layer)) || ((a.z || 0) - (b.z || 0)));
   for (const el of ordered) drawElement(el);
   if (drawing) drawElement(drawing);
   drawSelection();
@@ -141,6 +141,11 @@ function drawElement(el) {
   } else if (el.type === "rect") {
     if (el.fill) { ctx.fillStyle = el.fill; ctx.fillRect(el.x, el.y, el.w, el.h); }
     ctx.strokeRect(el.x, el.y, el.w, el.h);
+  } else if (el.type === "triangle" || el.type === "star" || el.type === "polygon") {
+    const poly = polyForShape(el);
+    ctx.beginPath(); poly.forEach((q, i) => i ? ctx.lineTo(q.x, q.y) : ctx.moveTo(q.x, q.y)); ctx.closePath();
+    if (el.fill) { ctx.fillStyle = el.fill; ctx.fill(); }
+    ctx.stroke();
   } else if (el.type === "circle") {
     ctx.beginPath();
     ctx.ellipse(el.x + el.w / 2, el.y + el.h / 2, Math.abs(el.w / 2), Math.abs(el.h / 2), 0, 0, Math.PI * 2);
@@ -203,8 +208,22 @@ function textLines(el) {
   return out;
 }
 
+// Puntos de polígono para formas con bbox (triángulo/estrella/polígono)
+function polyForShape(el) {
+  const x = Math.min(el.x, el.x + el.w), y = Math.min(el.y, el.y + el.h), w = Math.abs(el.w), h = Math.abs(el.h);
+  const cx = x + w / 2, cy = y + h / 2, rx = w / 2, ry = h / 2;
+  if (el.type === "triangle") return [{ x: cx, y }, { x: x + w, y: y + h }, { x, y: y + h }];
+  const pts = []; const n = el.type === "star" ? 5 : 6;
+  if (el.type === "star") {
+    for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5; const f = i % 2 ? 0.42 : 1; pts.push({ x: cx + Math.cos(a) * rx * f, y: cy + Math.sin(a) * ry * f }); }
+  } else {
+    for (let i = 0; i < n; i++) { const a = -Math.PI / 2 + i * 2 * Math.PI / n; pts.push({ x: cx + Math.cos(a) * rx, y: cy + Math.sin(a) * ry }); }
+  }
+  return pts;
+}
+const BBOX_SHAPES = ["rect", "circle", "image", "triangle", "star", "polygon"];
 function bounds(el) {
-  if (el.type === "rect" || el.type === "circle" || el.type === "image")
+  if (BBOX_SHAPES.includes(el.type))
     return { x: Math.min(el.x, el.x + el.w), y: Math.min(el.y, el.y + el.h), w: Math.abs(el.w), h: Math.abs(el.h) };
   if (el.type === "line" || el.type === "arrow")
     return { x: Math.min(el.x1, el.x2), y: Math.min(el.y1, el.y2), w: Math.abs(el.x2 - el.x1), h: Math.abs(el.y2 - el.y1) };
@@ -273,9 +292,56 @@ function hitResizeHandle(el, p) {
   const b = bounds(el);
   return p.x >= b.x + b.w - 10 && p.x <= b.x + b.w + 14 && p.y >= b.y + b.h - 10 && p.y <= b.y + b.h + 14;
 }
+// Distancia punto→segmento
+function distSeg(px, py, ax, ay, bx, by) {
+  const dx = bx - ax, dy = by - ay, l2 = dx * dx + dy * dy;
+  let t = l2 ? ((px - ax) * dx + (py - ay) * dy) / l2 : 0; t = Math.max(0, Math.min(1, t));
+  return Math.hypot(px - (ax + t * dx), py - (ay + t * dy));
+}
+function pointInRect(p, b) { return p.x >= b.x && p.x <= b.x + b.w && p.y >= b.y && p.y <= b.y + b.h; }
+
+// Hit por GEOMETRÍA real: basta tocar el trazo/borde (o relleno) del objeto, no su caja
 function hitElement(el, p) {
-  const b = bounds(el), pad = (el.width || 6) + 6;
+  const tol = (el.width || 4) / 2 + 6 / scale;
+  if (el.type === "path" || el.type === "highlighter") {
+    const pts = el.points || []; const r = (el.type === "highlighter" ? (el.width || 2) * 1.5 : tol);
+    if (el.fill && pts.length > 2 && pointInPoly(p, pts)) return true;
+    for (let i = 0; i < pts.length - 1; i++) if (distSeg(p.x, p.y, pts[i].x, pts[i].y, pts[i + 1].x, pts[i + 1].y) <= r) return true;
+    return pts.length === 1 && Math.hypot(pts[0].x - p.x, pts[0].y - p.y) <= r;
+  }
+  if (el.type === "line" || el.type === "arrow") return distSeg(p.x, p.y, el.x1, el.y1, el.x2, el.y2) <= tol;
+  if (el.type === "triangle" || el.type === "star" || el.type === "polygon") {
+    const poly = polyForShape(el);
+    if (el.fill && pointInPoly(p, poly)) return true;
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) if (distSeg(p.x, p.y, poly[j].x, poly[j].y, poly[i].x, poly[i].y) <= tol) return true;
+    return false;
+  }
+  if (el.type === "rect") {
+    const b = bounds(el);
+    if (el.fill) return pointInRect(p, b);
+    const inBox = p.x >= b.x - tol && p.x <= b.x + b.w + tol && p.y >= b.y - tol && p.y <= b.y + b.h + tol;
+    const onEdge = Math.abs(p.x - b.x) <= tol || Math.abs(p.x - (b.x + b.w)) <= tol || Math.abs(p.y - b.y) <= tol || Math.abs(p.y - (b.y + b.h)) <= tol;
+    return inBox && onEdge;
+  }
+  if (el.type === "circle") {
+    const b = bounds(el), rx = b.w / 2, ry = b.h / 2, cx = b.x + rx, cy = b.y + ry;
+    if (!rx || !ry) return false;
+    const d = (p.x - cx) * (p.x - cx) / (rx * rx) + (p.y - cy) * (p.y - cy) / (ry * ry);
+    if (el.fill) return d <= 1.05;
+    const dout = ((p.x - cx) / (rx + tol)) ** 2 + ((p.y - cy) / (ry + tol)) ** 2;
+    const din = ((p.x - cx) / Math.max(1, rx - tol)) ** 2 + ((p.y - cy) / Math.max(1, ry - tol)) ** 2;
+    return dout <= 1 && din >= 1;
+  }
+  // text / sticker / image → caja (regiones llenas)
+  const b = bounds(el), pad = 4 / scale;
   return p.x >= b.x - pad && p.x <= b.x + b.w + pad && p.y >= b.y - pad && p.y <= b.y + b.h + pad;
+}
+function pointInPoly(p, pts) {
+  let c = false;
+  for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+    if (((pts[i].y > p.y) !== (pts[j].y > p.y)) && (p.x < (pts[j].x - pts[i].x) * (p.y - pts[i].y) / (pts[j].y - pts[i].y) + pts[i].x)) c = !c;
+  }
+  return c;
 }
 
 // --- Nodos editables (selección directa) ---
@@ -283,13 +349,13 @@ function getNodes(el) {
   if (!el) return [];
   if (el.type === "path" || el.type === "highlighter") return el.points.map((p, i) => ({ x: p.x, y: p.y, i }));
   if (el.type === "line" || el.type === "arrow") return [{ x: el.x1, y: el.y1, i: 0 }, { x: el.x2, y: el.y2, i: 1 }];
-  if (el.type === "rect" || el.type === "circle") return [{ x: el.x, y: el.y, i: 0 }, { x: el.x + el.w, y: el.y, i: 1 }, { x: el.x + el.w, y: el.y + el.h, i: 2 }, { x: el.x, y: el.y + el.h, i: 3 }];
+  if (["rect", "circle", "triangle", "star", "polygon"].includes(el.type)) return [{ x: el.x, y: el.y, i: 0 }, { x: el.x + el.w, y: el.y, i: 1 }, { x: el.x + el.w, y: el.y + el.h, i: 2 }, { x: el.x, y: el.y + el.h, i: 3 }];
   return [];
 }
 function setNode(el, i, x, y) {
   if (el.type === "path" || el.type === "highlighter") el.points[i] = { x, y };
   else if (el.type === "line" || el.type === "arrow") { if (i === 0) { el.x1 = x; el.y1 = y; } else { el.x2 = x; el.y2 = y; } }
-  else if (el.type === "rect" || el.type === "circle") {
+  else if (["rect", "circle", "triangle", "star", "polygon"].includes(el.type)) {
     // mover una esquina ajustando origen + tamaño
     let x0 = el.x, y0 = el.y, x1 = el.x + el.w, y1 = el.y + el.h;
     if (i === 0) { x0 = x; y0 = y; } else if (i === 1) { x1 = x; y0 = y; } else if (i === 2) { x1 = x; y1 = y; } else { x0 = x; y1 = y; }
@@ -320,6 +386,9 @@ function down(e) {
   if (e.button === 1) { dragMode = "pan"; dragStart = { sx: sp.x, sy: sp.y, tx, ty }; return; }
   if (tool === "pan") { dragMode = "pan"; dragStart = { sx: sp.x, sy: sp.y, tx, ty }; return; }
   if (tool === "laser") { sendCursor(p.x, p.y, true); return; }
+
+  // Modo juego: solo el dibujante puede dibujar en su ronda
+  if (typeof GAME !== "undefined" && GAME.blockPointer(tool)) return;
 
   if (tool === "select" || tool === "directselect") {
     const single = selectedIds.size === 1 && elements.find(el => selectedIds.has(el.id));
@@ -367,7 +436,7 @@ function down(e) {
     drawing = { id, type: tool === "highlighter" ? "highlighter" : "path", color, width: lineWidth, points: [p], fidelity: brushFidelity, z: ++zCounter };
   else if (tool === "line" || tool === "arrow")
     drawing = { id, type: tool, color, width: lineWidth, borderStyle, x1: p.x, y1: p.y, x2: p.x, y2: p.y, z: ++zCounter };
-  else if (tool === "rect" || tool === "circle")
+  else if (["rect", "circle", "triangle", "star", "polygon"].includes(tool))
     drawing = { id, type: tool, color, width: lineWidth, borderStyle, fill: fillOn ? fillColor : null, x: p.x, y: p.y, w: 0, h: 0, z: ++zCounter };
   render();
 }
@@ -470,9 +539,9 @@ function up() {
     const b = bounds(drawing);
     const tiny = (drawing.points && drawing.points.length < 2) || (!drawing.points && b.w < 3 && b.h < 3);
     if (!tiny) {
-      // Fidelidad del pincel: suaviza el trazo según el nivel elegido
+      // Fidelidad del pincel: Precisión = trazo crudo · Equilibrado/Suavizado = curva real
       if (drawing.points && drawing.fidelity && drawing.fidelity !== "precise") {
-        drawing.points = smoothPoints(drawing.points, drawing.fidelity === "smooth" ? 2 : 1);
+        drawing.points = smoothPath(drawing.points, drawing.fidelity);
       }
       addElement(drawing, true);
     }
@@ -480,21 +549,42 @@ function up() {
   }
 }
 
-// Suavizado de trazos (Chaikin): redondea las esquinas para un trazo más fluido
-function smoothPoints(pts, passes) {
-  let p = pts;
-  for (let k = 0; k < passes; k++) {
-    if (p.length < 3) break;
-    const out = [p[0]];
-    for (let i = 0; i < p.length - 1; i++) {
-      const a = p[i], b = p[i + 1];
-      out.push({ x: a.x * 0.75 + b.x * 0.25, y: a.y * 0.75 + b.y * 0.25 });
-      out.push({ x: a.x * 0.25 + b.x * 0.75, y: a.y * 0.25 + b.y * 0.75 });
-    }
-    out.push(p[p.length - 1]);
-    p = out;
+// Suavizado real: simplifica (quita temblor) + interpola curva Catmull-Rom (estilo Illustrator)
+function rdpSimplify(pts, eps) {
+  if (pts.length < 3) return pts.slice();
+  let dmax = 0, idx = 0;
+  const a = pts[0], b = pts[pts.length - 1];
+  const dx = b.x - a.x, dy = b.y - a.y, len = Math.hypot(dx, dy) || 1;
+  for (let i = 1; i < pts.length - 1; i++) {
+    const d = Math.abs((pts[i].x - a.x) * dy - (pts[i].y - a.y) * dx) / len;
+    if (d > dmax) { dmax = d; idx = i; }
   }
-  return p;
+  if (dmax > eps) {
+    const left = rdpSimplify(pts.slice(0, idx + 1), eps), right = rdpSimplify(pts.slice(idx), eps);
+    return left.slice(0, -1).concat(right);
+  }
+  return [a, b];
+}
+function catmullRom(pts, seg) {
+  if (pts.length < 3) return pts.slice();
+  const out = [pts[0]];
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+    for (let t = 1; t <= seg; t++) {
+      const u = t / seg, u2 = u * u, u3 = u2 * u;
+      out.push({
+        x: 0.5 * ((2 * p1.x) + (-p0.x + p2.x) * u + (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * u2 + (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * u3),
+        y: 0.5 * ((2 * p1.y) + (-p0.y + p2.y) * u + (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * u2 + (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * u3)
+      });
+    }
+  }
+  return out;
+}
+function smoothPath(pts, fidelity) {
+  if (pts.length < 3) return pts;
+  const eps = fidelity === "smooth" ? 4 : 1.6;
+  const seg = fidelity === "smooth" ? 12 : 6;
+  return catmullRom(rdpSimplify(pts, eps), seg);
 }
 
 function geom(el) { return JSON.parse(JSON.stringify({ points: el.points, x: el.x, y: el.y, x1: el.x1, y1: el.y1, x2: el.x2, y2: el.y2, w: el.w, h: el.h })); }
@@ -505,11 +595,39 @@ function applyGeom(el, g, dx, dy) {
   else { el.x = g.x + dx; el.y = g.y + dy; }
 }
 
+// Borrador = círculo (radio según grosor). En trazos a mano borra SOLO la parte tocada
+// (parte el trazo); en formas/imágenes/texto borra el objeto solo si se toca su geometría.
 function eraseAt(p) {
-  const victims = elements.filter(el => !el.locked && hitElement(el, p));
-  if (!victims.length) return;
-  victims.forEach(el => removeElement(el.id, true));
-  render();
+  const R = Math.max(7, lineWidth) / 1;   // radio en unidades de mundo
+  let changed = false;
+  for (const el of [...elements]) {
+    if (el.locked) continue;
+    if (el.type === "path" || el.type === "highlighter") {
+      const raw = el.points || [];
+      // densificar para poder partir trazos rectos (pocos puntos) también
+      const pts = [];
+      for (let i = 0; i < raw.length - 1; i++) {
+        const a = raw[i], b = raw[i + 1], d = Math.hypot(b.x - a.x, b.y - a.y), steps = Math.max(1, Math.ceil(d / (R / 2)));
+        for (let s = 0; s < steps; s++) pts.push({ x: a.x + (b.x - a.x) * s / steps, y: a.y + (b.y - a.y) * s / steps });
+      }
+      if (raw.length) pts.push(raw[raw.length - 1]);
+      let touch = false;
+      for (const pt of pts) if (Math.hypot(pt.x - p.x, pt.y - p.y) <= R) { touch = true; break; }
+      if (!touch) continue;
+      // partir en sub-trazos quitando puntos dentro del círculo
+      const runs = []; let run = [];
+      for (const pt of pts) { if (Math.hypot(pt.x - p.x, pt.y - p.y) <= R) { if (run.length > 1) runs.push(run); run = []; } else run.push(pt); }
+      if (run.length > 1) runs.push(run);
+      elements = elements.filter(e => e.id !== el.id); selectedIds.delete(el.id); SYNC.removeElement(el.id);
+      runs.forEach((r, i) => { const ne = serialize(el); ne.id = el.id + "x" + Date.now().toString(36) + i; ne.points = r; elements.push(ne); SYNC.setElement(ne); });
+      changed = true;
+    } else if (hitElement(el, p)) {
+      // formas/imágenes/texto: borra el objeto (solo si tocas su geometría, no su caja vacía)
+      elements = elements.filter(e => e.id !== el.id); selectedIds.delete(el.id); SYNC.removeElement(el.id);
+      changed = true;
+    }
+  }
+  if (changed) { render(); if (typeof renderLayers === "function") renderLayers(); }
 }
 
 // Bote de relleno: pinta el interior de la figura cerrada bajo el cursor
@@ -547,6 +665,7 @@ canvas.addEventListener("wheel", e => { e.preventDefault(); const s = screenPos(
 //  ALTA / BAJA DE ELEMENTOS  (con historial)
 // ============================================================
 function addElement(el, record) {
+  if (!el.layer) el.layer = activeLayer;
   elements.push(el);
   if (imgCache[el.id] && el.type === "image") { } // ya cacheada
   SYNC.setElement(serialize(el));
@@ -675,6 +794,79 @@ function setOpacity(v) {
   els.forEach(el => SYNC.setElement(serialize(el))); render();
 }
 
+// ---- Alinear / Distribuir ----
+function alignSel(mode) {
+  const els = selectedElements().filter(e => !e.locked); if (els.length < 2) return;
+  const bs = els.map(e => ({ e, b: bounds(e) }));
+  const minX = Math.min(...bs.map(o => o.b.x)), maxX = Math.max(...bs.map(o => o.b.x + o.b.w));
+  const minY = Math.min(...bs.map(o => o.b.y)), maxY = Math.max(...bs.map(o => o.b.y + o.b.h));
+  bs.forEach(({ e, b }) => {
+    let dx = 0, dy = 0;
+    if (mode === "left") dx = minX - b.x;
+    else if (mode === "right") dx = maxX - (b.x + b.w);
+    else if (mode === "centerH") dx = (minX + maxX) / 2 - (b.x + b.w / 2);
+    else if (mode === "top") dy = minY - b.y;
+    else if (mode === "bottom") dy = maxY - (b.y + b.h);
+    else if (mode === "centerV") dy = (minY + maxY) / 2 - (b.y + b.h / 2);
+    if (dx || dy) { applyGeom(e, geom(e), dx, dy); SYNC.setElement(serialize(e)); }
+  });
+  render(); refreshSelBar();
+}
+function distributeSel(axis) {
+  const els = selectedElements().filter(e => !e.locked); if (els.length < 3) return;
+  const bs = els.map(e => ({ e, b: bounds(e) })).sort((a, c) => axis === "h" ? (a.b.x - c.b.x) : (a.b.y - c.b.y));
+  const first = bs[0].b, last = bs[bs.length - 1].b;
+  const span = axis === "h" ? ((last.x + last.w) - first.x) : ((last.y + last.h) - first.y);
+  const totalSize = bs.reduce((s, o) => s + (axis === "h" ? o.b.w : o.b.h), 0);
+  const gap = (span - totalSize) / (bs.length - 1);
+  let cur = axis === "h" ? first.x : first.y;
+  bs.forEach(({ e, b }) => {
+    const pos0 = axis === "h" ? b.x : b.y;
+    const d = cur - pos0;
+    if (d) { applyGeom(e, geom(e), axis === "h" ? d : 0, axis === "h" ? 0 : d); SYNC.setElement(serialize(e)); }
+    cur += (axis === "h" ? b.w : b.h) + gap;
+  });
+  render(); refreshSelBar();
+}
+
+// ---- Buscatrazos (booleanas) → resultado rasterizado como imagen ----
+function pathShape(c, el, ox, oy) {
+  c.beginPath();
+  if (el.type === "rect") c.rect(el.x - ox, el.y - oy, el.w, el.h);
+  else if (el.type === "circle") { const b = bounds(el); c.ellipse(b.x - ox + b.w / 2, b.y - oy + b.h / 2, Math.max(1, b.w / 2), Math.max(1, b.h / 2), 0, 0, Math.PI * 2); }
+  else { const poly = (el.type === "path" || el.type === "highlighter") ? el.points : polyForShape(el); poly.forEach((q, i) => i ? c.lineTo(q.x - ox, q.y - oy) : c.moveTo(q.x - ox, q.y - oy)); c.closePath(); }
+}
+function pathfinder(op) {
+  const els = selectedElements().filter(e => ["rect", "circle", "triangle", "star", "polygon", "path", "highlighter"].includes(e.type) && !e.locked);
+  if (els.length < 2) return;
+  const bs = els.map(e => bounds(e));
+  const minX = Math.floor(Math.min(...bs.map(b => b.x))), minY = Math.floor(Math.min(...bs.map(b => b.y)));
+  const maxX = Math.ceil(Math.max(...bs.map(b => b.x + b.w))), maxY = Math.ceil(Math.max(...bs.map(b => b.y + b.h)));
+  let W = maxX - minX, H = maxY - minY; if (W < 2 || H < 2) return;
+  const scl = Math.min(1, 1400 / Math.max(W, H));
+  const cv = document.createElement("canvas"); cv.width = Math.round(W * scl); cv.height = Math.round(H * scl);
+  const c = cv.getContext("2d"); c.scale(scl, scl);
+  const col = els[0].fill || els[0].color || "#7c5cff";
+  c.fillStyle = col;
+  pathShape(c, els[0], minX, minY); c.fill();
+  for (let i = 1; i < els.length; i++) {
+    c.globalCompositeOperation = op === "unite" ? "source-over" : op === "subtract" ? "destination-out" : op === "intersect" ? "destination-in" : "xor";
+    c.fillStyle = col; pathShape(c, els[i], minX, minY); c.fill();
+  }
+  c.globalCompositeOperation = "source-over";
+  const src = cv.toDataURL("image/png");
+  const removed = els.map(serialize);
+  els.forEach(e => removeElement(e.id, false));
+  const img = new Image();
+  img.onload = () => {
+    const el = { id: CLIENT_ID + "-pf-" + Date.now().toString(36), type: "image", x: minX, y: minY, w: W, h: H, src, z: ++zCounter, layer: activeLayer };
+    imgCache[el.id] = img; elements.push(el); SYNC.setElement(serialize(el));
+    selectedIds = new Set([el.id]); render(); refreshSelBar(); renderLayers();
+    history.push({ undo: () => { removeElement(el.id, false); removed.forEach(r => { elements.push({ ...r }); if (r.type === "image") loadImg(r); SYNC.setElement(r); }); render(); }, redo: () => pathfinder(op) });
+  };
+  img.src = src;
+}
+
 // Barra contextual de selección
 function refreshSelBar() {
   const bar = document.getElementById("pzSelBar");
@@ -687,6 +879,7 @@ function refreshSelBar() {
   const op = els.length ? Math.round((els[0].opacity != null ? els[0].opacity : 1) * 100) : 100;
   document.getElementById("pzOpacity").value = op;
   document.getElementById("pzOpacityVal").textContent = op + "%";
+  document.querySelectorAll(".pz-multi").forEach(b => b.style.display = n >= 2 ? "" : "none");
 }
 (function wireSelBar() {
   const op = document.getElementById("pzOpacity");
@@ -700,6 +893,18 @@ function refreshSelBar() {
   document.getElementById("pzUngroup").onclick = () => ungroupSelection();
   document.getElementById("pzDup").onclick = () => duplicateSelection(24, 24);
   document.getElementById("pzDel").onclick = () => { [...selectedIds].forEach(id => { const el = elements.find(e => e.id === id); if (el && !el.locked) removeElement(id, true); }); refreshSelBar(); };
+  document.getElementById("pzAlignL").onclick = () => alignSel("left");
+  document.getElementById("pzAlignCH").onclick = () => alignSel("centerH");
+  document.getElementById("pzAlignR").onclick = () => alignSel("right");
+  document.getElementById("pzAlignT").onclick = () => alignSel("top");
+  document.getElementById("pzAlignCV").onclick = () => alignSel("centerV");
+  document.getElementById("pzAlignB").onclick = () => alignSel("bottom");
+  document.getElementById("pzDistH").onclick = () => distributeSel("h");
+  document.getElementById("pzDistV").onclick = () => distributeSel("v");
+  document.getElementById("pzPfU").onclick = () => pathfinder("unite");
+  document.getElementById("pzPfS").onclick = () => pathfinder("subtract");
+  document.getElementById("pzPfI").onclick = () => pathfinder("intersect");
+  document.getElementById("pzPfX").onclick = () => pathfinder("exclude");
 })();
 
 // ---- Atajos de teclado ----
@@ -748,6 +953,7 @@ function defaultFmt() { return { size: 24, bold: false, italic: false, align: "l
 
 // Abrir editor: para crear (box) o editar un elemento existente
 function openTextEditor(opts) {
+  if (typeof GAME !== "undefined" && GAME.blockTool("text")) return;
   commitText();
   const fmt = opts.el ? { size: opts.el.size || 24, bold: !!opts.el.bold, italic: !!opts.el.italic, align: opts.el.align || "left", color: opts.el.color || color } : defaultFmt();
   txtEdit = { x: opts.x, y: opts.y, w: opts.w || 240, id: opts.el ? opts.el.id : null, fmt };
@@ -836,24 +1042,68 @@ canvas.addEventListener("dblclick", e => {
 // ============================================================
 //  IMÁGENES
 // ============================================================
-document.getElementById("pzImage").addEventListener("change", e => {
-  [...e.target.files].forEach(file => { const rd = new FileReader(); rd.onload = () => addImageFromSrc(rd.result); rd.readAsDataURL(file); });
-  e.target.value = "";
-});
-function addImageFromSrc(src) {
+document.getElementById("pzImage").addEventListener("change", e => { importFiles(e.target.files); e.target.value = ""; });
+
+// Importa archivos de imagen (selector, drag&drop, pegar). Reparte y selecciona.
+function importFiles(files) {
+  const imgs = [...files].filter(f => /^image\//.test(f.type));
+  imgs.forEach((file, i) => { const rd = new FileReader(); rd.onload = () => addImageFromSrc(rd.result, i, imgs.length); rd.readAsDataURL(file); });
+}
+
+// Optimiza imágenes grandes: reescala a máx 1600px de lado conservando proporción + transparencia
+function optimizeSrc(img, src, cb) {
+  const MAX = 1600;
+  if (img.width <= MAX && img.height <= MAX) { cb(src); return; }
+  const sc = MAX / Math.max(img.width, img.height);
+  const c = document.createElement("canvas"); c.width = Math.round(img.width * sc); c.height = Math.round(img.height * sc);
+  c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+  try { cb(c.toDataURL("image/png")); } catch (e) { cb(src); }
+}
+
+function addImageFromSrc(src, idx, total) {
+  if (typeof GAME !== "undefined" && GAME.blockTool("image")) return;
+  idx = idx || 0; total = total || 1;
   const img = new Image();
-  img.onload = () => {
-    const w = canvas.clientWidth, h = canvas.clientHeight;
-    const cx = (w / 2 - tx) / scale, cy = (h / 2 - ty) / scale;
-    const sc = Math.min(1, (w * 0.5) / img.width, (h * 0.5) / img.height) / scale;
-    const iw = img.width * sc, ih = img.height * sc;
-    const el = { id: CLIENT_ID + "-img-" + Date.now().toString(36), type: "image", x: cx - iw / 2, y: cy - ih / 2, w: iw, h: ih, src, z: ++zCounter };
-    imgCache[el.id] = img;
-    addElement(el, true);
-    render();
-  };
+  img.onload = () => optimizeSrc(img, src, finalSrc => {
+    const fimg = new Image();
+    fimg.onload = () => {
+      const w = canvas.clientWidth, h = canvas.clientHeight;
+      const cx = (w / 2 - tx) / scale, cy = (h / 2 - ty) / scale;
+      const sc = Math.min(1, (w * 0.5) / fimg.width, (h * 0.5) / fimg.height) / scale;
+      const iw = fimg.width * sc, ih = fimg.height * sc;
+      // reparto en cascada si hay varias (evita superposición total)
+      const off = (total > 1 ? (idx - (total - 1) / 2) * 28 : 0);
+      const el = { id: CLIENT_ID + "-img-" + Date.now().toString(36) + idx, type: "image", x: cx - iw / 2 + off, y: cy - ih / 2 + off, w: iw, h: ih, src: finalSrc, z: ++zCounter };
+      imgCache[el.id] = fimg;
+      addElement(el, true);
+      selectedIds = new Set([el.id]); setTool("select"); render(); refreshSelBar();
+    };
+    fimg.src = finalSrc;
+  });
   img.src = src;
 }
+
+// Arrastrar y soltar imágenes (PC)
+(function dndImages() {
+  const stage = document.getElementById("pzStage");
+  let overlay = document.getElementById("pzDrop");
+  if (!overlay) { overlay = document.createElement("div"); overlay.id = "pzDrop"; overlay.className = "pz-drop"; overlay.innerHTML = "📷 Suelta aquí para insertar imagen"; stage.appendChild(overlay); }
+  let depth = 0;
+  const hasFiles = e => e.dataTransfer && [...(e.dataTransfer.types || [])].includes("Files");
+  stage.addEventListener("dragenter", e => { if (!hasFiles(e)) return; e.preventDefault(); depth++; overlay.classList.add("show"); });
+  stage.addEventListener("dragover", e => { if (hasFiles(e)) { e.preventDefault(); e.dataTransfer.dropEffect = "copy"; } });
+  stage.addEventListener("dragleave", e => { if (!hasFiles(e)) return; depth--; if (depth <= 0) { depth = 0; overlay.classList.remove("show"); } });
+  stage.addEventListener("drop", e => { if (!hasFiles(e)) return; e.preventDefault(); depth = 0; overlay.classList.remove("show"); if (e.dataTransfer.files.length) importFiles(e.dataTransfer.files); });
+})();
+
+// Pegar imágenes desde portapapeles (Ctrl+V): capturas, navegador, Word, etc.
+window.addEventListener("paste", e => {
+  if (document.activeElement === textInput) return;
+  const items = (e.clipboardData && e.clipboardData.items) || [];
+  const files = [];
+  for (const it of items) { if (it.type && it.type.indexOf("image") === 0) { const f = it.getAsFile(); if (f) files.push(f); } }
+  if (files.length) { e.preventDefault(); importFiles(files); }
+});
 function loadImg(el) {
   if (imgCache[el.id]) { render(); return; }
   const img = new Image(); img.onload = () => { imgCache[el.id] = img; render(); }; img.src = el.src;
@@ -879,6 +1129,7 @@ const STICKERS = [
 })();
 document.getElementById("pzStickerBtn").addEventListener("click", () => document.getElementById("pzStickerPalette").classList.toggle("open"));
 function placeSticker(p) {
+  if (typeof GAME !== "undefined" && GAME.blockTool("sticker")) return;
   if (!pendingSticker) return;
   addElement({ id: CLIENT_ID + "-stk-" + Date.now().toString(36), type: "sticker", x: p.x, y: p.y, emoji: pendingSticker.emoji, label: pendingSticker.label, size: 48, color: "#7c5cff", z: ++zCounter }, true);
 }
@@ -900,11 +1151,29 @@ document.getElementById("pzClear").addEventListener("click", () => {
 function setTool(t) {
   tool = t;
   document.querySelectorAll("[data-tool]").forEach(b => b.classList.toggle("active", b.dataset.tool === t));
+  const sb = document.getElementById("pzShapeBtn"); if (sb) sb.classList.toggle("active", ["rect", "circle", "triangle", "star", "polygon"].includes(t));
   if (t !== "select" && t !== "directselect") selectedIds.clear();
   canvas.style.cursor = t === "pan" ? "grab" : ((t === "select" || t === "directselect") ? "default" : "crosshair");
   render(); refreshSelBar();
 }
 document.querySelectorAll("[data-tool]").forEach(btn => btn.addEventListener("click", () => setTool(btn.dataset.tool)));
+
+// Submenú de formas
+(function shapeFly() {
+  const btn = document.getElementById("pzShapeBtn"), fly = document.getElementById("pzShapeFly");
+  const ICON = { rect: "▭", circle: "◯", triangle: "△", star: "★", polygon: "⬡" };
+  btn.addEventListener("click", e => {
+    e.stopPropagation();
+    const r = btn.getBoundingClientRect(), st = document.getElementById("pzStage").getBoundingClientRect();
+    fly.style.top = (r.top - st.top) + "px";
+    fly.classList.toggle("open");
+  });
+  fly.querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+    btn.textContent = ICON[b.dataset.tool] || "▭"; btn.classList.add("active");
+    fly.classList.remove("open");
+  }));
+  document.addEventListener("click", e => { if (!fly.contains(e.target) && e.target !== btn) fly.classList.remove("open"); });
+})();
 
 const swatches = document.getElementById("pzSwatches");
 ["#3c3160", "#ff4f9a", "#7c5cff", "#2eb872", "#ffc83d", "#ff7a3d", "#4d9fff", "#ffffff"].forEach((c, i) => {
@@ -1045,35 +1314,45 @@ function renderPresence(data) {
 // ============================================================
 //  CAPAS
 // ============================================================
-const TYPE_ICON = { path: "✏️", highlighter: "🖍️", line: "╱", arrow: "➜", rect: "▭", circle: "◯", text: "🔤", image: "🖼️", sticker: "⭐" };
-function layerLabel(el) {
-  if (el.type === "text") return "🔤 " + (el.text || "Texto").split("\n")[0].slice(0, 18);
-  if (el.type === "sticker") return (el.emoji || "⭐") + " " + (el.label || "Sticker");
-  const names = { path: "Trazo", highlighter: "Resaltado", line: "Línea", arrow: "Flecha", rect: "Rectángulo", circle: "Círculo", image: "Imagen" };
-  return (TYPE_ICON[el.type] || "•") + " " + (names[el.type] || el.type);
+function addLayer() {
+  const n = boardLayers.length + 1;
+  boardLayers = boardLayers.concat([{ id: "L" + Date.now().toString(36), name: "Capa " + n }]);
+  activeLayer = boardLayers[boardLayers.length - 1].id;
+  SYNC.setLayers(boardLayers); renderLayers();
 }
+function moveLayer(from, to) {
+  if (to < 0 || to >= boardLayers.length || from === to) return;
+  const arr = boardLayers.slice(); const [it] = arr.splice(from, 1); arr.splice(to, 0, it);
+  boardLayers = arr; SYNC.setLayers(boardLayers); render(); renderLayers();
+}
+let _dragLayer = null;
 function renderLayers() {
   const box = document.getElementById("pzLayers");
   if (!box || !IS_ADMIN) return;
-  const ord = [...elements].sort((a, b) => (b.z || 0) - (a.z || 0));
-  if (!ord.length) { box.innerHTML = `<div class="pz-layers-empty">Aún no hay elementos.</div>`; return; }
   box.innerHTML = "";
-  ord.forEach(el => {
+  // arriba en la lista = encima en el lienzo (orden inverso al array)
+  const order = boardLayers.map((l, i) => i).reverse();
+  order.forEach(idx => {
+    const L = boardLayers[idx];
+    const count = elements.filter(e => (e.layer || "L1") === L.id).length;
     const row = document.createElement("div");
-    row.className = "pz-layer" + (selectedIds.has(el.id) ? " sel" : "");
-    row.innerHTML = `<span class="lname">${escapeHtml(layerLabel(el))}</span>`;
-    const up = document.createElement("button"); up.textContent = "🔼"; up.title = "Adelantar";
-    const dn = document.createElement("button"); dn.textContent = "🔽"; dn.title = "Atrasar";
-    const lk = document.createElement("button"); lk.textContent = el.locked ? "🔒" : "🔓"; lk.title = "Fijar";
-    row.querySelector(".lname").addEventListener("click", () => { selectedIds = new Set(expandGroup(el)); setTool("select"); render(); refreshSelBar(); });
-    up.addEventListener("click", e => { e.stopPropagation(); selectedIds = new Set([el.id]); orderSelection("forward"); });
-    dn.addEventListener("click", e => { e.stopPropagation(); selectedIds = new Set([el.id]); orderSelection("backward"); });
-    lk.addEventListener("click", e => { e.stopPropagation(); el.locked = !el.locked; SYNC.setElement(serialize(el)); render(); renderLayers(); });
-    row.append(up, dn, lk);
+    row.className = "pz-layer" + (activeLayer === L.id ? " sel" : "");
+    row.draggable = true;
+    row.innerHTML = `<span class="lh">⠿</span><span class="lname">${escapeHtml(L.name)}</span><span class="lc">${count}</span>`;
+    row.addEventListener("click", () => { activeLayer = L.id; renderLayers(); });
+    row.addEventListener("dragstart", () => _dragLayer = idx);
+    row.addEventListener("dragover", e => e.preventDefault());
+    row.addEventListener("drop", e => { e.preventDefault(); if (_dragLayer != null) moveLayer(_dragLayer, idx); _dragLayer = null; });
     box.appendChild(row);
   });
+  const add = document.createElement("button"); add.className = "pz-addlayer"; add.textContent = "＋ Nueva capa";
+  add.onclick = addLayer; box.appendChild(add);
 }
 
+let boardLayers = [{ id: "L1", name: "Capa 1" }];
+let activeLayer = "L1";
+function layerRank(id) { const i = boardLayers.findIndex(l => l.id === id); return i < 0 ? 0 : i; }
+let presenceData = {};
 const remoteCursors = {};
 function drawCursors() {
   const ahora = Date.now();
@@ -1121,7 +1400,7 @@ const SYNC = (function () {
     appId: "1:860985724021:web:d20e5f47e95ba27b037c3c"
   };
   const ROOM = "luanna-pizarra";
-  let elRef = null, bgRef = null, permRef = null, curRef = null, ok = false;
+  let elRef = null, bgRef = null, permRef = null, curRef = null, layersRef = null, ok = false;
 
   try {
     firebase.initializeApp(FIREBASE_CONFIG);
@@ -1140,6 +1419,8 @@ const SYNC = (function () {
     elRef.on("child_changed", s => upsertRemote(s.val()));
     elRef.on("child_removed", s => { const el = s.val(); if (el) { elements = elements.filter(e => e.id !== el.id); selectedIds.delete(el.id); render(); renderLayers(); } });
 
+    layersRef = db.ref(base + "layers");
+    layersRef.on("value", s => { const v = s.val(); if (v && v.length) { boardLayers = v; if (!boardLayers.find(l => l.id === activeLayer)) activeLayer = boardLayers[boardLayers.length - 1].id; render(); renderLayers(); } });
     bgRef.on("value", s => { const v = s.val(); if (v) { bgType = v; document.getElementById("pzBg").value = v; render(); } });
     permRef.on("value", s => applyPerms(s.val() || {}));
     curRef.on("value", s => { const d = s.val() || {}; Object.keys(remoteCursors).forEach(k => delete remoteCursors[k]); Object.assign(remoteCursors, d); render(); });
@@ -1154,18 +1435,23 @@ const SYNC = (function () {
         myCurRef.onDisconnect().remove();
       };
       if (IS_GUEST) {
-        // Aforo: máximo 10 invitados simultáneos
+        // Aforo (máx 10) + nombre único entre conectados
         presRef.once("value").then(snap => {
           const d = snap.val() || {};
+          const nm = (MY_NAME || "").trim().toLowerCase();
           const otros = Object.entries(d).filter(([k, v]) => k.startsWith("guest-") && k !== MY_KEY && v && v.online).length;
-          if (otros >= MAX_GUESTS) {
+          const nameTaken = Object.entries(d).some(([k, v]) => k !== MY_KEY && v && v.online && (v.name || "").trim().toLowerCase() === nm);
+          if (nameTaken) {
+            alert('El nombre "' + MY_NAME + '" ya está en uso. Elige otro 🙂');
+            window.location.href = "index.html";
+          } else if (otros >= MAX_GUESTS) {
             alert("La pizarra ya tiene " + MAX_GUESTS + " invitados conectados. Intenta más tarde 🙂");
             window.location.href = "dashboard.html";
           } else register();
         });
       } else register();
     });
-    presRef.on("value", s => renderPresence(s.val()));
+    presRef.on("value", s => { presenceData = s.val() || {}; renderPresence(presenceData); if (typeof onPresence === "function") onPresence(); });
     ok = true;
   } catch (e) { console.warn("Firebase no disponible:", e); }
 
@@ -1185,10 +1471,263 @@ const SYNC = (function () {
     removeElement: (id) => { if (elRef) elRef.child(id).remove(); },
     clearAll: () => { if (elRef) elRef.remove(); },
     setBg: (v) => { if (bgRef) bgRef.set(v); },
+    setLayers: (a) => { if (layersRef) layersRef.set(a); },
     setPermissions: (p) => { if (permRef) permRef.set(p); },
     setCursor: (c) => { if (curRef) curRef.child(MY_KEY).set(c); }
   };
 })();
+
+// ============================================================
+//  MODO JUEGO · ADIVINA EL DIBUJO
+// ============================================================
+const GAME = (function () {
+  const ROOM = "luanna-pizarra";
+  const WORDS = [
+    "gato", "perro", "elefante", "casa", "sol", "luna", "arbol", "flor", "pez", "pajaro",
+    "manzana", "platano", "auto", "avion", "barco", "tren", "pelota", "globo", "helado", "pastel",
+    "estrella", "corazon", "mariposa", "tortuga", "leon", "jirafa", "oso", "raton", "abeja", "araña",
+    "zapato", "sombrero", "reloj", "lapiz", "libro", "silla", "mesa", "cama", "puerta", "ventana",
+    "montaña", "rio", "nube", "lluvia", "fuego", "robot", "dinosaurio", "unicornio", "fantasma", "corona",
+    "pizza", "queso", "huevo", "zanahoria", "uva", "fresa", "sandia", "galleta", "caramelo", "pinguino"
+  ];
+  let lastWords = [];
+  function pickThree() {
+    const out = []; let t = 0;
+    while (out.length < 3 && t < 80) { const w = WORDS[Math.floor(Math.random() * WORDS.length)]; if (!out.includes(w) && !lastWords.includes(w)) out.push(w); t++; }
+    while (out.length < 3) { const w = WORDS[Math.floor(Math.random() * WORDS.length)]; if (!out.includes(w)) out.push(w); }
+    lastWords.push(...out); while (lastWords.length > 18) lastWords.shift();
+    return out;
+  }
+  function norm(s) { return (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/g, ""); }
+  function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+  let gameRef = null, state = null, gameOpen = false, muted = false, audioCtx = null, closedByUser = false;
+  if (typeof firebase !== "undefined" && SYNC.ok) {
+    try { gameRef = firebase.database().ref("rooms/" + ROOM + "/game"); gameRef.on("value", s => { state = s.val(); onState(); }); } catch (e) { console.warn("Juego sin Firebase:", e); }
+  }
+
+  // ---- Helpers de jugadores ----
+  function onlineKeys() { return Object.keys(presenceData).filter(k => presenceData[k] && presenceData[k].online); }
+  function isOnline(k) { return !!(presenceData[k] && presenceData[k].online); }
+  function nameOf(k) { return (state && state.names && state.names[k]) || (presenceData[k] && presenceData[k].name) || "Jugador"; }
+  function actingHost(g) { if (g && g.host && isOnline(g.host)) return g.host; return onlineKeys().sort()[0]; }
+  function iAmHost(g) { return actingHost(g) === MY_KEY; }
+  function remaining(g) { return Math.max(0, Math.round(g.turnSeconds - (Date.now() - g.startTs) / 1000)); }
+
+  // ---- Sonido tic ----
+  function tick() {
+    if (muted) return;
+    try {
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.frequency.value = 880; g.gain.value = 0.05; o.connect(g); g.connect(audioCtx.destination);
+      o.start(); o.stop(audioCtx.currentTime + 0.04);
+    } catch (e) {}
+  }
+  function celebrate() {
+    const box = document.getElementById("pzConfetti"); if (!box) return;
+    const cols = ["#ff4f9a", "#7c5cff", "#2eb872", "#ffc83d", "#ff7a3d", "#4d9fff"];
+    box.innerHTML = ""; box.classList.add("show");
+    for (let i = 0; i < 80; i++) { const c = document.createElement("i"); c.style.left = Math.random() * 100 + "%"; c.style.background = cols[i % cols.length]; c.style.animationDuration = (1.5 + Math.random() * 1.5) + "s"; c.style.animationDelay = (Math.random() * .3) + "s"; box.appendChild(c); }
+    setTimeout(() => box.classList.remove("show"), 2800);
+  }
+
+  // ---- Reparto de estrellas ----
+  function guesserStars(order) { return Math.max(1, 6 - order); }       // 1º=5 · 2º=4 · 3º=3 … mín 1
+  function drawerStars(frac) { return frac >= 1 ? 5 : frac > 0 ? 3 : 1; } // todos=5 · algunos=3 · nadie=1
+  function nonDrawers(g) { return (g.queue || []).filter(k => k !== g.drawer && isOnline(k)); }
+  function allGuessed(g) { const nd = nonDrawers(g); return nd.length > 0 && nd.every(k => g.guessed && g.guessed[k]); }
+
+  // ---- Transiciones (las ejecuta el anfitrión activo) ----
+  function startGame(seconds) {
+    const players = shuffle(onlineKeys());
+    if (players.length < 2) { alert("Se necesitan al menos 2 jugadores conectados 🙂"); return; }
+    const names = {}, scores = {}; players.forEach(k => { names[k] = nameOf(k); scores[k] = 0; });
+    SYNC.clearAll();
+    gameRef.set({ status: "choosing", host: MY_KEY, turnSeconds: seconds, queue: players, round: 1, drawer: players[0], choices: pickThree(), word: null, startTs: null, guessed: null, scores, names, roundResult: null, chat: null });
+  }
+  function chooseWord(w) {
+    gameRef.update({ status: "playing", word: w, choices: null, startTs: Date.now(), guessed: null });
+    gameRef.child("chat").remove();
+  }
+  function nextTurn(g) {
+    let idx = g.queue.indexOf(g.drawer), next = null;
+    for (let i = 1; i <= g.queue.length; i++) { const cand = g.queue[(idx + i) % g.queue.length]; if (isOnline(cand)) { next = cand; break; } }
+    if (!next) next = onlineKeys()[0];
+    if (!next) { gameRef.remove(); return; }
+    SYNC.clearAll();
+    gameRef.update({ status: "choosing", round: (g.round || 1) + 1, drawer: next, choices: pickThree(), word: null, startTs: null, guessed: null, roundResult: null });
+    gameRef.child("chat").remove();
+  }
+  function endRound(g) {
+    const nd = nonDrawers(g), got = nd.filter(k => g.guessed && g.guessed[k]).length;
+    const frac = nd.length ? got / nd.length : 0;
+    const scores = Object.assign({}, g.scores || {});
+    scores[g.drawer] = (scores[g.drawer] || 0) + drawerStars(frac);
+    gameRef.update({ status: "roundEnd", roundEndTs: Date.now(), scores, roundResult: { word: g.word, drawerName: nameOf(g.drawer), got, total: nd.length } });
+  }
+
+  // ---- Adivinanzas (chat) ----
+  function sendGuess(text) {
+    const g = state; if (!g || !text.trim() || g.status !== "playing") return;
+    if (MY_KEY === g.drawer) return;                 // dibujante no responde
+    if (g.guessed && g.guessed[MY_KEY]) return;       // ya acertó → bloqueado
+    if (norm(text) === norm(g.word)) {
+      // Acierto: NO se publica el mensaje; aviso sin revelar palabra; bloquea al jugador
+      const order = Object.keys(g.guessed || {}).length + 1;
+      const scores = Object.assign({}, g.scores || {}); scores[MY_KEY] = (scores[MY_KEY] || 0) + guesserStars(order);
+      const guessed = Object.assign({}, g.guessed || {}); guessed[MY_KEY] = order;
+      gameRef.child("chat").push({ system: true, text: "🎉 " + MY_NAME + " adivinó la palabra (+" + guesserStars(order) + "⭐)", t: Date.now() });
+      gameRef.update({ scores, guessed });
+      if (allGuessed(Object.assign({}, g, { guessed }))) endRound(Object.assign({}, g, { guessed }));
+    } else {
+      gameRef.child("chat").push({ key: MY_KEY, name: MY_NAME, text, t: Date.now() });
+    }
+  }
+
+  // ---- Reacción a cada cambio de estado ----
+  let lastStatus = null;
+  function onState() {
+    const g = state;
+    if (g && g.status !== "config" && !gameOpen && !closedByUser) gameOpen = true;
+    if (g && g.status === "roundEnd" && lastStatus !== "roundEnd") celebrate();
+    lastStatus = g ? g.status : null;
+    document.getElementById("pzPlayBtn").classList.toggle("on", !!(g && g.status !== "config"));
+    renderGame();
+  }
+  function gamePresence() {
+    // Dibujante asignado desconectado → el anfitrión salta al siguiente
+    const g = state;
+    if (g && (g.status === "playing" || g.status === "choosing") && iAmHost(g) && !isOnline(g.drawer)) nextTurn(g);
+    if (gameOpen) renderGame();
+  }
+
+  // ---- Bucle de tiempo (1s) ----
+  setInterval(() => {
+    const g = state; if (!g) return;
+    if (g.status === "playing") {
+      const rem = remaining(g);
+      const tEl = document.getElementById("pzgTime"); if (tEl) { tEl.textContent = fmt(rem); const bar = document.getElementById("pzgBar"); if (bar) bar.style.width = (rem / g.turnSeconds * 100) + "%"; }
+      if (gameOpen && rem > 0) tick();
+      if (iAmHost(g) && (rem <= 0 || allGuessed(g))) endRound(g);
+    } else if (g.status === "roundEnd" && iAmHost(g)) {
+      if (Date.now() - (g.roundEndTs || 0) > 5000) nextTurn(g);
+    }
+  }, 1000);
+  function fmt(s) { const m = Math.floor(s / 60), x = s % 60; return m + ":" + (x < 10 ? "0" : "") + x; }
+
+  // ---- Render del panel ----
+  function maskWord(w) { return (w || "").split("").map(c => c === " " ? "&nbsp;&nbsp;" : "_").join(" "); }
+  function renderGame() {
+    const panel = document.getElementById("pzGamePanel"), body = document.getElementById("pzGameBody");
+    panel.classList.toggle("open", gameOpen);
+    if (!gameOpen) return;
+    const g = state;
+    const online = onlineKeys().length;
+    const head = `<div class="pzg-head">🎮 Adivina el Dibujo <span style="font-size:.72rem;font-weight:700;opacity:.9">· ${online} en línea</span><button class="x" id="pzgClose">✕</button></div>`;
+    if (!gameRef) { body.innerHTML = head + `<div class="pzg-sec">El juego necesita conexión en línea.</div>`; wireClose(); return; }
+
+    // --- Configuración (sin partida) ---
+    if (!g || g.status === "config") {
+      const players = onlineKeys().map(k => `<span class="pzg-pchip">${escapeHtml(nameOf(k))}</span>`).join("") || `<span class="pzg-pchip">Esperando jugadores…</span>`;
+      body.innerHTML = head + `
+        <div class="pzg-sec">
+          <div class="pzg-title">Tiempo por turno</div>
+          <div class="pzg-opts" id="pzgSecs">${[30, 60, 90].map(n => `<button class="pzg-opt${n === 60 ? " on" : ""}" data-s="${n}">${n}s</button>`).join("")}</div>
+          <button class="pzg-btn" id="pzgStart">▶ Iniciar partida</button>
+          <p style="font-size:.76rem;color:var(--text-soft);margin-top:8px">Rondas ilimitadas: los turnos rotan entre todos. Termina cuando quieran con ✕.</p>
+        </div>
+        <div class="pzg-sec"><div class="pzg-title">Jugadores conectados (${online})</div><div class="pzg-players">${players}</div>
+          <p style="font-size:.76rem;color:var(--text-soft);margin-top:8px">Mínimo 2 jugadores. Papá, Luanna e invitados entran en la cola.</p></div>`;
+      wireClose();
+      let S = 60;
+      body.querySelectorAll("#pzgSecs .pzg-opt").forEach(b => b.onclick = () => { S = +b.dataset.s; body.querySelectorAll("#pzgSecs .pzg-opt").forEach(x => x.classList.remove("on")); b.classList.add("on"); });
+      body.querySelector("#pzgStart").onclick = () => startGame(S);
+      return;
+    }
+
+    const meDrawer = g.drawer === MY_KEY;
+    const rank = Object.keys(g.scores || {}).sort((a, b) => (g.scores[b] || 0) - (g.scores[a] || 0));
+    const stopBtn = iAmHost(g) ? `<button class="pzg-stop" id="pzgStop" title="Terminar juego">⏹</button>` : "";
+    const metaSec = `<div class="pzg-sec"><div class="pzg-meta"><span>✏️ Dibuja: <b>${escapeHtml(nameOf(g.drawer))}</b></span><span>Ronda <b>${g.round}</b> ${stopBtn}</span></div></div>`;
+
+    // --- Elegir palabra ---
+    if (g.status === "choosing") {
+      let mid;
+      if (meDrawer) {
+        mid = `<div class="pzg-sec"><div class="pzg-title">Elige una palabra para dibujar</div>
+          <div class="pzg-choices">${(g.choices || []).map(w => `<button class="pzg-choice" data-w="${escapeHtml(w)}">${escapeHtml(w)}</button>`).join("")}</div></div>`;
+      } else {
+        mid = `<div class="pzg-sec" style="text-align:center"><div class="pzg-word"><small>⏳ ${escapeHtml(nameOf(g.drawer))} está eligiendo palabra…</small></div></div>`;
+      }
+      body.innerHTML = head + metaSec + mid + `<div class="pzg-sec"><div class="pzg-title">⭐ Puntuación</div>${scoreRows(g, rank)}</div>`;
+      wireClose(); wireStop();
+      if (meDrawer) body.querySelectorAll(".pzg-choice").forEach(b => b.onclick = () => chooseWord(b.dataset.w));
+      return;
+    }
+
+    // --- Jugando / fin de ronda ---
+    const guessedMe = !!(g.guessed && g.guessed[MY_KEY]);
+    const wordHtml = meDrawer
+      ? `<div class="pzg-word">${escapeHtml(g.word)}<small>¡Te toca dibujar! No escribas la palabra</small></div>`
+      : `<div class="pzg-word">${maskWord(g.word)}<small>${(g.word || "").replace(/ /g, "").length} letras</small></div>`;
+    const reveal = g.status === "roundEnd"
+      ? `<div class="pzg-reveal"><div class="pzg-reveal-star">⭐</div><div class="pzg-reveal-word">${escapeHtml((g.roundResult && g.roundResult.word) || g.word)}</div>
+         <div class="pzg-reveal-sub">${g.roundResult ? g.roundResult.got + " de " + g.roundResult.total + " adivinaron" : ""}</div></div>` : "";
+    const chatMsgs = g.chat ? Object.values(g.chat).sort((a, b) => a.t - b.t).slice(-40) : [];
+    const chatHtml = chatMsgs.map(m => m.system
+      ? `<div class="pzg-msg correct">${escapeHtml(m.text)}</div>`
+      : `<div class="pzg-msg"><span class="who" style="color:${m.key === g.drawer ? "#999" : "var(--purple)"}">${escapeHtml(m.name)}:</span> ${escapeHtml(m.text)}</div>`).join("");
+    const canGuess = g.status === "playing" && !meDrawer && !guessedMe;
+
+    body.innerHTML = head + metaSec + `
+      <div class="pzg-sec pzg-timer">
+        <div class="pzg-title" style="display:flex;justify-content:center;gap:8px;align-items:center">Tiempo restante <button class="pzg-mute" id="pzgMute" title="Silenciar">${muted ? "🔇" : "🔊"}</button></div>
+        <div class="pzg-time" id="pzgTime">${fmt(remaining(g))}</div>
+        <div class="pzg-bar"><div id="pzgBar" style="width:${remaining(g) / g.turnSeconds * 100}%"></div></div>
+        ${reveal || wordHtml}
+      </div>
+      <div class="pzg-sec grow">
+        <div class="pzg-title">Chat — escribe tu respuesta</div>
+        <div class="pzg-chat" id="pzgChat">${chatHtml}</div>
+        <div class="pzg-chatform">
+          <input id="pzgInput" placeholder="${meDrawer ? "Tú dibujas 🎨" : (guessedMe ? "¡Ya adivinaste! 🌟" : (canGuess ? "Escribe tu respuesta…" : "Espera…"))}" ${canGuess ? "" : "disabled"}>
+          <button id="pzgSend" ${canGuess ? "" : "disabled"}>➤</button>
+        </div>
+      </div>
+      <div class="pzg-sec"><div class="pzg-title">⭐ Puntuación</div>${scoreRows(g, rank)}</div>`;
+    wireClose(); wireStop();
+    const chatBox = document.getElementById("pzgChat"); if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
+    const mb = document.getElementById("pzgMute"); if (mb) mb.onclick = () => { muted = !muted; renderGame(); };
+    const inp = document.getElementById("pzgInput"), snd = document.getElementById("pzgSend");
+    if (snd && !snd.disabled) {
+      const go = () => { if (inp.value.trim()) { sendGuess(inp.value); inp.value = ""; inp.focus(); } };
+      snd.onclick = go;
+      inp.onkeydown = e => { if (e.key === "Enter") { e.preventDefault(); go(); } };
+    }
+  }
+  function wireStop() { const s = document.getElementById("pzgStop"); if (s) s.onclick = () => { if (confirm("¿Terminar el juego para todos?")) gameRef.remove(); }; }
+  function scoreRows(g, rank) {
+    const medals = ["🥇", "🥈", "🥉"];
+    return rank.map((k, i) => `<div class="pzg-score${k === MY_KEY ? " me" : ""}"><span class="medal">${medals[i] || ""}</span><span class="nm">${escapeHtml(nameOf(k))}${k === g.drawer ? " ✏️" : ""}</span><span class="st">⭐ ${g.scores[k] || 0}</span></div>`).join("");
+  }
+  function wireClose() { const c = document.getElementById("pzgClose"); if (c) c.onclick = () => { gameOpen = false; closedByUser = true; renderGame(); document.getElementById("pzPlayBtn").classList.remove("on"); }; }
+
+  // Botón JUGAR
+  document.getElementById("pzPlayBtn").addEventListener("click", () => {
+    gameOpen = !gameOpen; closedByUser = !gameOpen;
+    if (gameOpen) { try { audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
+    renderGame();
+  });
+
+  return {
+    presence: gamePresence,
+    blockPointer(t) { const g = state; if (!g || (g.status !== "playing" && g.status !== "choosing")) return false; if (g.status === "choosing" || g.drawer !== MY_KEY) return !(t === "pan" || t === "laser"); return t === "text" || t === "sticker"; },
+    blockTool(kind) { const g = state; if (!g || (g.status !== "playing" && g.status !== "choosing")) return false; if (g.status === "choosing" || g.drawer !== MY_KEY) return true; return ["text", "sticker", "image"].includes(kind); }
+  };
+})();
+// Hook llamado desde la capa de sincronización cuando cambia la presencia
+function onPresence() { if (typeof GAME !== "undefined" && GAME.presence) GAME.presence(); }
 
 // ---------- Arranque ----------
 updateUndoRedo();

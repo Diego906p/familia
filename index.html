@@ -98,13 +98,23 @@
     }
     .btn-enter:hover { transform: translateY(-2px); box-shadow: 0 9px 22px rgba(124, 92, 255, .5); }
 
+    .btn-guide {
+      display: block; width: 100%; margin-top: 10px;
+      background: var(--purple-soft); color: var(--purple-dark);
+      border: none; border-radius: 16px; padding: 12px;
+      font-size: .95rem; font-weight: 800; font-family: inherit;
+      cursor: pointer; text-decoration: none; text-align: center;
+      transition: background .15s;
+    }
+    .btn-guide:hover { background: #ddd2ff; }
+
     .login-error { color: var(--pink); font-weight: 800; font-size: .88rem; min-height: 1.5em; margin-top: 12px; }
   </style>
 </head>
 <body>
   <div class="login-card">
-    <h1>Panel de Actividades 🌟</h1>
-    <p class="tagline">Cada día avanzas un poquito más.<br>¡Sigue esforzándote! 💜</p>
+    <h1>My Space 🌟</h1>
+    <p class="tagline">✨ Mi espacio para aprender, crear y jugar. 💜</p>
 
     <div class="role-switch">
       <button type="button" class="role-btn active" data-role="child">
@@ -126,6 +136,7 @@
       <input type="password" id="password" placeholder="Contraseña" autocomplete="current-password">
       <input type="text" id="guestName" placeholder="Tu nombre" maxlength="24" style="display:none">
       <button type="submit" class="btn-enter">Entrar ✨</button>
+      <a class="btn-guide" href="guia.html">📖 Ver guía</a>
     </form>
     <div class="login-error" id="loginError"></div>
   </div>

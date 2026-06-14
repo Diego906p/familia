@@ -267,3 +267,103 @@ body { font-family: "Nunito", "Segoe UI", system-ui, sans-serif; background: #cf
   .pz-calc-keys button { padding: 13px 0; font-size: 1rem; }
   .pz-chip { font-size: .72rem; padding: 3px 9px; }
 }
+
+/* ===== Modo juego: Adivina el Dibujo ===== */
+.pz-play-btn { background: #fff; color: var(--purple-dark); }
+.pz-play-btn:hover { background: #f3eeff; }
+.pz-play-btn.on { background: #ffd23d; color: #5a4500; }
+
+.pz-game {
+  position: absolute; top: 10px; right: 10px; bottom: 10px; z-index: 14;
+  width: 320px; max-width: calc(100% - 20px);
+  background: #fff; border-radius: 18px; box-shadow: 0 14px 40px rgba(80,50,160,.32);
+  display: none; flex-direction: column; overflow: hidden;
+}
+.pz-game.open { display: flex; }
+.pz-game-inner { display: flex; flex-direction: column; min-height: 0; flex: 1; overflow-y: auto; }
+
+.pzg-head { background: linear-gradient(135deg, var(--purple), var(--pink)); color: #fff; padding: 12px 14px; display: flex; align-items: center; gap: 8px; font-weight: 900; }
+.pzg-head .x { margin-left: auto; background: rgba(255,255,255,.25); border: none; color: #fff; width: 26px; height: 26px; border-radius: 8px; cursor: pointer; font-weight: 900; }
+.pzg-sec { padding: 12px 14px; border-bottom: 1px solid var(--purple-soft); }
+.pzg-sec.grow { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.pzg-title { font-size: .72rem; font-weight: 800; color: var(--text-soft); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 6px; }
+
+.pzg-meta { display: flex; justify-content: space-between; font-size: .88rem; font-weight: 700; color: var(--text); }
+.pzg-meta b { color: var(--purple-dark); }
+.pzg-timer { text-align: center; }
+.pzg-time { font-size: 2.2rem; font-weight: 900; color: var(--purple-dark); line-height: 1; }
+.pzg-bar { height: 8px; background: var(--purple-soft); border-radius: 99px; overflow: hidden; margin: 8px 0; }
+.pzg-bar > div { height: 100%; background: linear-gradient(90deg, var(--purple), var(--pink)); transition: width .9s linear; }
+.pzg-word { text-align: center; font-size: 1.5rem; letter-spacing: 6px; font-weight: 900; color: var(--purple-dark); padding: 4px 0; word-break: break-word; }
+.pzg-word small { display: block; letter-spacing: normal; font-size: .7rem; color: var(--text-soft); font-weight: 700; }
+.pzg-mute { background: none; border: none; cursor: pointer; font-size: 1.1rem; }
+
+/* Configuración */
+.pzg-opts { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.pzg-opt { border: 2px solid var(--purple-soft); background: #fff; border-radius: 10px; padding: 7px 12px; font-weight: 800; cursor: pointer; font-size: .85rem; color: var(--text); }
+.pzg-opt.on { background: var(--purple); color: #fff; border-color: var(--purple); }
+.pzg-btn { width: 100%; background: linear-gradient(135deg, var(--purple), var(--pink)); color: #fff; border: none; border-radius: 14px; padding: 12px; font-weight: 900; font-size: 1rem; cursor: pointer; font-family: inherit; }
+.pzg-btn:hover { filter: brightness(1.05); }
+.pzg-players { display: flex; flex-wrap: wrap; gap: 5px; }
+.pzg-pchip { background: var(--purple-soft); color: var(--purple-dark); border-radius: 99px; padding: 3px 10px; font-size: .76rem; font-weight: 800; }
+
+/* Chat */
+.pzg-chat { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; padding: 4px 2px; min-height: 80px; }
+.pzg-msg { font-size: .85rem; }
+.pzg-msg .who { font-weight: 900; }
+.pzg-msg.correct { background: var(--green-soft); color: #1d7a4d; border-radius: 8px; padding: 4px 8px; font-weight: 800; }
+.pzg-chatform { display: flex; gap: 6px; margin-top: 6px; }
+.pzg-chatform input { flex: 1; border: 2px solid var(--purple-soft); border-radius: 10px; padding: 8px 10px; font-family: inherit; font-size: .85rem; outline: none; }
+.pzg-chatform button { background: var(--purple); color: #fff; border: none; border-radius: 10px; padding: 0 12px; cursor: pointer; font-weight: 900; }
+.pzg-banner { background: var(--green-soft); color: #1d7a4d; border-radius: 10px; padding: 8px 10px; font-weight: 800; font-size: .85rem; text-align: center; }
+
+/* Marcador */
+.pzg-score { display: flex; align-items: center; gap: 8px; padding: 5px 4px; font-size: .86rem; font-weight: 700; border-bottom: 1px solid #f1edfb; }
+.pzg-score.me { color: var(--purple-dark); }
+.pzg-score .nm { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pzg-score .st { font-weight: 900; color: #b8860b; }
+.pzg-score .medal { width: 20px; text-align: center; }
+
+/* Resultados finales */
+.pzg-final { text-align: center; padding: 8px 0; }
+.pzg-final .win { font-size: 1.3rem; font-weight: 900; color: var(--purple-dark); margin: 6px 0; }
+.pzg-final .crown { font-size: 2.4rem; }
+
+/* Confeti */
+.pz-confetti { position: absolute; inset: 0; pointer-events: none; z-index: 20; overflow: hidden; display: none; }
+.pz-confetti.show { display: block; }
+.pz-confetti i { position: absolute; top: -12px; width: 9px; height: 14px; border-radius: 2px; animation: pzfall linear forwards; }
+@keyframes pzfall { to { transform: translateY(110vh) rotate(540deg); opacity: .9; } }
+
+@media (max-width: 760px) {
+  .pz-game { width: 100%; max-width: 100%; left: 0; right: 0; top: 0; bottom: 0; border-radius: 0; }
+}
+
+/* Juego: elegir palabra + revelado */
+.pzg-choices { display: flex; flex-direction: column; gap: 8px; }
+.pzg-choice { border: 2px solid var(--purple-soft); background: #faf8ff; border-radius: 12px; padding: 12px; font-weight: 900; font-size: 1.05rem; color: var(--purple-dark); cursor: pointer; text-transform: capitalize; }
+.pzg-choice:hover { background: var(--purple); color: #fff; border-color: var(--purple); }
+.pzg-reveal { text-align: center; padding: 6px 0; }
+.pzg-reveal-star { font-size: 2.6rem; line-height: 1; }
+.pzg-reveal-word { font-size: 1.5rem; font-weight: 900; color: var(--purple-dark); text-transform: capitalize; margin-top: 2px; }
+.pzg-reveal-sub { font-size: .78rem; font-weight: 700; color: var(--text-soft); }
+.pzg-stop { background: rgba(255,79,154,.15); border: none; color: var(--pink); border-radius: 8px; cursor: pointer; font-size: .9rem; padding: 1px 7px; margin-left: 6px; }
+.pzg-stop:hover { background: var(--pink); color: #fff; }
+
+/* Drag & drop de imágenes */
+.pz-drop { position: absolute; inset: 12px; z-index: 18; display: none; align-items: center; justify-content: center;
+  background: rgba(124,92,255,.12); border: 3px dashed var(--purple); border-radius: 18px;
+  color: var(--purple-dark); font-weight: 900; font-size: 1.3rem; pointer-events: none; text-align: center; }
+.pz-drop.show { display: flex; }
+
+/* Capas (reordenar) */
+.pz-layer .lh { cursor: grab; opacity: .5; font-size: .9rem; }
+.pz-layer .lc { font-size: .68rem; font-weight: 800; color: var(--text-soft); background: var(--purple-soft); border-radius: 99px; padding: 0 6px; }
+.pz-addlayer { width: 100%; margin-top: 6px; border: 2px dashed var(--purple-soft); background: #faf8ff; border-radius: 10px; padding: 7px; font-weight: 800; font-size: .78rem; color: var(--purple-dark); cursor: pointer; }
+.pz-addlayer:hover { background: var(--purple-soft); }
+
+/* Submenú de formas */
+.pz-shapes { position: absolute; left: 64px; z-index: 16; background: #fff; border-radius: 14px; box-shadow: 0 10px 30px rgba(80,50,160,.3); padding: 8px; display: none; grid-template-columns: repeat(3,1fr); gap: 6px; }
+.pz-shapes.open { display: grid; }
+.pz-shapes button { width: 42px; height: 42px; border: 2px solid var(--purple-soft); background: #fff; border-radius: 10px; cursor: pointer; font-size: 1.3rem; }
+.pz-shapes button:hover { background: var(--purple-soft); }

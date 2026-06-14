@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pizarra — Panel de Luanna</title>
-  <link rel="stylesheet" href="css/pizarra.css?v=8">
+  <link rel="stylesheet" href="css/pizarra.css?v=11">
 </head>
 <body>
 <div class="pz-app" id="pzApp">
@@ -14,6 +14,7 @@
     <h1>🎨 Pizarra colaborativa</h1>
     <div class="pz-presence-bar" id="pzPresence"></div>
     <span class="pz-role-badge" id="pzRoleBadge" style="display:none">Administrador</span>
+    <button class="pz-top-btn pz-play-btn" id="pzPlayBtn" title="Modo juego: Adivina el Dibujo">🎮 Jugar</button>
     <div class="spacer"></div>
     <button class="pz-top-btn" data-tool="laser" id="pzLaserTop" title="Puntero láser">🔦 Láser</button>
     <button class="pz-back" id="pzBack">‹ Volver</button>
@@ -35,8 +36,7 @@
       <span class="pz-sep-h"></span>
       <button class="pz-tool" data-tool="line" title="Línea">╱</button>
       <button class="pz-tool" data-tool="arrow" title="Flecha">➜</button>
-      <button class="pz-tool" data-tool="rect" title="Rectángulo (M)">▭</button>
-      <button class="pz-tool" data-tool="circle" title="Círculo (L)">◯</button>
+      <button class="pz-tool" id="pzShapeBtn" title="Formas (cuadrado, círculo, estrella…)">▭</button>
       <button class="pz-tool" id="pzStickerBtn" data-perm="stickers" title="Stickers y sellos">🏷️</button>
       <span class="pz-sep-h"></span>
       <label class="pz-tool" data-perm="image" title="Insertar imagen">🖼️
@@ -69,6 +69,19 @@
         <canvas id="pzCanvas"></canvas>
         <textarea id="pzTextInput" spellcheck="false"></textarea>
 
+        <!-- Submenú de formas -->
+        <div class="pz-shapes" id="pzShapeFly">
+          <button data-tool="rect" title="Rectángulo">▭</button>
+          <button data-tool="circle" title="Círculo / elipse">◯</button>
+          <button data-tool="triangle" title="Triángulo">△</button>
+          <button data-tool="star" title="Estrella">★</button>
+          <button data-tool="polygon" title="Polígono">⬡</button>
+        </div>
+
+        <!-- Modo juego: Adivina el Dibujo -->
+        <div class="pz-game" id="pzGamePanel"><div class="pz-game-inner" id="pzGameBody"></div></div>
+        <div class="pz-confetti" id="pzConfetti"></div>
+
         <!-- Barra de formato de texto -->
         <div class="pz-textbar" id="pzTextBar">
           <button id="pzTxtBold" title="Negrita"><b>B</b></button>
@@ -99,6 +112,20 @@
           <button class="pz-mini" id="pzUngroup" title="Desagrupar (Ctrl+Shift+G)">✂️</button>
           <button class="pz-mini" id="pzDup" title="Duplicar (Ctrl+D)">⧉</button>
           <button class="pz-mini" id="pzDel" title="Eliminar (Supr)">🗑️</button>
+          <span class="pz-sep pz-multi"></span>
+          <button class="pz-mini pz-multi" id="pzAlignL" title="Alinear izquierda">⇤</button>
+          <button class="pz-mini pz-multi" id="pzAlignCH" title="Centrar horizontal">↔</button>
+          <button class="pz-mini pz-multi" id="pzAlignR" title="Alinear derecha">⇥</button>
+          <button class="pz-mini pz-multi" id="pzAlignT" title="Alinear arriba">⤒</button>
+          <button class="pz-mini pz-multi" id="pzAlignCV" title="Centrar vertical">↕</button>
+          <button class="pz-mini pz-multi" id="pzAlignB" title="Alinear abajo">⤓</button>
+          <button class="pz-mini pz-multi" id="pzDistH" title="Distribuir horizontal">⇿</button>
+          <button class="pz-mini pz-multi" id="pzDistV" title="Distribuir vertical">⇳</button>
+          <span class="pz-sep pz-multi"></span>
+          <button class="pz-mini pz-multi" id="pzPfU" title="Unir">⬕</button>
+          <button class="pz-mini pz-multi" id="pzPfS" title="Restar">◐</button>
+          <button class="pz-mini pz-multi" id="pzPfI" title="Intersectar">◎</button>
+          <button class="pz-mini pz-multi" id="pzPfX" title="Excluir">⊗</button>
         </div>
 
         <!-- Panel de color y estilo -->
@@ -162,6 +189,6 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
   <script src="js/config.js?v=3"></script>
   <script src="js/auth.js?v=6"></script>
-  <script src="js/pizarra.js?v=8"></script>
+  <script src="js/pizarra.js?v=11"></script>
 </body>
 </html>
