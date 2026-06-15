@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pizarra — Panel de Luanna</title>
-  <link rel="stylesheet" href="css/pizarra.css?v=11">
+  <link rel="stylesheet" href="css/pizarra.css?v=15">
 </head>
 <body>
 <div class="pz-app" id="pzApp">
@@ -52,10 +52,17 @@
         <button class="pz-tool sm" id="pzUndo" title="Deshacer (Ctrl+Z)">↶</button>
         <button class="pz-tool sm" id="pzRedo" title="Rehacer (Ctrl+Y)">↷</button>
         <span class="pz-sep"></span>
+        <div class="pz-fgbg" id="pzFgBg">
+          <button class="pz-fb pz-fb-stroke" id="pzFbStroke" title="Borde"></button>
+          <button class="pz-fb pz-fb-fill" id="pzFbFill" title="Relleno"></button>
+          <input type="color" id="pzFbInput">
+        </div>
+        <button class="pz-tool sm" id="pzFbSwap" title="Intercambiar relleno/borde">⇄</button>
+        <button class="pz-tool sm" id="pzFbNone" title="Sin color (relleno/borde activo)">▱</button>
         <div class="pz-swatches" id="pzSwatches"></div>
         <button class="pz-tool sm" id="pzStyleBtn" title="Color y estilo">🎨</button>
         <span class="pz-sep"></span>
-        <label class="pz-size">Grosor <input type="range" id="pzSize" min="1" max="40" value="4"></label>
+        <label class="pz-size">Grosor <input type="range" id="pzSize" min="1" max="120" value="4"></label>
         <button class="pz-tool sm" id="pzLock" title="Bloquear proporción">🔓</button>
         <span class="pz-sep"></span>
         <button class="pz-tool sm" id="pzZoomOut" title="Alejar">➖</button>
@@ -81,6 +88,8 @@
         <!-- Modo juego: Adivina el Dibujo -->
         <div class="pz-game" id="pzGamePanel"><div class="pz-game-inner" id="pzGameBody"></div></div>
         <div class="pz-confetti" id="pzConfetti"></div>
+        <div class="pz-brushcursor" id="pzBrushCursor"></div>
+        <div class="pz-starsrow" id="pzStarsRow"></div>
 
         <!-- Barra de formato de texto -->
         <div class="pz-textbar" id="pzTextBar">
@@ -174,8 +183,12 @@
         <div class="pz-layers" id="pzLayers"></div>
       </div>
       <div class="pz-rp-section">
-        <div class="pz-rp-title">🛡️ Permisos de Luanna</div>
-        <div class="pz-perms-body" id="pzPermsBody"></div>
+        <button class="pz-rp-dropbtn" id="pzAdminBtn">⚙ Configuración de Papá <span class="pz-caret">▸</span></button>
+        <div class="pz-admin-menu" id="pzAdminMenu">
+          <div class="pz-rp-title" style="margin-top:6px">🛡️ Permisos de Luanna e invitados</div>
+          <div class="pz-perms-body" id="pzPermsBody"></div>
+          <button class="pzg-btn" id="pzAdminEndGame" style="margin-top:10px;display:none">⏹ Terminar partida</button>
+        </div>
       </div>
     </div>
 
@@ -189,6 +202,6 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
   <script src="js/config.js?v=3"></script>
   <script src="js/auth.js?v=6"></script>
-  <script src="js/pizarra.js?v=11"></script>
+  <script src="js/pizarra.js?v=15"></script>
 </body>
 </html>

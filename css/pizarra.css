@@ -367,3 +367,136 @@ body { font-family: "Nunito", "Segoe UI", system-ui, sans-serif; background: #cf
 .pz-shapes.open { display: grid; }
 .pz-shapes button { width: 42px; height: 42px; border: 2px solid var(--purple-soft); background: #fff; border-radius: 10px; cursor: pointer; font-size: 1.3rem; }
 .pz-shapes button:hover { background: var(--purple-soft); }
+
+/* ============================================================
+   PULIDO VISUAL — más suave, moderno, profesional (sin perder lo infantil)
+   ============================================================ */
+:root {
+  --shadow-sm: 0 2px 8px rgba(80,50,160,.08);
+  --shadow-md: 0 6px 20px rgba(80,50,160,.12);
+  --shadow-lg: 0 16px 44px rgba(80,50,160,.22);
+  --ring: 0 0 0 3px rgba(124,92,255,.18);
+  --grad: linear-gradient(135deg, #8e6bff, #c44df0 60%, #ff6fae);
+}
+
+/* Fondo general suave */
+body { background: linear-gradient(160deg, #ece7fb 0%, #efe3f7 55%, #fbe6f1 100%); }
+.pz-stage { background: #eef0f8; }
+
+/* Tipografía un poco más fina/legible */
+.pz-topbar h1 { letter-spacing: .2px; }
+
+/* Barra superior con leve profundidad */
+.pz-topbar { box-shadow: var(--shadow-md); }
+
+/* Sidebar / subbar: bordes suaves, no sombras duras */
+.pz-sidebar { box-shadow: var(--shadow-sm); border-right: 1px solid #efeaff; }
+.pz-subbar { box-shadow: var(--shadow-sm); border-bottom: 1px solid #efeaff; }
+.pz-rightpanel { box-shadow: var(--shadow-sm); border-left: 1px solid #efeaff; }
+
+/* Botones de herramienta: más redondos, transición suave, hover elevado */
+.pz-tool, .pz-mini, .pz-label-btn, .pz-select, .pz-top-btn, .pz-back, .pz-tool.sm {
+  transition: transform .12s ease, background .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.pz-tool { border-radius: 14px; border-color: #efeaff; }
+.pz-tool:hover { transform: translateY(-1px); background: #f6f2ff; }
+.pz-tool.active { background: var(--grad); border-color: transparent; box-shadow: 0 6px 16px rgba(124,92,255,.38); }
+.pz-tool.active#pzLock, .pz-tool.active#pzLockEl { background: linear-gradient(135deg, #ff6fae, #ff4f9a); }
+.pz-mini { border-radius: 12px; border-color: #efeaff; }
+.pz-mini:hover { transform: translateY(-1px); background: #f6f2ff; }
+
+/* Swatches con anillo suave */
+.pz-swatch { box-shadow: 0 0 0 1px #e7e0fb, var(--shadow-sm); }
+.pz-swatch.active { box-shadow: var(--ring); }
+
+/* Paneles flotantes: sombra grande y suave + esquinas más redondas */
+.pz-game, .pz-calc, .pz-style, .pz-stickers, .pz-textbar, .pz-selbar, .pz-shapes, .pz-perms {
+  box-shadow: var(--shadow-lg); border-radius: 18px;
+}
+.pz-selbar { border: 1px solid #f0ecff; }
+
+/* Cabeceras de panel con el degradado de marca */
+.pz-game .pzg-head, .pz-calc-head, .pz-style-head { background: var(--grad); }
+
+/* Chips de participantes más suaves */
+.pz-chip { background: rgba(255,255,255,.22); backdrop-filter: blur(2px); }
+
+/* Inputs/rangos accent coherente */
+input[type="range"] { accent-color: var(--purple); }
+
+/* Scrollbars finos y morados (WebKit) */
+.pz-layers::-webkit-scrollbar, .pz-game-inner::-webkit-scrollbar, .pz-rightpanel::-webkit-scrollbar,
+.pzg-chat::-webkit-scrollbar, .pz-sidebar::-webkit-scrollbar { width: 8px; height: 8px; }
+.pz-layers::-webkit-scrollbar-thumb, .pz-game-inner::-webkit-scrollbar-thumb, .pz-rightpanel::-webkit-scrollbar-thumb,
+.pzg-chat::-webkit-scrollbar-thumb, .pz-sidebar::-webkit-scrollbar-thumb { background: #d9cffa; border-radius: 99px; }
+.pz-layers::-webkit-scrollbar-track, .pz-game-inner::-webkit-scrollbar-track { background: transparent; }
+
+/* Capas: tarjetitas suaves */
+.pz-layer { border-radius: 10px; transition: background .12s; }
+.pz-layer.sel { outline: none; background: #f0ebff; box-shadow: inset 0 0 0 2px var(--purple); }
+
+/* Juego: número de tiempo y revelado más vivos */
+.pzg-time { letter-spacing: 1px; }
+.pzg-choice { transition: transform .12s, background .15s; }
+.pzg-choice:hover { transform: translateY(-2px); }
+.pzg-btn { box-shadow: 0 6px 16px rgba(124,92,255,.35); transition: transform .12s, filter .15s; }
+.pzg-btn:hover { transform: translateY(-1px); }
+
+/* Botón Jugar destacado */
+.pz-play-btn { box-shadow: 0 4px 12px rgba(0,0,0,.12); }
+.pz-play-btn.on { box-shadow: 0 4px 14px rgba(255,200,60,.5); }
+
+/* Estrella grande de acierto (Adivina el Dibujo) */
+.pz-star { position: absolute; inset: 0; z-index: 22; display: none; align-items: center; justify-content: center; pointer-events: none; }
+.pz-star.show { display: flex; animation: pzStarPop .35s ease; }
+.pz-star-shape {
+  width: 320px; height: 320px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;
+  color: #6a4fd8; font-weight: 900;
+  background: url("https://raw.githubusercontent.com/Diego906p/imagenes/main/images/star_level.png") center/contain no-repeat;
+  filter: drop-shadow(0 12px 30px rgba(255,180,0,.45));
+  padding-bottom: 18px;
+}
+.pz-star-w { font-size: 1.6rem; letter-spacing: 1px; }
+.pz-star-sub { font-size: .85rem; color: #8a5cf0; margin-top: 2px; }
+.pz-star-pts { font-size: 2.4rem; margin-top: 6px; line-height: 1; }
+.pz-star-pt2 { font-size: .95rem; }
+@keyframes pzStarPop { 0% { transform: scale(.3) rotate(-12deg); opacity: 0; } 70% { transform: scale(1.08) rotate(3deg); } 100% { transform: scale(1) rotate(0); opacity: 1; } }
+
+/* M11 — indicador de tamaño de pincel/borrador en el cursor */
+.pz-brushcursor { position: absolute; z-index: 17; display: none; border: 2px solid rgba(124,92,255,.7); border-radius: 50%; pointer-events: none; transform: translate(-50%, -50%); box-shadow: 0 0 0 1px rgba(255,255,255,.6) inset; }
+.pz-brushcursor.eraser { border-color: rgba(255,79,154,.8); border-style: dashed; }
+.pz-brushcursor.show { display: block; }
+
+/* M8 — editor de texto sin desplazamiento (alinear con el render del canvas) */
+#pzTextInput { padding: 0; border-width: 1px; }
+
+/* M4 — en tablet el panel de juego ocupa todo el ancho (no tapa el chat) */
+@media (max-width: 900px) {
+  .pz-game { width: 100%; max-width: 100%; left: 0; right: 0; top: 0; bottom: 0; border-radius: 0; }
+}
+
+/* #4 — fila de estrellas (progreso de aciertos) bajo la pizarra */
+.pz-starsrow { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); z-index: 16; display: none; gap: 6px;
+  background: rgba(255,255,255,.92); border-radius: 99px; padding: 6px 14px; box-shadow: 0 6px 18px rgba(80,50,160,.18); }
+.pz-starsrow.show { display: flex; }
+.pz-starsrow span { font-size: 1.3rem; color: #d9d0ec; line-height: 1; }
+.pz-starsrow span.on { color: #ffc01f; text-shadow: 0 0 6px rgba(255,192,31,.6); }
+
+/* M9 — configuración de Papá desplegable */
+.pz-rp-dropbtn { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 6px;
+  background: var(--purple-soft); color: var(--purple-dark); border: none; border-radius: 12px;
+  padding: 10px 12px; font-weight: 800; font-size: .84rem; cursor: pointer; font-family: inherit; }
+.pz-rp-dropbtn:hover { background: #ddd2ff; }
+.pz-rp-dropbtn .pz-caret { transition: transform .15s; }
+.pz-rp-dropbtn.open .pz-caret { transform: rotate(90deg); }
+.pz-admin-menu { display: none; }
+.pz-admin-menu.open { display: block; }
+
+/* M7 — selector relleno (frente) + borde (atrás) estilo Illustrator */
+.pz-fgbg { position: relative; width: 46px; height: 40px; flex-shrink: 0; }
+.pz-fgbg #pzFbInput { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
+.pz-fb { position: absolute; width: 26px; height: 26px; border-radius: 7px; border: 2px solid #fff; box-shadow: 0 0 0 1px #cfc6e8, var(--shadow-sm); cursor: pointer; padding: 0; }
+.pz-fb-stroke { left: 0; top: 0; }
+.pz-fb-fill { right: 0; bottom: 0; }
+.pz-fb.active { box-shadow: 0 0 0 2px var(--purple); z-index: 2; }
+.pz-fb.none { background-image: linear-gradient(45deg, transparent 44%, #ff4f9a 44%, #ff4f9a 56%, transparent 56%) !important; background-color: #fff !important; }

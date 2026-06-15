@@ -428,3 +428,40 @@ img { max-width: 100%; }
   .footer-band { flex-direction: column; text-align: center; gap: 8px; }
   .footer-band .quote { min-width: 0; }
 }
+
+/* ============================================================
+   PULIDO VISUAL DASHBOARD — suave, moderno, infantil (solo cosmético)
+   ============================================================ */
+:root { --grad-band: linear-gradient(135deg, #8e6bff, #b35cf0 60%, #ff6fae); }
+
+body { background: linear-gradient(160deg, #d7cdf6 0%, #e7d9f5 50%, #f9dcec 100%); background-attachment: fixed; }
+.panel { box-shadow: 0 18px 50px rgba(80,50,160,.20); background: #f4effe; }
+
+/* Tarjetas KPI: sombra suave + hover sutil (sin mover tamaños) */
+.kpi-card, .progress-card, .streak-card, .achievements-card, .soon-card, .week-section, .hello-card, .footer-band {
+  box-shadow: 0 6px 20px rgba(80,50,160,.10);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.kpi-card:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(80,50,160,.16); }
+
+/* Bandas/títulos con degradado coherente */
+.week-band { background: var(--grad-band); }
+
+/* Barras de progreso con degradado */
+.kpi-level .bar > div, .bar > div, .pg .bar > div { background: linear-gradient(90deg, #7c5cff, #ff6fae) !important; }
+
+/* Botones sesión más suaves */
+.btn2 { transition: transform .12s, box-shadow .15s; }
+.btn2:hover { transform: translateY(-1px); }
+
+/* Matriz semanal: filas con hover suave */
+.matrix tbody tr:hover td { background: #faf7ff; }
+
+/* Logros: leve realce */
+.ach-item img { transition: transform .15s; }
+.ach-item:hover img { transform: scale(1.06); }
+
+/* Scrollbar fino morado */
+*::-webkit-scrollbar { width: 9px; height: 9px; }
+*::-webkit-scrollbar-thumb { background: #d9cffa; border-radius: 99px; }
+*::-webkit-scrollbar-track { background: transparent; }
