@@ -1,5222 +1,735 @@
 
 ============================================================
+  LIBRERÍA DE PALABRAS - JUEGO DE DIBUJOS
+  Para todas las edades | Solo palabras dibujables
+  Total: ~600 palabras limpias y optimizadas
+============================================================
+
+CRITERIOS DE SELECCIÓN:
+  ✔ Una sola palabra en español (o dos si son inseparables)
+  ✔ Fácil de representar con un dibujo
+  ✔ Apta para todas las edades
+  ✔ Sin palabras técnicas, abstractas o compuestas
+  ✔ Sin anglicismos
+============================================================
+
+
+============================================================
 === FÁCIL ===
 ============================================================
+Ideal para niños pequeños y rondas iniciales.
+
 
 [ANIMALES]
 ----------------------------------------
-perro
-gato
-vaca
-cerdo
-caballo
-gallina
-pato
-conejo
-ratón
-elefante
-jirafa
-cebra
-león
-tigre
-oso
-mono
-gorila
-pingüino
-cocodrilo
-serpiente
-águila
-loro
-paloma
-pez
-tiburón
-ballena
-delfín
-pulpo
-cangrejo
-langosta
-mariposa
-abeja
-hormiga
-araña
-mosca
-mosquito
-caracol
-tortuga
-rana
-sapo
-cabra
-oveja
-burro
-camello
-reno
-alce
-búfalo
-rinoceronte
-hipopótamo
-canguro
-koala
-panda
-zorro
-lobo
-ciervo
-ardilla
-erizo
-murciélago
-lechuza
-búho
-flamenco
-pelícano
-cigüeña
-tucán
-colibrí
-pavo
-ganso
-cisne
-gaviota
-cuervo
-gallo
-toro
-cordero
-ternero
-potro
-cachorro
-gatito
-pollito
-cría
-huevo
-cola
-hocico
-pezuña
-garra
-escama
-pluma
-ala
-aleta
-cuerno
-colmillo
-canario
-hámster
-cobaya
-hurón
-chinchilla
-iguana
-camaleón
-gecko
-boa
-pitón
-estrella de mar
-medusa
-erizo de mar
-caballito de mar
-morsa
-foca
-nutria
-castor
-mapache
-mofeta
-tejón
-lince
-puma
-jaguar
-guepardo
-leopardo
-chacal
-hiena
-ñu
-antílope
-bisonte
-yak
-llama
-alpaca
-dromedario
-tapir
-perezoso
-armadillo
+Perro
+Gato
+Vaca
+Cerdo
+Caballo
+Gallina
+Pato
+Conejo
+Ratón
+Elefante
+Jirafa
+Cebra
+León
+Tigre
+Oso
+Mono
+Pingüino
+Cocodrilo
+Serpiente
+Águila
+Loro
+Pez
+Tiburón
+Ballena
+Delfín
+Pulpo
+Cangrejo
+Mariposa
+Abeja
+Araña
+Mosca
+Caracol
+Tortuga
+Rana
+Cabra
+Oveja
+Burro
+Camello
+Canguro
+Koala
+Panda
+Zorro
+Lobo
+Ciervo
+Ardilla
+Erizo
+Murciélago
+Lechuza
+Flamenco
+Pelícano
+Cigüeña
+Tucán
+Pavo
+Ganso
+Cisne
+Gaviota
+Gallo
+Toro
+Cordero
+Potro
+Cachorro
+Gatito
+Pollito
+Huevo
+Canario
+Hámster
+Iguana
+Foca
+Nutria
+Castor
+Mapache
+Lince
+Puma
+Jaguar
+Guepardo
+Leopardo
+Hipopótamo
+Rinoceronte
+Búfalo
+Alce
+Reno
+Llama
+Alpaca
+Dromedario
+Armadillo
+Perezoso
+
 
 [COMIDA Y BEBIDA]
 ----------------------------------------
-pizza
-hamburguesa
-hot dog
-sándwich
-taco
-burrito
-sushi
-paella
-fideos
-arroz
-pan
-baguette
-croissant
-dona
-galleta
-torta
-pastel
-helado
-flan
-chocolate
-manzana
-pera
-naranja
-limón
-fresa
-sandía
-melón
-uva
-plátano
-piña
-mango
-papaya
-cereza
-durazno
-ciruela
-higo
-coco
-aguacate
-granada
-kiwi
-tomate
-zanahoria
-lechuga
-cebolla
-ajo
-papa
-brócoli
-coliflor
-espinaca
-pepino
-pimiento
-berenjena
-calabaza
-maíz
-arveja
-lenteja
-garbanzo
-frijol
-soja
-champiñón
-queso
-mantequilla
-yogur
-leche
-crema
-huevo
-jamón
-salchicha
-tocino
-chorizo
-pollo
-pavo
-carne
-filete
-chuleta
-costilla
-pescado
-atún
-salmón
-camarón
-café
-té
-jugo
-refresco
-agua
-limonada
-leche
-batido
-cerveza
-vino
-ensalada
-sopa
-caldo
-guiso
-estofado
-lasaña
-espagueti
-macarrón
-ravioles
-risotto
-empanada
-arepa
-tamale
-pupusa
-ceviche
-causa
-lomo saltado
-cuy
-anticucho
-chicha
-tortilla
-enchilada
-quesadilla
-nachos
-guacamole
-salsa
-chile
-jalapeño
-chipotle
-mole
-crepe
-waffle
-panqueque
-tostada
-mermelada
-miel
-mantequilla de maní
-nutella
-cereal
-avena
-sal
-pimienta
-orégano
-albahaca
-cilantro
-perejil
-comino
-canela
-vainilla
-curry
+Pizza
+Hamburguesa
+Sándwich
+Taco
+Fideos
+Arroz
+Pan
+Dona
+Galleta
+Torta
+Pastel
+Helado
+Chocolate
+Manzana
+Pera
+Naranja
+Limón
+Fresa
+Sandía
+Melón
+Uva
+Plátano
+Piña
+Mango
+Cereza
+Durazno
+Coco
+Aguacate
+Kiwi
+Tomate
+Zanahoria
+Lechuga
+Cebolla
+Ajo
+Papa
+Brócoli
+Espinaca
+Pepino
+Pimiento
+Berenjena
+Calabaza
+Maíz
+Champiñón
+Queso
+Mantequilla
+Yogur
+Leche
+Huevo
+Jamón
+Salchicha
+Tocino
+Pollo
+Carne
+Pescado
+Camarón
+Café
+Jugo
+Agua
+Cerveza
+Sopa
+Ensalada
+Espagueti
+Empanada
+Arepa
+Ceviche
+Tortilla
+Nachos
+Guacamole
+Crepe
+Waffle
+Tostada
+Mermelada
+Miel
+Avena
+Sal
+Canela
+Flan
+Batido
+
 
 [OBJETOS DEL HOGAR]
 ----------------------------------------
-silla
-mesa
-sofá
-cama
-armario
-cajón
-espejo
-lámpara
-cuadro
-alfombra
-cortina
-almohada
-sábana
-manta
-toalla
-jabón
-champú
-cepillo
-peine
-tijeras
-televisor
-control remoto
-radio
-reloj
-teléfono
-computadora
-tablet
-impresora
-teclado
-ratón
-refrigeradora
-microondas
-horno
-licuadora
-tostadora
-cafetera
-lavadora
-plancha
-aspiradora
-ventilador
-sartén
-olla
-cacerola
-taza
-plato
-vaso
-tenedor
-cuchillo
-cuchara
-cucharón
-botella
-jarra
-recipiente
-tupper
-bolsa
-canasta
-cubo
-balde
-escoba
-trapeador
-llave
-cerradura
-puerta
-ventana
-pared
-techo
-piso
-escalera
-barandilla
-timbre
-enchufe
-cable
-foco
-interruptor
-batería
-pila
-cargador
-auriculares
-parlante
-cámara
-libro
-cuaderno
-lápiz
-bolígrafo
-marcador
-goma
-regla
-compás
-calculadora
-agenda
-caja
-maleta
-mochila
-bolso
-cartera
-billetera
-paraguas
-abanico
-vela
-linterna
+Silla
+Mesa
+Sofá
+Cama
+Armario
+Espejo
+Lámpara
+Cuadro
+Alfombra
+Cortina
+Almohada
+Manta
+Toalla
+Jabón
+Cepillo
+Tijeras
+Televisor
+Radio
+Reloj
+Teléfono
+Computadora
+Refrigeradora
+Horno
+Licuadora
+Cafetera
+Lavadora
+Plancha
+Sartén
+Olla
+Taza
+Plato
+Vaso
+Tenedor
+Cuchillo
+Cuchara
+Botella
+Jarra
+Bolsa
+Canasta
+Balde
+Escoba
+Llave
+Puerta
+Ventana
+Escalera
+Foco
+Cargador
+Auriculares
+Cámara
+Libro
+Cuaderno
+Lápiz
+Bolígrafo
+Goma
+Regla
+Calculadora
+Caja
+Maleta
+Mochila
+Paraguas
+Vela
+Linterna
 
-[ROPA Y ACCESORIOS]
-----------------------------------------
-camisa
-camiseta
-blusa
-vestido
-falda
-pantalón
-jeans
-short
-bermuda
-traje
-chaqueta
-abrigo
-gabardina
-impermeable
-chaleco
-suéter
-pullover
-hoodie
-pijama
-bata
-zapato
-zapatilla
-sandalia
-bota
-tacón
-pantufla
-calcetín
-media
-guante
-gorro
-sombrero
-boina
-gorra
-bufanda
-corbata
-cinturón
-tirantes
-pañuelo
-bolso
-mochila
-reloj
-collar
-pulsera
-anillo
-pendiente
-aretes
-broche
-diadema
-lentes
-gafas de sol
-bikini
-traje de baño
-ropa interior
-sostén
-calzoncillo
-bragas
-slip
-boxer
-tanga
-body
-uniforme
-disfraz
-toga
-kimono
-sari
-poncho
-capa
-mantilla
-velo
-corsé
 
-[DEPORTES]
+[ROPA]
 ----------------------------------------
-fútbol
-básquet
-voleibol
-tenis
-béisbol
-golf
-rugby
-hockey
-cricket
-polo
-natación
-atletismo
-ciclismo
-boxeo
-kárate
-judo
-taekwondo
-lucha
-esgrima
-tiro
-salto
-carrera
-maratón
-triatlón
-decatlón
-pentatlón
-halterofilia
-gimnasia
-acrobacia
-patinaje
-esquí
-snowboard
-surf
-windsurf
-kayak
-remo
-vela
-buceo
-escalada
-alpinismo
-equitación
-polo
-tiro con arco
-lanzamiento
-jabalina
-disco
-martillo
-bala
-salto largo
-salto alto
-pelota
-canasta
-portería
-red
-pista
-cancha
-campo
-estadio
-piscina
-velódromo
-árbitro
-jugador
-entrenador
-equipo
-partido
-torneo
-campeonato
-medalla
-trofeo
-podio
-balón
-raqueta
-bate
-palo
-disco
-guante
-casco
-rodillera
-codillera
-protector
-ajedrez
-damas
-dominó
-billar
-bolos
-dardos
-ping pong
-bádminton
-squash
-pádel
-paracaidismo
-parapente
-ala delta
-espeleología
-senderismo
-montañismo
-rafting
-bungee
-skate
-BMX
+Camisa
+Camiseta
+Vestido
+Falda
+Pantalón
+Chaqueta
+Abrigo
+Suéter
+Pijama
+Zapato
+Zapatilla
+Sandalia
+Bota
+Calcetín
+Guante
+Gorro
+Sombrero
+Bufanda
+Corbata
+Cinturón
+Lentes
+Bikini
+Disfraz
+Kimono
+Poncho
+Capa
+Anillo
+Collar
+Pulsera
+Aretes
+
 
 [TRANSPORTE]
 ----------------------------------------
-coche
-camión
-autobús
-moto
-bicicleta
-avión
-barco
-tren
-metro
-tranvía
-helicóptero
-yate
-velero
-lancha
-canoa
-kayak
-submarino
-portaaviones
-ferry
-crucero
-taxi
-ambulancia
-camión de bomberos
-patrulla
-furgoneta
-tractor
-bulldozer
-excavadora
-grúa
-carretilla
-scooter
-patinete
-monopatín
-segway
-bicicleta eléctrica
-motocicleta
-cuatrimoto
-kart
-fórmula 1
-bólido
-cohete
-nave espacial
-satélite
-dron
-globo aerostático
-dirigible
-planeador
-ultraligero
-hidroplano
-anfibio
-teleférico
-funicular
-góndola
-rickshaw
-carruaje
-diligencia
-trineo
-esquí acuático
-moto acuática
-tabla de surf
-rueda
-motor
-volante
-freno
-palanca
-timón
-hélice
-turbina
-ala
-cola
+Coche
+Camión
+Autobús
+Moto
+Bicicleta
+Avión
+Barco
+Tren
+Helicóptero
+Velero
+Canoa
+Submarino
+Taxi
+Ambulancia
+Tractor
+Excavadora
+Grúa
+Patinete
+Cohete
+Dron
+Trineo
+Góndola
+Carruaje
+Rueda
+Volante
+Timón
+
 
 [NATURALEZA]
 ----------------------------------------
-sol
-luna
-estrella
-nube
-lluvia
-nieve
-viento
-tornado
-huracán
-tormenta
-arco iris
-rayo
-trueno
-niebla
-rocío
-escarcha
-granizo
-aguacero
-brisa
-ventisca
-montaña
-volcán
-colina
-valle
-río
-lago
-mar
-océano
-playa
-acantilado
-cueva
-cascada
-géiser
-manantial
-pantano
-laguna
-islote
-península
-cabo
-golfo
-árbol
-flor
-hoja
-rama
-raíz
-tronco
-semilla
-fruto
-espina
-musgo
-rosa
-margarita
-tulipán
-girasol
-orquídea
-lirio
-lavanda
-cactus
-helecho
-bambú
-selva
-bosque
-pradera
-desierto
-tundra
-sabana
-manglar
-arrecife
-coral
-alga
-tierra
-piedra
-roca
-arena
-barro
-lava
-cristal
-diamante
-oro
-plata
-fuego
-agua
-aire
-tierra
-hielo
-vapor
-humo
-ceniza
-polvo
-burbuja
-amanecer
-atardecer
-eclipse
-aurora
-marea
-ola
-corriente
-remolino
-delta
-oasis
+Sol
+Luna
+Estrella
+Nube
+Lluvia
+Nieve
+Viento
+Tornado
+Tormenta
+Arco iris
+Rayo
+Niebla
+Granizo
+Montaña
+Volcán
+Valle
+Río
+Lago
+Mar
+Playa
+Cueva
+Cascada
+Pantano
+Árbol
+Flor
+Hoja
+Rama
+Raíz
+Tronco
+Semilla
+Espina
+Rosa
+Margarita
+Girasol
+Cactus
+Selva
+Bosque
+Desierto
+Piedra
+Arena
+Fuego
+Hielo
+Humo
+Burbuja
+Amanecer
+Ola
+Oasis
+Coral
+
 
 [LUGARES]
 ----------------------------------------
-casa
-apartamento
-villa
-castillo
-palacio
-torre
-iglesia
-catedral
-templo
-pirámide
-escuela
-universidad
-biblioteca
-hospital
-clínica
-farmacia
-banco
-correos
-ayuntamiento
-palacio de justicia
-supermercado
-tienda
-mercado
-centro comercial
-panadería
-carnicería
-pescadería
-ferretería
-floristería
-joyería
-restaurante
-café
-bar
-discoteca
-cine
-teatro
-museo
-galería
-estadio
-parque
-aeropuerto
-estación de tren
-puerto
-terminal
-autopista
-carretera
-calle
-avenida
-callejón
-rotonda
-playa
-parque nacional
-reserva
-safari
-zoológico
-acuario
-jardín botánico
-granja
-faro
-molino
-puente
-túnel
-presa
-canal
-muelle
-embarcadero
-marina
-astillero
-fábrica
-almacén
-cementerio
-monumento
-estatua
-fuente
-plaza
-parque de diversiones
-circo
-feria
-carnaval
-arena
-cuartel
-prisión
-comisaría
-bomberos
-embajada
-consulado
-ministerio
-congreso
-senado
-corte
-laboratorio
-observatory
-planetario
-acelerador
-reactor
-mina
-cantera
-pozo
-plataforma
-refinería
+Casa
+Castillo
+Palacio
+Torre
+Iglesia
+Catedral
+Pirámide
+Escuela
+Hospital
+Farmacia
+Banco
+Tienda
+Mercado
+Restaurante
+Cine
+Teatro
+Museo
+Parque
+Aeropuerto
+Puerto
+Playa
+Zoológico
+Granja
+Faro
+Molino
+Puente
+Túnel
+Muelle
+Fábrica
+Cementerio
+Estatua
+Fuente
+Plaza
+Circo
+Feria
+Prisión
+Mina
 
-[PROFESIONES]
-----------------------------------------
-médico
-enfermero
-cirujano
-dentista
-veterinario
-farmacéutico
-fisioterapeuta
-psicólogo
-optometrista
-paramédico
-maestro
-profesor
-director
-rector
-tutor
-pedagogo
-orientador
-catedrático
-decano
-investigador
-abogado
-juez
-fiscal
-notario
-policía
-detective
-guardia
-bombero
-militar
-soldado
-ingeniero
-arquitecto
-diseñador
-urbanista
-topógrafo
-geólogo
-geógrafo
-cartógrafo
-meteorólogo
-astrónomo
-chef
-cocinero
-panadero
-pastelero
-barman
-mesero
-sommelier
-catador
-nutricionista
-dietista
-mecánico
-electricista
-plomero
-carpintero
-albañil
-pintor
-fontanero
-soldador
-tornero
-técnico
-piloto
-capitán
-marinero
-maquinista
-conductor
-taxista
-camionero
-repartidor
-cartero
-mudanzas
-actor
-cantante
-músico
-bailarín
-director de cine
-guionista
-productor
-fotógrafo
-editor
-periodista
-futbolista
-atleta
-entrenador
-árbitro
-comentarista
-fisioterapeuta deportivo
-nutricionista deportivo
-preparador físico
-scout
-mánager
-agricultor
-ganadero
-pescador
-minero
-leñador
-jardinero
-florista
-apicultor
-viñatero
-forestal
-científico
-biólogo
-químico
-físico
-matemático
-estadístico
-informático
-programador
-hacker
-analista
-contador
-economista
-financiero
-banquero
-corredor de bolsa
-auditor
-actuario
-administrador
-gerente
-empresario
-político
-diplomático
-embajador
-gobernador
-alcalde
-senador
-diputado
-ministro
-presidente
-rey
-sacerdote
-pastor
-rabino
-imán
-monje
-misionero
-teólogo
-filósofo
-astrólogo
-chamán
 
 ============================================================
 === MEDIO ===
 ============================================================
+Para jugadores con más vocabulario. Se puede dibujar pero
+requiere algo más de ingenio.
 
-[CIENCIA Y TECNOLOGÍA]
-----------------------------------------
-átomo
-molécula
-electrón
-protón
-neutrón
-núcleo
-célula
-ADN
-gen
-cromosoma
-bacteria
-virus
-hongo
-parásito
-vacuna
-antibiótico
-proteína
-vitamina
-hormona
-enzima
-gravedad
-magnetismo
-electricidad
-energía
-calor
-luz
-sonido
-presión
-velocidad
-aceleración
-telescopio
-microscopio
-termómetro
-barómetro
-cronómetro
-balanza
-voltímetro
-amperímetro
-espectrómetro
-centrifugadora
-robot
-inteligencia artificial
-algoritmo
-código
-programa
-software
-hardware
-red
-servidor
-nube
-satélite
-cohete
-sonda
-telescopio espacial
-estación espacial
-luna
-marte
-asteroide
-cometa
-agujero negro
-reactor nuclear
-panel solar
-turbina eólica
-presa hidroeléctrica
-generador
-motor
-batería
-condensador
-resistencia
-transistor
-láser
-radar
-sonar
-ultrasonido
-tomografía
-resonancia
-rayos X
-ecografía
-electroencefalograma
-electrocardiograma
-química
-física
-biología
-matemáticas
-astronomía
-geología
-oceanografía
-climatología
-neurociencia
-genética
-evolución
-selección natural
-fotosíntesis
-respiración
-digestión
-circulación
-reproducción
-metabolismo
-homeostasis
-simbiosis
-fórmula
-ecuación
-hipótesis
-experimento
-laboratorio
-microscopio
-probeta
-matraz
-pipeta
-centrífuga
-elemento
-compuesto
-mezcla
-reacción
-catalizador
-ácido
-base
-sal
-solución
-precipitado
 
-[HISTORIA Y CULTURA]
+[PROFESIONES]
 ----------------------------------------
-faraón
-pirámide
-esfinge
-momia
-jeroglífico
-papiro
-obelisco
-sarcófago
-Valle de los Reyes
-Nilo
-gladiador
-coliseo
-senado
-legión
-tribuno
-cónsul
-patricio
-plebeyo
-esclavo
-gladius
-caballero
-castillo
-catapulta
-trebuchet
-armadura
-escudo
-espada
-lanza
-arco
-flecha
-revolución
-colonia
-independencia
-constitución
-democracia
-república
-monarquía
-dictadura
-guerra civil
-tratado
-renacimiento
-barroco
-romántico
-impresionismo
-cubismo
-surrealismo
-vanguardia
-dadaísmo
-abstracción
-pop art
-vikingo
-samurái
-ninja
-azteca
-maya
-inca
-olmeca
-zapoteca
-tolteca
-chichimeca
-Colón
-Napoleón
-Alejandro
-César
-Cleopatra
-Leonardo da Vinci
-Galileo
-Newton
-Darwin
-Einstein
-pirámide
-templo
-anfiteatro
-acueducto
-muralla
-catedral
-mezquita
-sinagoga
-pagoda
-ziggurat
-Imperio Romano
-Grecia antigua
-Mesopotamia
-Egipto antiguo
-China imperial
-Japón feudal
-Edad Media
-Renacimiento
-Revolución Industrial
-Guerra Fría
-esclavitud
-colonialismo
-imperialismo
-feudalismo
-capitalismo
-comunismo
-fascismo
-nazismo
-apartheid
-genocidio
+Médico
+Dentista
+Veterinario
+Maestro
+Abogado
+Juez
+Policía
+Bombero
+Soldado
+Ingeniero
+Arquitecto
+Chef
+Panadero
+Mecánico
+Carpintero
+Pintor
+Piloto
+Marinero
+Cartero
+Actor
+Cantante
+Músico
+Bailarín
+Fotógrafo
+Periodista
+Futbolista
+Pescador
+Jardinero
+Científico
+Agricultor
+Sacerdote
+Pastor
+Rey
+Astronauta
+Payaso
+Mago
 
-[ARTE Y ENTRETENIMIENTO]
-----------------------------------------
-pintura
-escultura
-fotografía
-dibujo
-grabado
-mosaico
-fresco
-acuarela
-óleo
-pastel
-lienzo
-caballete
-pincel
-paleta
-galería
-museo
-exposición
-subasta
-colección
-obra maestra
-película
-serie
-documental
-animación
-cortometraje
-largometraje
-guión
-director
-actor
-productor
-música
-canción
-melodía
-armonía
-ritmo
-letra
-coro
-estrofa
-solo
-improvisación
-guitarra
-piano
-violín
-batería
-bajo
-trompeta
-saxofón
-flauta
-clarinete
-acordeón
-ópera
-ballet
-teatro
-comedia
-drama
-tragedia
-musical
-circo
-magia
-mimo
-videojuego
-consola
-arcade
-RPG
-FPS
-estrategia
-simulador
-plataformas
-puzzle
-deportes
-libro
-novela
-cuento
-poema
-cómic
-manga
-revista
-periódico
-enciclopedia
-diccionario
-superhéroe
-villano
-monstruo
-dragón
-hada
-elfo
-enano
-orco
-mago
-guerrero
-caricatura
-dibujo animado
-anime
-manga
-ilustración
-cómic
-fanzine
-storyboard
-concept art
-pixel art
 
-[CUERPO HUMANO]
+[DEPORTES Y JUEGOS]
 ----------------------------------------
-cabeza
-cuello
-hombro
-brazo
-codo
-muñeca
-mano
-dedo
-uña
-palma
-pecho
-pulmón
-corazón
-estómago
-hígado
-riñón
-intestino
-páncreas
-bazo
-vesícula
-cadera
-muslo
-rodilla
-pantorrilla
-tobillo
-pie
-talón
-planta del pie
-dedo del pie
-uña del pie
-cerebro
-columna vertebral
-costilla
-clavícula
-pelvis
-fémur
-tibia
-peroné
-húmero
-radio
-ojo
-oreja
-nariz
-boca
-labio
-diente
-lengua
-garganta
-mentón
-mejilla
-frente
-ceja
-pestaña
-párpado
-pupila
-iris
-retina
-córnea
-lente
-nervio óptico
-piel
-pelo
-vello
-uña
-hueso
-músculo
-tendón
-ligamento
-articulación
-cartílago
-sangre
-plasma
-glóbulo rojo
-glóbulo blanco
-plaqueta
-hemoglobina
-suero
-oxígeno
-dióxido de carbono
-nutriente
-latido
-respiración
-digestión
-circulación
-metabolismo
-sudor
-lágrima
-saliva
-moco
-orina
+Fútbol
+Básquet
+Tenis
+Béisbol
+Golf
+Natación
+Ciclismo
+Boxeo
+Karate
+Salto
+Carrera
+Gimnasia
+Patinaje
+Esquí
+Surf
+Kayak
+Escalada
+Equitación
+Ajedrez
+Dominó
+Dardos
+Billar
+Bolos
+Magia
+
+
+[PARTES DEL CUERPO]
+----------------------------------------
+Cabeza
+Cara
+Ojo
+Nariz
+Boca
+Oreja
+Cuello
+Hombro
+Brazo
+Codo
+Mano
+Dedo
+Pecho
+Barriga
+Espalda
+Cadera
+Pierna
+Rodilla
+Pie
+Talón
+Corazón
+Cerebro
+Hueso
+Diente
+Cabello
+Bigote
+Barba
+
+
+[EMOCIONES Y ACCIONES DIBUJABLES]
+----------------------------------------
+Llorar
+Reír
+Dormir
+Correr
+Saltar
+Nadar
+Comer
+Bailar
+Cantar
+Pelear
+Abrazar
+Besar
+Rezar
+Gritar
+Pensar
+Esconderse
+Caer
+Volar
+Empujar
+Jalar
+Señalar
+Aplaudir
+Mentir
+Robar
+Golpear
+Disparar
+Escalar
+Construir
+Pintar
+Cocinar
+Manejar
+Pescar
+
+
+[OBJETOS VARIOS]
+----------------------------------------
+Lata
+Cohete
+Maleta
+Espada
+Escudo
+Armadura
+Antorcha
+Moneda
+Corona
+Trofeo
+Medalla
+Mapa
+Brújula
+Ancla
+Tienda (de campaña)
+Hacha
+Pala
+Martillo
+Sierra
+Llave inglesa
+Pistola
+Arco
+Flecha
+Bomba
+Telescopio
+Microscopio
+Lupa
+Probeta
+Robot
+Imán
+
+
+[CONCEPTOS DIBUJABLES]
+----------------------------------------
+Cumpleaños
+Navidad
+Fiesta
+Boda
+Funeral
+Vacaciones
+Circo
+Carnaval
+Noche
+Día
+Invierno
+Verano
+Primavera
+Otoño
+Amanecer
+Atardecer
+Sueño
+Hambre
+Sed
+Frío
+Calor
+Silencio
+Música
+Tiempo
+Dinero
+Guerra
+Paz
+Amor
+Miedo
+Peligro
+Secreto
+Mentira
+Magia
+Fantasma
+Sombra
+Espejo
+Reflejo
+Herida
+Divorcio
+
 
 ============================================================
 === DIFÍCIL ===
 ============================================================
+Palabras que se pueden dibujar pero son más complicadas
+de representar o menos obvias. Para jugadores avanzados.
 
-[CONCEPTOS ABSTRACTOS]
+
+[ACCIONES COMPLEJAS]
 ----------------------------------------
-libertad
-justicia
-igualdad
-democracia
-paz
-guerra
-amor
-odio
-esperanza
-desesperación
-tiempo
-espacio
-infinito
-eternidad
-realidad
-ilusión
-verdad
-mentira
-bien
-mal
-caos
-orden
-equilibrio
-armonía
-contradicción
-paradoja
-dilema
-enigma
-misterio
-secreto
-poder
-influencia
-autoridad
-obediencia
-resistencia
-revolución
-reforma
-tradición
-cambio
-continuidad
-éxito
-fracaso
-suerte
-destino
-casualidad
-causalidad
-determinismo
-libre albedrío
-karma
-dharma
-conciencia
-inconsciente
-sueño
-realidad virtual
-simulación
-matrix
-realidad aumentada
-metaverso
-ciberespacio
-singularidad
-belleza
-fealdad
-sublime
-grotesco
-elegante
-tosco
-refinado
-vulgar
-clásico
-moderno
-identidad
-personalidad
-carácter
-temperamento
-ego
-alma
-espíritu
-mente
-conciencia
-subconsciencia
-solidaridad
-empatía
-compasión
-altruismo
-egoísmo
-narcisismo
-envidia
-celos
-orgullo
-humildad
-creatividad
-imaginación
-innovación
-invención
-descubrimiento
-inspiración
-genialidad
-talento
-habilidad
-destreza
+Robar
+Esconderse
+Soñar
+Tropezar
+Ahogar
+Enterrar
+Explotar
+Derretirse
+Congelarse
+Envenenar
+Perseguir
+Espiar
+Disfrazarse
+Casarse
+Divorciarse
+Naufragar
+Rescatar
+Secuestrar
+Escapar
+Vencer
 
-[FRASES Y EXPRESIONES]
+
+[CONCEPTOS ABSTRACTOS DIBUJABLES]
 ----------------------------------------
-amor a primera vista
-a río revuelto ganancia de pescadores
-no hay mal que por bien no venga
-más vale tarde que nunca
-el que mucho abarca poco aprieta
-a caballo regalado no le mires el diente
-ojos que no ven corazón que no siente
-en boca cerrada no entran moscas
-camarón que se duerme se lo lleva la corriente
-dime con quién andas y te diré quién eres
-no todo lo que brilla es oro
-cada oveja con su pareja
-al mal tiempo buena cara
-a falta de pan buenas son tortas
-barriga llena corazón contento
-más vale pájaro en mano que cien volando
-quien mucho corre pronto para
-de tal palo tal astilla
-el que ríe último ríe mejor
-no hay peor ciego que el que no quiere ver
-a quien madruga Dios le ayuda
-perro que ladra no muerde
-no por mucho madrugar amanece más temprano
-donde hay humo hay fuego
-más vale solo que mal acompañado
-la unión hace la fuerza
-romper el hielo
-meter la pata
-tomar el pelo
-dar en el clavo
-estar en las nubes
-costar un ojo de la cara
-no dar el brazo a torcer
-hacer la vista gorda
-ir al grano
-tirar la toalla
-colgar los guantes
-ponerse las pilas
-echar leña al fuego
-no tener pelos en la lengua
-ver las estrellas
-quedarse de piedra
-estar hecho polvo
-perder los papeles
-montar en cólera
-ponerse rojo de vergüenza
-llegar tarde
-trabajo en equipo
-primer día de clases
-atasco de tráfico
-caída de internet
-cumpleaños sorpresa
-boda de lujo
-funeral triste
-parto en el hospital
-accidente de coche
-robo en el banco
-incendio en el edificio
-rescate en la montaña
-naufragio en el mar
-terremoto en la ciudad
-ganar la lotería
-perder el trabajo
-enamorarse
-divorciarse
-mudarse de ciudad
-aprender a caminar
-primer día de escuela
-graduación
-jubilación
-vejez feliz
+Velocidad
+Peso
+Calor
+Frío
+Luz
+Oscuridad
+Silencio
+Hambre
+Sed
+Cansancio
+Libertad
+Prisión
+Peligro
+Suerte
+Mala suerte
+Destino
+Tiempo
+Infinito
+Gravedad
 
-[SITUACIONES]
+
+[COSAS DE HALLOWEEN / FANTASÍA]
 ----------------------------------------
-hacer cola en el supermercado
-perderse en una ciudad nueva
-llegar tarde al aeropuerto
-quedarse sin batería en el móvil
-olvidar la contraseña
-derramar café en el teclado
-encontrar dinero en la calle
-perder las llaves de casa
-romperse el pantalón
-pisar una cáscara de plátano
-que te canten cumpleaños en el restaurante
-sonarse los nudillos
-bostezar en una reunión
-dormirse en clase
-comer con palillos sin saber
-hablar solo en público
-reírse sin poder parar
-llorar de emoción
-asustarse con una película de terror
-saltar de alegría
-esperar el ascensor
-subir las escaleras de dos en dos
-tropezar con la acera
-caminar bajo la lluvia sin paraguas
-quemar la comida
-que se vaya la luz cocinando
-hacer la compra con hambre
-abrir la nevera sin saber qué quieres
-intentar aparcar en un espacio pequeño
-gritar de rabia en el coche
-cantar en la ducha
-bailar solo en casa
-ver una araña en casa
-matar un mosquito
-encontrar un ratón
-que se te escape el globo
-hacer cola para la montaña rusa
-perderse en el laberinto
-ganar en el casino
-perder en el casino
-bañarse en el mar con olas
-que te pique una abeja
-quemarse con el sol
-resbalar en la nieve
+Fantasma
+Bruja
+Vampiro
+Zombie
+Momia
+Esqueleto
+Dragón
+Unicornio
+Sirena
+Hada
+Gnomo
+Ogro
+Gigante
+Duende
+Monstruo
+Alien
 
-============================================================
-=== EXPERTO ===
-============================================================
 
-[IMPOSIBLES DE DIBUJAR]
+[PALABRAS TRAMPA - DESAFIANTES]
 ----------------------------------------
-inflación
-democracia
-algoritmo
-paradoja
-entropía
-relatividad
-cuántico
-caos
-infinito
-eternidad
-metaverso
-blockchain
-criptomoneda
-NFT
-inteligencia artificial
-singularidad
-transumanismo
-nihilismo
-existencialismo
-absurdismo
-derechos humanos
-justicia social
-igualdad de género
-cambio climático
-calentamiento global
-desertificación
-deforestación
-extinción
-biodiversidad
-ecosistema
-hipocresía
-melancolía
-nostalgia
-serendipia
-petricor
-hiraeth
-saudade
-schadenfreude
-weltschmerz
-deja vu
-procrastinación
-perfeccionismo
-síndrome del impostor
-burnout
-resiliencia
-empatía
-asertividad
-inteligencia emocional
-mindfulness
-flow
-superconductividad
-antimateria
-materia oscura
-energía oscura
-agujero de gusano
-paradoja del tiempo
-universo paralelo
-multiverso
-simulación
-teoría de cuerdas
-libre comercio
-proteccionismo
-globalización
-geopolítica
-soberanía
-autodeterminación
-diáspora
-xenofobia
-etnocentrismo
-relativismo cultural
-feudalismo
-mercantilismo
-capitalismo salvaje
-socialismo utópico
-anarquismo
-tecnocracia
-meritocracia
-oligarquía
-plutocracia
-teocracia
-
-[PERSONAJES HISTÓRICOS Y FICTICIOS]
-----------------------------------------
-Einstein
-Newton
-Darwin
-Galileo
-Copérnico
-Kepler
-Faraday
-Curie
-Tesla
-Edison
-Platón
-Sócrates
-Aristóteles
-Descartes
-Kant
-Hegel
-Nietzsche
-Sartre
-Simone de Beauvoir
-Foucault
-Napoleón
-Cleopatra
-Alejandro Magno
-Julio César
-Gengis Kan
-Atila
-Saladino
-Isabel I
-Carlos V
-Simón Bolívar
-Shakespeare
-Cervantes
-Dante
-Goethe
-Tolkien
-Homero
-Virgilio
-Kafka
-Dostoievski
-Tolstói
-Mozart
-Beethoven
-Bach
-Chopin
-Vivaldi
-Handel
-Brahms
-Mahler
-Tchaikovsky
-Schubert
-Da Vinci
-Miguel Ángel
-Rafael
-Rembrandt
-Velázquez
-Goya
-Monet
-Van Gogh
-Picasso
-Dalí
-Batman
-Superman
-Spider-Man
-Iron Man
-Thor
-Hulk
-Wonder Woman
-Capitán América
-Wolverine
-Flash
-Harry Potter
-Hermione Granger
-Gandalf
-Frodo
-Aragorn
-Legolas
-Gimli
-Sauron
-Voldemort
-Dumbledore
-Sherlock Holmes
-Hercules Poirot
-James Bond
-Indiana Jones
-Lara Croft
-Rambo
-MacGyver
-El Zorro
-Fantomas
-Drácula
-Frankenstein
-Drácula
-El Joker
-Hannibal Lecter
-Freddy Krueger
-Jason
-Chucky
-Michael Myers
-Pennywise
-El Exorcista
-
-[OBJETOS RAROS O ESPECÍFICOS]
-----------------------------------------
-sacacorchos
-abrelatas
-quitaesmалtes
-cortaúñas
-depiladora
-rizadora
-alisadora
-secador
-afeitadora
-masajeador
-trituradora
-mandolina
-rallador
-pelador
-espátula
-batidor
-molde
-rodillo
-manga pastelera
-soplete
-destornillador Phillips
-llave Allen
-alicate
-cúter
-sierra
-taladro
-lijadora
-pulidora
-soldador
-remachadora
-termómetro de cocina
-báscula de cocina
-centrifugadora de ensalada
-cortador de pizza
-abridor de ostras
-prensa de ajos
-espumadora
-colador
-embudo
-jeringa de cocina
-telescopio refractor
-microscopio electrónico
-espectroscopio
-polarímetro
-refractómetro
-viscosímetro
-densímetro
-higrómetro
-anemómetro
-pluviómetro
-esfigmomanómetro
-estetoscopio
-otoscopio
-oftalmoscopio
-laringoscopio
-endoscopio
-broncoscopio
-colonoscopio
-cistoscopio
-artroscopio
-sextante
-astrolabio
-brújula
-cuadrante
-gnomon
-reloj de sol
-reloj de arena
-clepsidra
-cronómetro
-metrónomo
-didgeridoo
-theremin
-cristal armónica
-ukelele
-banjo
-mandolina
-cítara
-arpa
-laúd
-clavicémbalo
-cafetera de émbolo
-sifón
-moka
-aeropress
-chemex
-V60
-cold brew
-café de goteo
-espresso
-cappuccino
-balancín
-tobogán
-columpio
-tiovivo
-noria
-montaña rusa
-coches de choque
-casa del terror
-laberinto de espejos
-tiro al blanco
-
-[VIDEOJUEGOS Y TECNOLOGÍA]
-----------------------------------------
-Mario
-Luigi
-Peach
-Bowser
-Yoshi
-Toad
-Donkey Kong
-Link
-Zelda
-Ganon
-Pikachu
-Charizard
-Mewtwo
-Snorlax
-Gengar
-Eevee
-Bulbasaur
-Squirtle
-Jigglypuff
-Mew
-Sonic
-Tails
-Knuckles
-Shadow
-Amy
-Eggman
-Silver
-Blaze
-Rouge
-Omega
-Minecraft
-Fortnite
-Roblox
-Among Us
-Elden Ring
-The Witcher
-GTA
-FIFA
-Call of Duty
-League of Legends
-PlayStation
-Xbox
-Nintendo Switch
-Game Boy
-Atari
-Commodore
-Arcade
-Pinball
-Pacman
-Tetris
-inteligencia artificial
-machine learning
-deep learning
-red neuronal
-algoritmo
-big data
-cloud computing
-blockchain
-metaverso
-realidad virtual
-smartphone
-tablet
-laptop
-smartwatch
-auriculares inalámbricos
-altavoz inteligente
-cámara 360
-dron
-impresora 3D
-gafas VR
-app
-interfaz
-UX
-UI
-frontend
-backend
-API
-base de datos
-servidor
-cliente
-hacker
-ciberseguridad
-firewall
-antivirus
-phishing
-ransomware
-malware
-VPN
-proxy
-encriptación
-emoji
-meme
-viral
-trending
-hashtag
-like
-follow
-share
-streaming
-podcast
-
-[GEOGRAFÍA MUNDIAL]
-----------------------------------------
-Amazonas
-Nilo
-Misisipi
-Yangtsé
-Danubio
-Rin
-Volga
-Ganges
-Indo
-Éufrates
-Himalaya
-Andes
-Alpes
-Pirineos
-Cárpatos
-Urales
-Cáucaso
-Atlas
-Kilimanjaro
-Monte Everest
-Sahara
-Gobi
-Atacama
-Kalahari
-Arabia
-Siberia
-Tundra ártica
-Antártida
-Gran Barrera de Coral
-Galápagos
-Mediterráneo
-Caribe
-Pacífico
-Atlántico
-Índico
-Ártico
-Antártico
-Mar Rojo
-Mar Negro
-Mar Caspio
-París
-Londres
-Roma
-Madrid
-Berlín
-Moscú
-Pekín
-Tokio
-Nueva York
-Los Ángeles
-Brasil
-Argentina
-Chile
-Colombia
-Venezuela
-Perú
-Bolivia
-Ecuador
-Paraguay
-Uruguay
-China
-Japón
-India
-Rusia
-Australia
-Canadá
-México
-Indonesia
-Nigeria
-Sudáfrica
-Amazon
-Sahara
-Serengeti
-Borneo
-Madagascar
-Groenlandia
-Islandia
-Hawaii
-Galápagos
-Maldivas
-Torre Eiffel
-Coliseo
-Gran Muralla
-Machu Picchu
-Angkor Wat
-Taj Mahal
-Petra
-Chichén Itzá
-Stonehenge
-Moái
-Polo Norte
-Polo Sur
-Ecuador
-Trópico de Cáncer
-Trópico de Capricornio
-Meridiano de Greenwich
-Línea Internacional de Cambio de Fecha
-latitud
-longitud
-altitud
-
-[PALABRAS COMPUESTAS Y FRASES CORTAS]
-----------------------------------------
-cepillo de dientes
-papel higiénico
-teléfono móvil
-correo electrónico
-redes sociales
-medio ambiente
-cambio climático
-calentamiento global
-energía renovable
-panel solar
-campo de fútbol
-cancha de tenis
-piscina olímpica
-pista de atletismo
-velódromo cubierto
-primer ministro
-jefe de estado
-secretario general
-director ejecutivo
-presidenta del gobierno
-sala de estar
-cuarto de baño
-cocina americana
-comedor integrado
-terraza con vistas
-oso polar
-ballena azul
-águila calva
-lobo gris
-zorro rojo
-árbol de navidad
-huevo de pascua
-disfraz de halloween
-tarta de cumpleaños
-brindis de año nuevo
-vuelo sin escalas
-viaje de negocios
-luna de miel
-viaje de aventura
-crucero por el mediterráneo
-clase magistral
-examen final
-trabajo en grupo
-tesis doctoral
-discurso de graduación
-estrella fugaz
-luna llena
-eclipse solar
-aurora boreal
-lluvia de meteoritos
-café con leche
-zumo de naranja
-té con limón
-agua con gas
-vino tinto
-pizza de pepperoni
-hamburguesa con queso
-hot dog con mostaza
-taco de carnitas
-sushi de salmón
-ramo de flores
-caja de bombones
-anillo de compromiso
-alianza de boda
-collar de perlas
-sombrero de copa
-corbata de moño
-vestido de noche
-traje de gala
-disfraz de superhéroe
-parque de atracciones
-noria gigante
-montaña rusa extrema
-casa encantada
-laberinto de maíz
-
-Total de palabras: 2128
-
-
-[EMOCIONES Y SENTIMIENTOS]
-----------------------------------------
-alegría
-tristeza
-miedo
-asco
-ira
-sorpresa
-amor
-odio
-vergüenza
-culpa
-orgullo
-envidia
-celos
-gratitud
-esperanza
-desesperación
-ansiedad
-estrés
-calma
-serenidad
-emoción
-entusiasmo
-aburrimiento
-curiosidad
-asombro
-admiración
-respeto
-desprecio
-indiferencia
-confusión
-soledad
-nostalgia
-melancolía
-euforia
-satisfacción
-frustración
-decepción
-ilusión
-desengaño
-resignación
-valentía
-cobardía
-generosidad
-egoísmo
-honestidad
-hipocresía
-lealtad
-traición
-confianza
-desconfianza
-simpatía
-antipatía
-empatía
-compasión
-crueldad
-ternura
-resentimiento
-perdón
-reconciliación
-venganza
-pasión
-aburrimiento
-monotonía
-emoción
-adrenalina
-nerviosismo
-tranquilidad
-agitación
-paz interior
-conflicto interno
-
-[CLIMA Y FENÓMENOS]
-----------------------------------------
-lluvia ácida
-efecto invernadero
-capa de ozono
-contaminación
-smog
-sequía
-inundación
-alud
-tsunami
-erupción
-terremoto
-temblor
-réplica
-epicentro
-magnitud
-escala Richter
-sismógrafo
-placa tectónica
-falla geológica
-subducción
-huracán
-ciclón
-tifón
-monzón
-anticiclón
-frente frío
-frente cálido
-inversión térmica
-efecto Foehn
-corriente en chorro
-arco iris doble
-halo solar
-corona solar
-parhelio
-noctiluca
-bioluminiscencia
-fogbow
-aurora austral
-nube nacarada
-nube noctilucente
-nieve
-granizo
-aguanieve
-escarcha
-hielo
-iceberh
-glaciar
-deshielo
-permafrost
-tundra
-delta
-estuario
-marisma
-mareal
-corriente oceánica
-remolino
-tifón
-mareas rojas
-bloom de algas
-zona muerta
-
-[MÚSICA Y SONIDOS]
-----------------------------------------
-do re mi fa sol la si
-escala musical
-acorde
-arpegio
-melodía
-armonía
-contrapunto
-fuga
-sonata
-sinfonía
-jazz
-blues
-rock
-pop
-reggae
-salsa
-cumbia
-tango
-flamenco
-bossa nova
-hip hop
-rap
-R&B
-soul
-funk
-disco
-electrónica
-techno
-house
-drum and bass
-ópera
-musical
-zarzuela
-cantata
-oratorio
-misa
-réquiem
-vals
-mazurca
-polca
-fortissimo
-pianissimo
-crescendo
-decrescendo
-allegro
-andante
-adagio
-presto
-staccato
-legato
-soprano
-mezzosoprano
-contralto
-tenor
-barítono
-bajo
-contratenor
-castrado
-voz de pecho
-voz de cabeza
-aplauso
-silbido
-abucheo
-ovación
-encore
-bis
-intermedio
-telón
-camerino
-foso de orquesta
-ruido
-silencio
-eco
-reverberación
-resonancia
-frecuencia
-amplitud
-timbre
-tono
-acústica
-sonido de la naturaleza
-canto de pájaros
-rugido de un león
-ladrido de perro
-maullido de gato
-relincho de caballo
-mugido de vaca
-oink de cerdo
-rebuzno de burro
-cacareo de gallina
-
-[COLORES Y FORMAS]
-----------------------------------------
-rojo
-azul
-amarillo
-verde
-naranja
-morado
-rosa
-marrón
-negro
-blanco
-gris
-beige
-turquesa
-magenta
-cian
-índigo
-violeta
-lila
-lavanda
-fucsia
-escarlata
-carmesí
-granate
-burdeos
-vino
-coral
-salmón
-melocotón
-crema
-marfil
-oliva
-esmeralda
-jade
-menta
-aguamarina
-celeste
-azul marino
-azul cobalto
-azul real
-añil
-dorado
-plateado
-bronce
-cobre
-platino
-titanio
-perla
-nácar
-ámbar
-ébano
-círculo
-cuadrado
-triángulo
-rectángulo
-pentágono
-hexágono
-heptágono
-octágono
-óvalo
-rombo
-esfera
-cubo
-cilindro
-cono
-pirámide
-tetraedro
-prisma
-toro
-helicoide
-fractal
-línea
-punto
-curva
-ángulo
-recta
-perpendicular
-paralela
-diámetro
-radio
-circunferencia
-simetría
-asimetría
-proporción
-escala
-perspectiva
-vanishing point
-proyección
-isometría
-axonometría
-planta
-horizontal
-vertical
-diagonal
-oblicuo
-curvo
-recto
-sinuoso
-zigzag
-espiral
-helicoidal
-
-[MATERIALES Y TEXTURAS]
-----------------------------------------
-madera
-metal
-plástico
-vidrio
-cerámica
-tela
-papel
-cartón
-goma
-silicona
-hierro
-acero
-aluminio
-cobre
-oro
-plata
-platino
-titanio
-tungsteno
-cromo
-algodón
-lino
-seda
-lana
-poliéster
-nylon
-lycra
-cuero
-ante
-gamuza
-mármol
-granito
-pizarra
-caliza
-arenisca
-basalto
-obsidiana
-cuarzo
-jaspe
-ágata
-barro
-arcilla
-porcelana
-terracota
-cemento
-hormigón
-ladrillo
-teja
-yeso
-escayola
-cristal
-acrílico
-metacrilato
-policarbonato
-fibra de vidrio
-fibra de carbono
-kevlar
-titanio
-aleación
-compuesto
-liso
-rugoso
-áspero
-suave
-blando
-duro
-flexible
-rígido
-elástico
-frágil
-brillante
-mate
-opaco
-transparente
-translúcido
-reflectante
-absorbente
-poroso
-impermeable
-conductivo
-ligero
-pesado
-denso
-esponjoso
-compacto
-hueco
-sólido
-líquido
-gaseoso
-plasma
-
-[ACCIONES COTIDIANAS]
-----------------------------------------
-caminar
-correr
-saltar
-bailar
-nadar
-bucear
-volar
-trepar
-rodar
-resbalar
-comer
-beber
-masticar
-tragar
-saborear
-oler
-tocar
-ver
-escuchar
-hablar
-dormir
-despertar
-bostezar
-estornudar
-toser
-reírse
-llorar
-gritar
-susurrar
-cantar
-leer
-escribir
-dibujar
-pintar
-esculpir
-fotografiar
-filmar
-editar
-publicar
-compartir
-cocinar
-hornear
-freír
-hervir
-asar
-mezclar
-batir
-cortar
-picar
-pelar
-limpiar
-barrer
-fregar
-planchar
-lavar
-secar
-doblar
-guardar
-ordenar
-tirar
-comprar
-vender
-pagar
-cobrar
-regatear
-intercambiar
-donar
-regalar
-prestar
-devolver
-conducir
-aparcar
-acelerar
-frenar
-girar
-adelantar
-esquivar
-chocar
-arrancar
-apagar
-construir
-demoler
-excavar
-cimentar
-levantar
-instalar
-montar
-desmontar
-reparar
-renovar
-plantar
-regar
-podar
-cosechar
-abonar
-injertar
-trasplantar
-germinar
-florecer
-marchitar
-abrazar
-besar
-acariciar
-pelear
-empujar
-jalar
-atar
-desatar
-abrir
-cerrar
-encender
-apagar
-conectar
-desconectar
-cargar
-descargar
-sincronizar
-actualizar
-reiniciar
-formatear
-
-[NÚMEROS Y MATEMÁTICAS]
-----------------------------------------
-uno
-dos
-tres
-cuatro
-cinco
-seis
-siete
-ocho
-nueve
-cero
-diez
-veinte
-cien
-mil
-millón
-billón
-trillón
-infinito
-pi
-phi
-suma
-resta
-multiplicación
-división
-potencia
-raíz
-logaritmo
-derivada
-integral
-límite
-fracción
-decimal
-porcentaje
-proporción
-razón
-media
-mediana
-moda
-varianza
-desviación
-triángulo rectángulo
-teorema de Pitágoras
-hipotenusa
-cateto
-seno
-coseno
-tangente
-hiperbolica
-arctg
-sec
-álgebra
-geometría
-cálculo
-estadística
-probabilidad
-topología
-teoría de números
-combinatoria
-lógica
-conjuntos
-par
-impar
-primo
-compuesto
-factorial
-fibonacci
-número áureo
-número de Euler
-número imaginario
-número complejo
-ecuación lineal
-ecuación cuadrática
-sistema de ecuaciones
-matriz
-determinante
-vector
-espacio vectorial
-transformación lineal
-autovalor
-autovector
-
-[ANIMALES ESPECÍFICOS]
-----------------------------------------
-golden retriever
-pastor alemán
-labrador
-bulldog
-dálmata
-beagle
-chihuahua
-poodle
-husky
-rottweiler
-siamés
-persa
-maine coon
-bengalí
-ragdoll
-sphynx
-british shorthair
-abisinio
-noruego del bosque
-angora
-loro africano
-cacatúa
-agapornis
-canario amarillo
-jilguero
-periquito
-mirlo
-ruiseñor
-petirrojo
-colibrí
-sardina
-anchoa
-bacalao
-merluza
-lubina
-dorada
-pargo
-mero
-lenguado
-rodaballo
-langosta americana
-bogavante
-nécora
-percebe
-mejillón
-almeja
-ostra
-navaja
-berberecho
-vieira
-boa constrictor
-anaconda
-cobra real
-mamba negra
-víbora
-cascabel
-pitón reticulada
-pitón birmana
-pitón de bola
-boa esmeralda
-ranas de árbol
-rana de dardos
-salamandra
-tritón
-axolotl
-cecilia
-salamandra gigante
-rana de lluvia
-platillo
-rana toro
-escorpión
-tarántula
-viuda negra
-araña de rincón
-opiliones
-alacrán
-ciempiés
-milpiés
-garrapata
-ácaro
-abeja melífera
-avispa
-abejorro
-marimosca
-mosca de la fruta
-mosquito tigre
-tábano
-tse-tsé
-jején
-pulga
-polilla
-escarabajo
-mariquita
-escarabajo pelotero
-luciérnaga
-grillo
-langosta migratoria
-mantis religiosa
-palo
-hoja
-
-[COMIDA INTERNACIONAL]
-----------------------------------------
-ramen
-pho
-pad thai
-bibimbap
-kimchi
-dim sum
-dumpling
-gyoza
-wonton
-baozi
-curry indio
-samosa
-naan
-roti
-dosa
-idli
-biryani
-tikka masala
-vindaloo
-korma
-falafel
-hummus
-shawarma
-kebab
-baklava
-tahini
-couscous
-tagine
-harissa
-za'atar
-pierogi
-borscht
-stroganoff
-pelmeni
-blini
-vareniki
-kasha
-kapusta
-beet soup
-okroshka
-moussaka
-tzatziki
-souvlaki
-spanakopita
-baklava griega
-dolmades
-taramasalata
-horiatiki
-garides saganaki
-gigantes plaki
-escalope
-quiche
-ratatouille
-bouillabaisse
-vichyssoise
-crème brûlée
-crêpe suzette
-cassoulet
-pot-au-feu
-coq au vin
-wiener schnitzel
-bratwurst
-sauerkraut
-pretzl
-strudel
-sachertorte
-black forest cake
-lebkuchen
-maultaschen
-spätzle
-haggis
-fish and chips
-shepherd's pie
-bangers and mash
-scones
-crumpets
-Yorkshire pudding
-Eton mess
-spotted dick
-trifle
-tapas
-gazpacho
-tortilla española
-cocido madrileño
-fabada asturiana
-pisto manchego
-patatas bravas
-crema catalana
-pan con tomate
-churros
-mole negro
-pozole
-tamales oaxaqueños
-tlayuda
-enchiladas verdes
-chiles en nogada
-tostadas de tinga
-sopa de lima
-cochinita pibil
-poc chuc
-
-[OBJETOS DE OFICINA Y ESCUELA]
-----------------------------------------
-escritorio
-silla de oficina
-archivador
-estante
-cajón
-papelera
-pizarra
-proyector
-pantalla
-puntero
-bolígrafo
-lápiz
-pluma estilográfica
-rotulador
-marcador fluorescente
-corrector
-goma de borrar
-sacapuntas
-regla
-compás
-cuaderno
-libreta
-carpeta
-portafolios
-dossier
-agenda
-calendario
-planificador
-post-it
-talonario
-tijeras
-grapadora
-perforadora
-celo
-cinta adhesiva
-pegamento
-clip
-goma elástica
-chincheta
-velcro
-calculadora
-ordenador
-monitor
-teclado
-ratón
-impresora
-escáner
-fotocopiadora
-fax
-teléfono fijo
-pizarra digital
-tablet de escritura
-lápiz electrónico
-ratón ergonómico
-teclado mecánico
-monitor curvo
-webcam
-auriculares con micrófono
-silla ergonómica
-soporte para portátil
-mochila escolar
-estuche
-caja de pinturas
-acuarelas
-gouache
-témpera
-pastel
-carboncillo
-sanguina
-plumín
-atlas
-globo terráqueo
-mapa
-diccionario
-enciclopedia
-manual
-libro de texto
-cuaderno de ejercicios
-hoja de examen
-diploma
-
-[DEPORTES EXTREMOS Y AVENTURA]
-----------------------------------------
-paracaidismo
-parapente
-ala delta
-base jumping
-wingsuit
-speedflying
-speed riding
-kite surfing
-wakeboard
-esquí acuático
-rappel
-escalada en roca
-bouldering
-lead climbing
-deep water solo
-via ferrata
-espeleología
-canoa extrema
-rafting en aguas bravas
-hidrospeed
-bungee jumping
-tirolesa
-senderismo extremo
-ultratrail
-skyrunning
-trailrunning
-orienteering
-adventure racing
-triatlón de larga distancia
-ironman
-motocross
-enduro
-trial
-freestyle motocross
-freestyle BMX
-street skating
-park skating
-vert skating
-longboard
-downhill skateboard
-snowboard freeride
-snowboard freestyle
-esquí de travesía
-heliesquí
-freestyle ski
-moguls
-acrobacias en skis
-biathlon
-nordic combined
-luge
-surf de ola grande
-surf de tow-in
-bodyboard
-bodysurf
-stand up paddle
-windsurf extremo
-kitesurf de olas
-foiling
-wakeskate
-wakesurfer
-tiro con arco 3D
-tiro instintivo
-airsoft
-paintball
-tiro olímpico
-biatlón
-pentatlón moderno
-triatlón de aventura
-carrera de obstáculos
-Spartan Race
-
-[FESTIVIDADES Y CELEBRACIONES]
-----------------------------------------
-Navidad
-Año Nuevo
-Reyes Magos
-Carnaval
-Semana Santa
-Halloween
-Día de Muertos
-Thanksgiving
-San Valentín
-San Patricio
-Diwali
-Hanukkah
-Ramadán
-Eid al-Fitr
-Eid al-Adha
-Pesaj
-Rosh Hashaná
-Yom Kippur
-Vesak
-Losar
-cumpleaños
-aniversario
-boda
-bautizo
-comunión
-bar mitzvah
-bat mitzvah
-quinceañera
-graduación
-jubilación
-funeral
-velorio
-entierro
-cremación
-luto
-condolencias
-misa de difuntos
-novena
-rosario
-duelo
-árbol de Navidad
-Papa Noel
-reno
-trineo
-elfo
-estrella de Belén
-portal
-belén
-roscón
-turrón
-fuegos artificiales
-petardos
-bengala
-cohete
-confeti
-serpentina
-globo
-piñata
-guirnalda
-decoración
-misa de Gallo
-Nochebuena
-Nochevieja
-Epifanía
-Cuaresma
-Viernes Santo
-Domingo de Ramos
-Pascua Florida
-Pentecostés
-Corpus Christi
-mascarada
-disfraz
-carroza
-comparsa
-murga
-batucada
-samba
-maracas
-tambor
-gaita
-
-[VIAJE Y TURISMO]
-----------------------------------------
-pasaporte
-visa
-billete de avión
-hotel
-hostel
-albergue
-apartamento turístico
-camping
-glamping
-cabaña
-maleta
-mochila de viaje
-bolsa de mano
-artículos de aseo
-adapter de corriente
-guía de viaje
-mapa
-brújula
-cámara de fotos
-selfie stick
-aeropuerto
-control de pasaportes
-aduana
-sala de espera
-puerta de embarque
-finger
-pista de aterrizaje
-torre de control
-radar
-hangar
-tren de alta velocidad
-vagón cama
-vagón restaurante
-Eurorail
-transiberiano
-Orient Express
-tren turístico
-funicular
-cremallera
-teleférico
-crucero
-camarote
-cubierta
-piscina del barco
-buffet del crucero
-puerto de escala
-excursión
-guía turístico
-visita guiada
-tour en bus
-agencia de viajes
-operador turístico
-paquete vacacional
-todo incluido
-viaje de mochilero
-viaje de novios
-luna de miel
-viaje de negocios
-viaje de trabajo
-viaje de estudios
-monumento
-patrimonio de la humanidad
-sitio arqueológico
-parque nacional
-reserva natural
-safari
-avistamiento de ballenas
-bird watching
-senderismo
-turismo rural
-souvenirs
-artesanía local
-mercado de artesanos
-tienda duty-free
-coleccionismo
-sellar el pasaporte
-timbres postales
-postales
-fotos de viaje
-diario de viaje
-
-[CONSTRUCCIÓN Y ARQUITECTURA]
-----------------------------------------
-cimientos
-pilares
-viga
-columna
-arco
-bóveda
-cúpula
-tejado
-chimenea
-balcón
-ladrillo
-bloque de hormigón
-paneles prefabricados
-estructura metálica
-madera laminada
-piedra natural
-vidrio templado
-aluminio estructural
-acero galvanizado
-fibra de carbono
-arquitectura románica
-arquitectura gótica
-arquitectura renacentista
-arquitectura barroca
-neoclásico
-modernismo
-art déco
-brutalismo
-deconstructivismo
-arquitectura sostenible
-plano arquitectónico
-alzado
-sección
-perspectiva
-maqueta
-render
-BIM
-autocad
-revit
-sketchup
-aparejador
-arquitecto técnico
-ingeniero civil
-ingeniero estructural
-topógrafo
-calculista
-decorador
-interiorista
-paisajista
-urbanista
-grúa
-andamio
-hormigonera
-compactadora
-retroexcavadora
-bulldozer
-pala mecánica
-dumper
-camión hormigonera
-bomba de hormigón
-fontanería
-electricidad
-climatización
-telecomunicaciones
-domótica
-seguridad
-contra incendios
-energía renovable
-tratamiento de aguas
-gestión de residuos
-
-
-
-[MITOLOGÍA Y FANTASÍA]
-----------------------------------------
-Zeus
-Hera
-Poseidón
-Atenea
-Apolo
-Artemisa
-Ares
-Afrodita
-Hefesto
-Hermes
-Dionisio
-Deméter
-Hestia
-Hades
-Perséfone
-Eros
-Psique
-Nike
-Iris
-Eolo
-Marte
-Venus
-Júpiter
-Saturno
-Neptuno
-Plutón
-Mercurio
-Vulcano
-Jano
-Diana
-Odín
-Thor
-Loki
-Freya
-Tyr
-Baldur
-Heimdall
-Valkiria
-Ragnarok
-Valhalla
-Ra
-Osiris
-Isis
-Horus
-Anubis
-Thoth
-Sekhmet
-Bastet
-Seth
-Nut
-dragón
-unicornio
-fénix
-grifo
-pegaso
-minotauro
-centauro
-sirena
-medusa
-hidra
-hada
-elfo
-enano
-gnomo
-duende
-leprechaun
-troll
-ogro
-orco
-goblin
-vampiro
-hombre lobo
-zombie
-momia
-fantasma
-espectro
-demonio
-ángel
-arcángel
-serafín
-mago
-brujo
-hechicero
-nigromante
-chamán
-druida
-paladin
-clérigo
-bardo
-monje
-espada mágica
-varita
-cetro
-amuleto
-talismán
-runas
-cristal mágico
-libro de hechizos
-pociones
-pergamino
-castillo encantado
-bosque mágico
-cueva del dragón
-mazmorra
-torre del mago
-isla flotante
-ciudad bajo el agua
-montaña prohibida
-jardín secreto
-laberinto eterno
-
-[INVENTOS E INNOVACIONES]
-----------------------------------------
-rueda
-imprenta
-teléfono
-bombilla
-televisor
-ordenador
-internet
-smartphone
-GPS
-laser
-vacuna
-penicilina
-rayos X
-resonancia magnética
-tomografía
-ultrasonido
-diálisis
-marcapasos
-stent
-trasplante
-motor de vapor
-motor de combustión interna
-turbina de vapor
-turbina de gas
-motor eléctrico
-motor de reacción
-motor cohete
-energía nuclear
-fusión nuclear
-fisión nuclear
-avión
-helicóptero
-dirigible
-cohete
-nave espacial
-satélite
-estación espacial
-telescopio espacial
-sonda planetaria
-rover marciano
-arado
-sembradora
-cosechadora
-irrigación
-invernadero
-fertilizante
-pesticida
-OGM
-selección artificial
-hidroponía
-papel
-tinta
-imprenta
-tipos móviles
-offset
-serigrafía
-tipografía digital
-ebook
-audiolibro
-periódico digital
-fotografía
-cinematógrafo
-fonógrafo
-radio
-televisión
-cable
-satélite
-streaming
-VoD
-podcast
-hormigón
-acero
-vidrio templado
-plástico
-nylon
-poliéster
-kevlar
-fibra óptica
-grafeno
-superconductores
-calculadora mecánica
-ordenador analógico
-ENIAC
-transistor
-circuito integrado
-microprocesador
-memoria RAM
-disco duro
-SSD
-nube
-telegrama
-teléfono fijo
-teléfono móvil
-SMS
-email
-chat
-videollamada
-redes sociales
-metaverso
-inteligencia artificial general
-
-[PELÍCULAS Y PERSONAJES]
-----------------------------------------
-Indiana Jones
-Han Solo
-Luke Skywalker
-Darth Vader
-Yoda
-Princesa Leia
-R2-D2
-C-3PO
-Obi-Wan
-Chewbacca
-Frodo Bolsón
-Gandalf el Gris
-Aragorn
-Legolas
-Gimli
-Gollum
-Sauron
-Saruman
-Boromir
-Sam Gamyi
-Harry Potter
-Hermione
-Ron Weasley
-Albus Dumbledore
-Voldemort
-Severus Snape
-Draco Malfoy
-Hagrid
-Sirius Black
-Bellatrix Lestrange
-Iron Man
-Capitán América
-Thor
-Hulk
-Viuda Negra
-Ojo de Halcón
-Spider-Man
-Doctor Strange
-Ant-Man
-Groot
-Batman
-Superman
-Wonder Woman
-The Flash
-Aquaman
-Cyborg
-Linterna Verde
-Martian Manhunter
-Zatanna
-Shazam
-Simba
-Mufasa
-Scar
-Timon
-Pumba
-Rafiki
-Nala
-Sarabi
-Zazu
-Shenzi
-Forrest Gump
-Jack Sparrow
-Sherlock Holmes
-James Bond
-Jason Bourne
-John Wick
-Ethan Hunt
-John McClane
-Ellen Ripley
-Sarah Connor
-Buzz Lightyear
-Woody
-Jessie
-Rex
-Hamm
-Mr. Potato
-Slinky
-Little Bo Peep
-Bullseye
-Lotso
-Nemo
-Dory
-Marlin
-Crush
-Squirt
-Bruce
-Anchor
-Chum
-Gill
-Gurgle
-Wall-E
-Eva
-M-O
-Auto
-Captain McCrea
-BURN-E
-AXIOM
-DIRECTIVE
-Define dancing
-Plant
-
-[PARTES DE VEHÍCULOS]
-----------------------------------------
-motor
-caja de cambios
-embrague
-freno de disco
-freno de tambor
-suspensión
-amortiguador
-dirección
-volante
-pedal
-acelerador
-freno
-embrague
-velocímetro
-cuenta revoluciones
-indicador de combustible
-temperatura del motor
-presión de aceite
-carga de batería
-velocidad crucero
-radiador
-alternador
-batería
-bujía
-filtro de aire
-filtro de aceite
-filtro de combustible
-correa de distribución
-bomba de agua
-compresor de aire acondicionado
-neumático
-llanta
-llanta de aleación
-rueda de repuesto
-tapacubos
-válvula
-presión de inflado
-desgaste
-banda de rodadura
-flanco
-parabrisas
-cristal trasero
-luneta
-retrovisor exterior
-retrovisor interior
-limpiaparabrisas
-elevalunas
-cierre centralizado
-sunroof
-panorámico
-carrocería
-guardabarros
-paragolpes
-capó
-maletero
-umbral
-pilar
-techo
-puerta
-manilla
-faro delantero
-faro trasero
-luz de posición
-intermitente
-luz de freno
-luz de marcha atrás
-luz de niebla
-piloto trasero
-retroreflector
-luz de matrícula
-catalizador
-tubo de escape
-silenciador
-colector de escape
-sonda lambda
-filtro de partículas
-EGR
-turbo
-intercooler
-inyector
-caja automática
-CVT
-doble embrague
-secuencial
-tiptronic
-4x4
-tracción delantera
-tracción trasera
-tracción total
-diferencial
-
-[INSTRUMENTOS MUSICALES DETALLADOS]
-----------------------------------------
-guitarra eléctrica
-guitarra acústica
-guitarra clásica
-guitarra de 12 cuerdas
-bajo eléctrico
-contrabajo
-ukelele
-banjo
-mandolina
-laúd
-piano de cola
-piano vertical
-piano eléctrico
-órgano electrónico
-sintetizador
-teclado MIDI
-sampler
-theremin
-armónica
-acordeón
-violín
-viola
-violonchelo
-contrabajo
-arpa
-cítara
-salterio
-dulcémele
-gayda
-zanfona
-trompeta
-trombón
-tuba
-trompa
-fliscorno
-figle
-bombardino
-corneta
-flugelhorno
-corno inglés
-flauta traversa
-flauta de pico
-píccolo
-oboe
-clarinete
-fagot
-contrafagot
-saxofón alto
-saxofón tenor
-saxofón soprano
-batería acústica
-batería electrónica
-caja
-bombo
-charles
-platillo crash
-platillo ride
-tom tom
-floor tom
-cowbell
-bongos
-congas
-timbales
-djembé
-cajon
-pandereta
-maracas
-clave
-güiro
-shekere
-xilófono
-marimba
-vibráfono
-glockenspiel
-carillón
-campana tubular
-cuenco tibetano
-triángulo
-crotales
-gong
-sitar
-tabla
-tanpura
-sarod
-sarangi
-shehnai
-bansuri
-pakhawaj
-mridangam
-ghatam
-erhu
-guqin
-pipa
-guzheng
-dizi
-xiao
-sheng
-hulusi
-suona
-yangqin
-
-[GASTRONOMÍA AVANZADA]
-----------------------------------------
-mise en place
-brunoise
-juliana
-chiffonade
-macedoine
-concasse
-tourné
-paysanne
-vichy
-jardinière
-demi-glace
-velouté
-béchamel
-hollandaise
-mayonesa
-vinagreta
-coulis
-chutney
-compota
-confit
-sous vide
-esferificación
-gelificación
-emulsión
-espuma
-gel
-lyo
-deshidratación
-fermentación
-curación
-wok
-parrilla
-plancha
-sartén de hierro
-cocotte
-cazuela de barro
-tajín
-tandoor
-horno de leña
-ahumador
-Michelin
-Repsol
-James Beard
-chef ejecutivo
-chef de partie
-garde manger
-patissier
-boulanger
-poissonnier
-saucier
-umami
-retrogusto
-bouquet garni
-mirepoix
-sachet d'épices
-fondo oscuro
-fondo blanco
-fumet
-consommé
-bisque
-temperatura de servicio
-maridaje
-sommelier
-decantación
-temperatura de bodega
-vino de guarda
-vino joven
-cava
-champagne
-prosecco
-brunch
-tasting menu
-menú degustación
-carta
-menú del día
-amuse-bouche
-aperitivo
-entrante
-principal
-postre
-
-[CIENCIAS SOCIALES Y HUMANIDADES]
-----------------------------------------
-antropología
-arqueología
-sociología
-psicología social
-economía
-ciencias políticas
-relaciones internacionales
-geografía humana
-historia contemporánea
-filosofía política
-cultura
-civilización
-sociedad
-comunidad
-grupo social
-clase social
-estrato
-movilidad social
-integración
-exclusión
-globalización
-localización
-glocalización
-multiculturalismo
-interculturalidad
-transculturación
-aculturación
-sincretismo
-creolización
-hibridación
-identidad
-alteridad
-otredad
-etnicidad
-raza
-género
-sexualidad
-orientación sexual
-identidad de género
-interseccionalidad
-derechos civiles
-derechos políticos
-derechos económicos
-derechos culturales
-derechos colectivos
-derechos indígenas
-derechos de la mujer
-derechos LGBTQ
-derechos del niño
-derechos del migrante
-marxismo
-feminismo
-liberalismo
-conservadurismo
-anarquismo
-ecologismo
-pacifismo
-nacionalismo
-internacionalismo
-cosmopolitismo
-estructuralismo
-funcionalismo
-interaccionismo simbólico
-fenomenología
-hermenéutica
-semiótica
-análisis del discurso
-etnografía
-etnometodología
-grounded theory
-encuesta
-entrevista
-observación participante
-análisis de contenido
-estadísticas descriptivas
-estadísticas inferenciales
-muestra
-población
-variable
-hipótesis
-
-[TECNOLOGÍA EMERGENTE]
-----------------------------------------
-inteligencia artificial generativa
-ChatGPT
-modelos de lenguaje
-prompt engineering
-fine-tuning
-transfer learning
-aprendizaje supervisado
-aprendizaje no supervisado
-aprendizaje por refuerzo
-redes generativas adversariales
-realidad virtual
-realidad aumentada
-realidad mixta
-hologramas
-displays volumétricos
-interfaz cerebro-máquina
-exoesqueleto
-prótesis biónica
-órgano impreso en 3D
-tejido sintético
-computación cuántica
-qubit
-superposición
-entrelazamiento
-puerta cuántica
-algoritmo de Shor
-algoritmo de Grover
-corrección de errores cuánticos
-ventaja cuántica
-computadora cuántica
-blockchain
-smart contract
-token
-NFT
-DeFi
-DAO
-Web3
-criptomoneda
-minería
-wallet
-Internet of Things
-smart home
-wearable
-sensor
-actuador
-protocolo MQTT
-Raspberry Pi
-Arduino
-edge computing
-fog computing
-biotecnología
-CRISPR
-edición genómica
-terapia génica
-medicina personalizada
-farmacogenómica
-proteómica
-metabolómica
-bioinformática
-biología sintética
-neurociencia computacional
-conectoma
-mapa cerebral
-estimulación magnética transcraneal
-electrocorticografía
-neuroprótesis
-memoria artificial
-mejora cognitiva
-transhumanismo
-singularidad tecnológica
-energía de fusión
-reactor ITER
-tokamak
-stellarator
-confinamiento inercial
-plasma
-tritio
-deuterio
-superconductores de alta temperatura
-baterías de estado sólido
-impresión 3D de metal
-manufactura aditiva
-sinterización laser
-FDM
-SLA
-DLP
-bioimpresión
-nanotecnología
-nanomaterial
-grafeno
-
-[PALABRAS EN OTROS IDIOMAS USADAS EN ESPAÑOL]
-----------------------------------------
-déjà vu
-vis-à-vis
-tête-à-tête
-joie de vivre
-savoir-faire
-laissez-faire
-enfant terrible
-café au lait
-au gratin
-ratatouille
-wanderlust
-angst
-zeitgeist
-weltanschauung
-schadenfreude
-doppelganger
-leitmotiv
-kindergarten
-realpolitik
-poltergeist
-pizza
-pasta
-lasagna
-cappuccino
-espresso
-gelato
-risotto
-bruschetta
-panettone
-tiramisu
-karaoke
-haiku
-manga
-anime
-origami
-sushi
-sashimi
-ramen
-samurai
-ninja
-macho
-fiesta
-siesta
-aficionado
-plaza
-hasta la vista
-hasta mañana
-vamos
-olé
-torero
-zen
-tao
-yin yang
-feng shui
-karma
-dharma
-yoga
-mantra
-nirvana
-chakra
-avatar
-bungalow
-shampoo
-jungle
-thug
-bandana
-pyjamas
-jodhpurs
-dungarees
-khaki
-algebra
-alcohol
-algorithm
-alchemy
-cipher
-tariff
-magazine
-safari
-safari
-cotton
-chocolate
-tomato
-avocado
-chili
-cacao
-vanilla
-tobacco
-jaguar
-hammock
-barbecue
-ketchup
-noodle
-toast
-bacon
-steak
-pudding
-biscuit
-sandwich
-cake
-pie
-
-
-
-[MÁS ANIMALES]
-----------------------------------------
-albatrós
-albatros
-pardela
-alcatraz
-fragata
-rabijunco
-petrel
-paiño
-fulmar
-skúa
-casuario
-emú
-ñandú
-kiwi
-kakapo
-takahe
-notornis
-huia
-moa
-dodo
-quetzal
-tucán toco
-guacamayo azul
-perico
-cotorra
-lorito
-calopsita
-ninfa
-ecléctico
-loro gris africano
-mandril
-macaco
-gibón
-orangután
-babuino
-chimpancé
-bonobo
-lémur
-aye-aye
-indri
-dugong
-manatí
-delfín rosado
-orca
-beluga
-narval
-cachalote
-ballena jorobada
-ballena azul
-rorcual
-axolotl
-mudskipper
-pez arquero
-pez globo
-pez espada
-pez vela
-pez aguja
-pez sierra
-pez martillo
-pez luna
-mantarraya
-raya eléctrica
-pez torpedo
-pintarroja
-gata
-tollo
-quelvacho
-mielga
-cazón
-marrajo
-escarabajo hércules
-escarabajo rinoceronte
-escarabajo goliat
-escarabajo ciervo
-mariposa morfó
-mariposa monarca
-polilla atlas
-polilla luna
-mantis orquídea
-palo indio
-víbora cornuda
-serpiente de coral
-serpiente del maíz
-king snake
-racer
-garter snake
-hognose
-milk snake
-rat snake
-bull snake
-caimán
-gavial
-cocodrilo de agua salada
-cocodrilo del Nilo
-cocodrilo americano
-cocodrilo de Cuba
-cocodrilo siamés
-cocodrilo de pantano
-cocodrilo de Johnston
-falso gavial
-
-[MÁS COMIDA Y RECETAS]
-----------------------------------------
-caldo de huesos
-consomé doble
-velouté de espárragos
-crema de calabaza
-sopa de cebolla gratinada
-ensalada César
-ensalada griega
-ensalada caprese
-ensalada nicoise
-ensalada waldorf
-ceviche de camarón
-tiradito de lenguado
-leche de tigre
-chicharrón de calamar
-conchas a la parmesana
-ají de gallina
-carapulca
-papa a la huancaína
-arroz con leche
-mazamorra morada
-mondongo
-anticucho de corazón
-cau cau
-sancochado
-patita con maní
-chupe de camarones
-parihuela
-sudado de corvina
-choritos a la chalaca
-tortilla de raya
-bistec a lo pobre
-lomo fino con champiñones
-pollo a la brasa
-arroz árabe
-tallarines verdes
-picarones
-suspiro de limeña
-turrón de doña pepa
-manjar blanco
-crema volteada
-mojito
-pisco sour
-margarita
-daiquiri
-cosmopolitan
-negroni
-manhattan
-martini
-old fashioned
-aperol spritz
-smoothie de fresas
-batido de plátano
-limonada con jengibre
-agua de Jamaica
-horchata
-tepache
-agua de tamarindo
-refrescos de fruta
-infusión de hierbas
-kombucha
-
-[MÁS LUGARES DEL MUNDO]
-----------------------------------------
-Machu Picchu
-Chichén Itzá
-Angkor Wat
-Taj Mahal
-Petra
-Coliseo Romano
-Gran Muralla China
-Machu Picchu
-Stonehenge
-Moáis de Isla de Pascua
-Partenón
-Acrópolis
-Foro Romano
-Palatino
-Termas de Caracalla
-Panteón
-Basílica de San Pedro
-Capilla Sixtina
-Vaticano
-Castel Sant'Angelo
-Torre Eiffel
-Arco del Triunfo
-Louvre
-Notre Dame
-Versalles
-Moulin Rouge
-Sacré-Cœur
-Montmartre
-Champs-Élysées
-Ópera Garnier
-Big Ben
-Palacio de Buckingham
-Tower Bridge
-The Shard
-British Museum
-Tate Modern
-Covent Garden
-Hyde Park
-Oxford Street
-Piccadilly Circus
-Sagrada Familia
-Park Güell
-Camp Nou
-Las Ramblas
-Parc de la Ciutadella
-Barrio Gótico
-Picasso Museum
-Fundació Miró
-Palau de la Música
-Barceloneta
-Alhambra
-Generalife
-Alcázar de Sevilla
-Catedral de Sevilla
-Mezquita de Córdoba
-El Escorial
-Toledo
-Segovia
-Salamanca
-Santiago de Compostela
-Amazonas brasileño
-Pantanal
-Cataratas del Iguazú
-Cristo Redentor
-Pan de Azúcar
-Copacabana
-Ipanema
-Pelourinho
-Ouro Preto
-Brasilia
-Patagonia argentina
-Perito Moreno
-Torres del Paine
-Atacama
-Salar de Uyuni
-Titicaca
-Valle Sagrado
-Cuzco
-Nazca
-Chan Chan
-Serengeti
-Masai Mara
-Kilimanjaro
-Ngorongoro
-Okavango
-Victoria Falls
-Sahara occidental
-Marruecos
-Zanzibar
-Seychelles
-Uluru
-Gran Barrera de Coral
-Sydney Harbour
-Melbourne CBD
-Fiordos de Nueva Zelanda
-Monte Cook
-Waitomo
-Rotorua
-Queenstown
-Milford Sound
-
-[MISCELÁNEA Y PALABRAS DIFÍCILES]
-----------------------------------------
-quincuagésimo
-nonagésimo
-centésimo
-milenario
-bicentenario
-tricentenario
-cuatricentenario
-quintocentenario
-milenio
-época
-efímero
-fugaz
-etéreo
-sublime
-prosaico
-banal
-trivial
-prístino
-impoluto
-inmaculado
-apocado
-pusilánime
-magnánimo
-preclaro
-egrégio
-eximio
-preclaro
-conspicuo
-ínclito
-insigne
-colisión
-fusión
-fisión
-implosión
-explosión
-combustión
-oxidación
-reducción
-catálisis
-electrólisis
-sismicidad
-vulcanismo
-erosión
-sedimentación
-diagénesis
-metamorfismo
-plutonismo
-epeirogénesis
-orogénesis
-glaciación
-fotosíntesis
-quimiosíntesis
-respiración aeróbica
-respiración anaeróbica
-fermentación alcohólica
-fermentación láctica
-digestión anaerobia
-biometanización
-compostaje
-vermicompostaje
-pitagórico
-euclidiano
-cartesiano
-leibniziano
-kantiano
-hegeliano
-marxista
-freudiano
-jungiano
-lacaniano
-paleolítico
-mesolítico
-neolítico
-calcolítico
-Edad del Bronce
-Edad del Hierro
-Edad Antigua
-Edad Media
-Edad Moderna
-Edad Contemporánea
-magnetosfera
-ionosfera
-termosfera
-mesosfera
-estratosfera
-troposfera
-exosfera
-heliosfera
-heliocéntrico
-geocéntrico
-hipermetropía
-miopía
-astigmatismo
-presbicia
-glaucoma
-cataratas
-daltonismo
-diplopía
-estrabismo
-nistagmo
-hipoglucemia
-hiperglucemia
-hipotensión
-hipertensión
-taquicardia
-bradicardia
-arritmia
-fibrilación
-flutter
-extrasístole
-celíaco
-diabético
-hipertenso
-asmático
-epiléptico
-esquizofrénico
-bipolar
-ansioso
-depresivo
-obsesivo-compulsivo
-acrofobia
-claustrofobia
-agorafobia
-aracnofobia
-xenofobia
-homofobia
-transfobia
-misoginia
-misandria
-racismo
-
-[JUEGOS Y ENTRETENIMIENTO]
-----------------------------------------
-ajedrez
-damas
-dominó
-parchís
-oca
-trivial pursuit
-monopoly
-scrabble
-clue
-risk
-cartas de poker
-blackjack
-baccarat
-ruleta
-tragamonedas
-craps
-bingo
-lotería
-keno
-dados
-sudoku
-crucigrama
-sopa de letras
-acertijo
-adivinanza
-rebus
-jeroglífico
-pictograma
-código morse
-criptograma
-escape room
-laser tag
-paintball
-go-kart
-boliche
-minigolf
-billar americano
-billar francés
-billar a tres bandas
-snooker
-magia
-ilusionismo
-prestidigitación
-mentalismo
-escapismo
-malabarismo
-acrobacia
-contorsionismo
-equilibrismo
-funambulismo
-teatro de marionetas
-guiñol
-títere de mano
-marioneta de hilo
-teatro de sombras
-bunraku
-kabuki
-noh
-commedia dell'arte
-mimo
-origami
-papiroflexia
-kirigami
-papier mâché
-decoupage
-macramé
-cestería
-alfarería
-soplado de vidrio
-forja
-cosplay
-LARP
-wargame
-rol en mesa
-dungeon master
-personaje de nivel 20
-tirada de dado
-crítico
-fallo
-salvación
-speedrun
-glitch
-exploit
-mod
-DLC
-patch
-beta
-alpha
-early access
-free to play
-eSports
-torneo online
-clan
-guild
-raid
-boss
-loot
-crafting
-farming
-grinding
+Reflejo
+Líquido
+Sólido
+Vacío
+Lleno
+Roto
+Redondo
+Pesado
+Liviano
+Invisible
+Transparente
+Curvo
+Afilado
+Suave
+Rugoso
+Mojado
+Seco
 
 
 ============================================================
-TOTAL DE PALABRAS ÚNICAS: 4658
-============================================================
-
-[ROPA DETALLADA]
-----------------------------------------
-leggings
-mallas
-culotte
-pantalón cargo
-pantalón palazzo
-pantalón capri
-pantalón pitillo
-pantalón acampanado
-pantalón de pana
-pantalón de lino
-camiseta sin mangas
-camiseta de tirantes
-camiseta oversized
-camiseta crop
-polo
-rugby shirt
-henley
-thermal
-camiseta de manga larga
-camiseta de rayas
-blazer
-chaqueta vaquera
-chaqueta de cuero
-chaqueta bomber
-chaqueta de punto
-cardigan
-rebeca
-chaleco de punto
-chaleco acolchado
-chaleco de plumas
-vestido de noche
-vestido de cóctel
-vestido de día
-vestido playero
-vestido bohemio
-vestido ajustado
-vestido amplio
-vestido de tirantes
-vestido cruzado
-vestido wrap
-falda tubo
-falda campana
-falda plisada
-falda asimétrica
-falda midi
-falda maxi
-falda mini
-falda con vuelo
-falda lápiz
-falda circular
-bota cowboy
-bota de agua
-bota de montaña
-bota Chelsea
-bota de cordones
-botín
-botín de tacón
-botín plano
-zapato oxford
-zapato Derby
-zapatilla deportiva
-zapatilla de running
-zapatilla de baloncesto
-zapatilla de fútbol sala
-zapatilla casual
-mocasín
-loafer
-slip-on
-espadrille
-clog
-sombrero panamá
-sombrero fedora
-sombrero cowboy
-sombrero de ala ancha
-sombrero cloche
-sombrero pillbox
-gorro de lana
-gorro de ducha
-tocado
-headband
-maxi cardi
-jumpsuit
-mono
-overall
-pelele
-body
-catsuit
-leotardo
-maillot
-culotte
-traje sastre
-traje chaqueta
-traje pantalón
-traje de baño de una pieza
-biquini
-pareo
-kaftan
-huipil
-quechquémitl
-rebozo
-
-[HERRAMIENTAS Y BRICOLAJE]
-----------------------------------------
-taladro percutor
-atornillador eléctrico
-sierra circular
-sierra caladora
-sierra de mesa
-sierra de calar
-lijadora orbital
-lijadora de banda
-amoladora
-pulidora
-martillo de uña
-martillo de bola
-martillo de goma
-mazo
-maza
-maceta
-cincel
-escoplo
-formón
-gubia
-llave inglesa
-llave ajustable
-llave de tubo
-llave de vaso
-llave hexagonal
-llave Torx
-destornillador plano
-destornillador estrella
-destornillador Pozidriv
-destornillador Torx
-alicates de punta
-alicates de corte
-alicates de presión
-tenazas
-pinzas
-morsa
-tornillo de banco
-prensa en C
-sargento
-mordaza
-cinta métrica
-nivel de burbuja
-nivel láser
-plomada
-escuadra
-cartabón
-transportador
-compás de puntas
-gramil
-calibre
-pintura al agua
-pintura al aceite
-barniz
-lasur
-esmalte
-imprimación
-sellador
-masilla
-silicona
-espuma de poliuretano
-lija de grano 80
-lija de grano 120
-lija de grano 220
-lija de grano 400
-papel de lija
-esponja de lija
-disco de lija
-piedra de esmeril
-pasta de pulir
-cera
-tubo de PVC
-codo de PVC
-te de PVC
-reducción
-válvula de bola
-grifo
-llave de paso
-contador
-sifón
-desagüe
-cable eléctrico
-cable de cobre
-regleta
-interruptor
-enchufe schuko
-disyuntor
-diferencial
-caja de distribución
-fusible
-protector de sobretensión
-
-[MASCOTAS Y ANIMALES DOMÉSTICOS]
-----------------------------------------
-comedero automático
-bebedero de fuente
-cama para mascotas
-transportín
-correa
-arnés
-collar antipulgas
-collar GPS
-microchip
-vacuna
-veterinario
-clínica veterinaria
-peluquería canina
-adiestramiento
-agility
-flyball
-frisbee canino
-dock diving
-treibball
-mantrailing
-acuario
-pecera
-filtro de acuario
-bomba de oxígeno
-decoración de pecera
-grava de acuario
-plantas acuáticas
-termómetro de acuario
-test de agua
-alimento para peces
-terrario
-lámpara UV
-piedra caliza
-tronco de corcho
-humid hide
-dry hide
-sustrato
-muda de piel
-suplemento de calcio
-grillo vivo
-jaula para aves
-posadero
-bañera para pájaros
-nido
-salero
-calamar de sepia
-juguete para aves
-columpio
-espejo
-trapeador
-arena para gatos
-arenero
-pala para arena
-spray antigruñido
-rascador
-árbol para gatos
-cama colgante
-tunnel
-pelota con campanilla
-ratón de juguete
-hueso de roer
-Kong
-pelota de tenis
-mordedor
-cuerda de juguete
-frisbee
-pelota de agility
-correa extensible
-doble correa
-silbato
-pez betta
-pez dorado
-pez koi
-pez discus
-pez ángel
-pez payaso
-pez cirujano
-pez globo
-pez mandarín
-pez napoleón
-
-[SALUD Y BIENESTAR]
-----------------------------------------
-meditación
-mindfulness
-yoga
-pilates
-tai chi
-qi gong
-stretching
-foam roller
-masaje
-acupuntura
-medicina alternativa
-homeopatía
-osteopatía
-quiropráctica
-reflexología
-aromaterapia
-cristaloterapia
-reiki
-shiatsu
-ayurveda
-dieta mediterránea
-dieta cetogénica
-dieta paleo
-dieta vegana
-dieta vegetariana
-ayuno intermitente
-dieta DASH
-dieta antiinflamatoria
-macrobiótica
-crudiveganismo
-suplemento proteico
-vitamina C
-vitamina D
-omega 3
-probióticos
-prebióticos
-colágeno
-ácido hialurónico
-coenzima Q10
-resveratrol
-electrocardiograma
-ecocardiograma
-holter
-ergometría
-coronariografía
-cateterismo
-stent
-bypass
-ablación
-desfibrilador
-mamografía
-ecografía mamaria
-biopsia
-citología
-colposcopia
-histeroscopia
-laparoscopia
-histerectomía
-miomectomía
-cesárea
-fractura
-esguince
-luxación
-contusión
-hematoma
-rotura fibrilar
-tendinitis
-bursitis
-fascitis plantar
-síndrome del túnel carpiano
-insomnio
-apnea del sueño
-narcolepsia
-sonambulismo
-bruxismo
-síndrome de piernas inquietas
-parálisis del sueño
-terrores nocturnos
-hipersomnia
-ritmo circadiano
-alergia al polen
-alergia alimentaria
-intolerancia al gluten
-intolerancia a la lactosa
-alergia a los ácaros
-alergia a los animales
-urticaria
-angioedema
-anafilaxis
-epinefrina
-depresión mayor
-trastorno bipolar
-esquizofrenia
-trastorno de pánico
-fobia social
-TOC
-TEPT
-TDAH
-autismo
-síndrome de Asperger
-
-============================================================
-TOTAL FINAL DE PALABRAS: 5028
+  TOTAL DE PALABRAS: ~600
+  Versión optimizada para juego de dibujos
 ============================================================

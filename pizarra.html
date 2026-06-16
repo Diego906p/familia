@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pizarra — Panel de Luanna</title>
-  <link rel="stylesheet" href="css/pizarra.css?v=15">
+  <link rel="stylesheet" href="css/pizarra.css?v=20">
 </head>
 <body>
 <div class="pz-app" id="pzApp">
@@ -14,6 +14,15 @@
     <h1>🎨 Pizarra colaborativa</h1>
     <div class="pz-presence-bar" id="pzPresence"></div>
     <span class="pz-role-badge" id="pzRoleBadge" style="display:none">Administrador</span>
+    <div class="pz-admin-top" id="pzAdminTop" style="display:none">
+      <select id="pzBg" class="pz-select pz-top-select" title="Fondo de la pizarra">
+        <option value="white">⬜ Blanco</option>
+        <option value="grid">▦ Cuadriculado</option>
+        <option value="lines">▤ Rayado</option>
+      </select>
+      <button class="pz-top-btn" id="pzLayersBtn" title="Capas">📁 Capas</button>
+      <button class="pz-top-btn" id="pzAdminBtn" title="Configuración de Papá">⚙ Config</button>
+    </div>
     <button class="pz-top-btn pz-play-btn" id="pzPlayBtn" title="Modo juego: Adivina el Dibujo">🎮 Jugar</button>
     <div class="spacer"></div>
     <button class="pz-top-btn" data-tool="laser" id="pzLaserTop" title="Puntero láser">🔦 Láser</button>
@@ -34,9 +43,7 @@
       <button class="pz-tool" data-tool="fill" title="Bote de relleno">🪣</button>
       <button class="pz-tool" data-tool="text" data-perm="text" title="Texto (T)">🔤</button>
       <span class="pz-sep-h"></span>
-      <button class="pz-tool" data-tool="line" title="Línea">╱</button>
-      <button class="pz-tool" data-tool="arrow" title="Flecha">➜</button>
-      <button class="pz-tool" id="pzShapeBtn" title="Formas (cuadrado, círculo, estrella…)">▭</button>
+      <button class="pz-tool" id="pzShapeBtn" title="Formas, línea y flecha">▭</button>
       <button class="pz-tool" id="pzStickerBtn" data-perm="stickers" title="Stickers y sellos">🏷️</button>
       <span class="pz-sep-h"></span>
       <label class="pz-tool" data-perm="image" title="Insertar imagen">🖼️
@@ -60,9 +67,9 @@
         <button class="pz-tool sm" id="pzFbSwap" title="Intercambiar relleno/borde">⇄</button>
         <button class="pz-tool sm" id="pzFbNone" title="Sin color (relleno/borde activo)">▱</button>
         <div class="pz-swatches" id="pzSwatches"></div>
-        <button class="pz-tool sm" id="pzStyleBtn" title="Color y estilo">🎨</button>
+        <button class="pz-tool sm" id="pzStyleBtn" title="Trazo y pincel">✒️</button>
         <span class="pz-sep"></span>
-        <label class="pz-size">Grosor <input type="range" id="pzSize" min="1" max="120" value="4"></label>
+        <label class="pz-size">Grosor <input type="range" id="pzSize" min="1" max="200" value="4"></label>
         <button class="pz-tool sm" id="pzLock" title="Bloquear proporción">🔓</button>
         <span class="pz-sep"></span>
         <button class="pz-tool sm" id="pzZoomOut" title="Alejar">➖</button>
@@ -83,6 +90,8 @@
           <button data-tool="triangle" title="Triángulo">△</button>
           <button data-tool="star" title="Estrella">★</button>
           <button data-tool="polygon" title="Polígono">⬡</button>
+          <button data-tool="line" title="Línea">╱</button>
+          <button data-tool="arrow" title="Flecha">➜</button>
         </div>
 
         <!-- Modo juego: Adivina el Dibujo -->
@@ -120,6 +129,7 @@
           <button class="pz-mini" id="pzGroup" title="Agrupar (Ctrl+G)">🔗</button>
           <button class="pz-mini" id="pzUngroup" title="Desagrupar (Ctrl+Shift+G)">✂️</button>
           <button class="pz-mini" id="pzDup" title="Duplicar (Ctrl+D)">⧉</button>
+          <button class="pz-mini" id="pzToShape" title="Convertir trazo en forma">⬟</button>
           <button class="pz-mini" id="pzDel" title="Eliminar (Supr)">🗑️</button>
           <span class="pz-sep pz-multi"></span>
           <button class="pz-mini pz-multi" id="pzAlignL" title="Alinear izquierda">⇤</button>
@@ -139,11 +149,8 @@
 
         <!-- Panel de color y estilo -->
         <div class="pz-style" id="pzStylePanel">
-          <div class="pz-style-head"><span>🎨 Color y estilo</span><button id="pzStyleClose">✕</button></div>
+          <div class="pz-style-head"><span>✒️ Trazo y pincel</span><button id="pzStyleClose">✕</button></div>
           <div class="pz-style-body">
-            <div class="pz-style-row"><label>Borde</label><input type="color" id="pzStrokeColor" value="#3c3160"></div>
-            <div class="pz-style-row"><label>Relleno</label><input type="color" id="pzFillColor" value="#ffd23d">
-              <label class="pz-chk"><input type="checkbox" id="pzFillOn"> Sin relleno</label></div>
             <div class="pz-style-row"><label>Estilo</label>
               <select id="pzBorderStyle" class="pz-select">
                 <option value="solid">Sólido ───</option><option value="dashed">Guiones ┄┄</option><option value="dotted">Puntos ┈┈</option>
@@ -151,6 +158,10 @@
             <div class="pz-style-row"><label>Pincel</label>
               <select id="pzFidelity" class="pz-select">
                 <option value="precise">Precisión</option><option value="balanced" selected>Equilibrado</option><option value="smooth">Suavizado</option>
+              </select></div>
+            <div class="pz-style-row"><label>Punta</label>
+              <select id="pzBrushCap" class="pz-select">
+                <option value="round" selected>Redondeada</option><option value="square">Cuadrada proyectada</option><option value="taper">En punta</option>
               </select></div>
             <div class="pz-style-recents"><span class="pz-recent-label">Recientes</span><div class="pz-recent-row" id="pzRecents"></div></div>
           </div>
@@ -168,32 +179,20 @@
       </div>
     </div>
 
-    <!-- Panel derecho (solo Papá): Fondo · Capas · Permisos -->
-    <div class="pz-rightpanel" id="pzRightPanel" style="display:none">
-      <div class="pz-rp-section">
-        <div class="pz-rp-title">🎨 Fondo</div>
-        <select id="pzBg" class="pz-select" style="width:100%">
-          <option value="white">Fondo blanco</option>
-          <option value="grid">Cuadriculado</option>
-          <option value="lines">Rayado</option>
-        </select>
-      </div>
-      <div class="pz-rp-section pz-rp-layers">
-        <div class="pz-rp-title">🗂️ Capas</div>
-        <div class="pz-layers" id="pzLayers"></div>
-      </div>
-      <div class="pz-rp-section">
-        <button class="pz-rp-dropbtn" id="pzAdminBtn">⚙ Configuración de Papá <span class="pz-caret">▸</span></button>
-        <div class="pz-admin-menu" id="pzAdminMenu">
-          <div class="pz-rp-title" style="margin-top:6px">🛡️ Permisos de Luanna e invitados</div>
-          <div class="pz-perms-body" id="pzPermsBody"></div>
-          <button class="pzg-btn" id="pzAdminEndGame" style="margin-top:10px;display:none">⏹ Terminar partida</button>
-        </div>
-      </div>
-    </div>
-
   </div>
 </div>
+
+  <!-- Ventanas flotantes de Papá (ancladas a sus botones de la barra superior) -->
+  <div class="pz-float" id="pzLayersPanel">
+    <div class="pz-float-head"><span>🗂️ Capas</span><button class="pz-float-x" id="pzLayersClose">✕</button></div>
+    <div class="pz-layers" id="pzLayers"></div>
+  </div>
+  <div class="pz-float" id="pzAdminMenu">
+    <div class="pz-float-head"><span>⚙ Configuración de Papá</span><button class="pz-float-x" id="pzAdminClose">✕</button></div>
+    <div class="pz-rp-title" style="margin-top:8px">🛡️ Permisos de Luanna e invitados</div>
+    <div class="pz-perms-body" id="pzPermsBody"></div>
+    <button class="pzg-btn" id="pzAdminEndGame" style="margin-top:10px;display:none">⏹ Terminar partida</button>
+  </div>
 
   <!-- Botón oculto de permisos (compatibilidad con la lógica) -->
   <button id="pzPerms" style="display:none"></button>
@@ -202,6 +201,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
   <script src="js/config.js?v=3"></script>
   <script src="js/auth.js?v=6"></script>
-  <script src="js/pizarra.js?v=15"></script>
+  <script src="js/pizarra.js?v=21"></script>
+  <script src="js/juego.js?v=5"></script>
 </body>
 </html>
