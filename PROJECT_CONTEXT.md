@@ -66,10 +66,7 @@ Luanna/
 │   ├── svgs.js             # Ilustraciones SVG de respaldo (DESACTIVADAS; USE_SVG_FALLBACK=false)
 │   ├── dashboard.js        # Render del panel de Luanna
 │   ├── admin.js            # Lógica del panel admin (registro, publicar a GitHub, historial)
-│   ├── pizarra.js          # Motor de pizarra PURA (dibujo). ~1550 líneas
-│   └── juego.js            # Módulo independiente "Adivina el Dibujo" (IIFE GAME). Se carga
-│                           #   DESPUÉS de pizarra.js; comparte scope global. La pizarra se
-│                           #   acopla por GAME.blockPointer()/blockTool()/onPresence (typeof guards)
+│   └── pizarra.js          # TODO el motor de pizarra + juego (el archivo más grande, ~1900 líneas)
 │
 ├── data/
 │   └── data.json           # Datos: meta, messages, records, readings, mathTopics
@@ -85,7 +82,7 @@ Luanna/
 
 - **Páginas independientes (MPA), no SPA.** Cada `.html` es autónomo, carga sus propios scripts. La "navegación" es `location.href`. Razón: simplicidad máxima en sitio estático, sin router.
 - **Sesión por `sessionStorage`** bajo la clave `luanna_session` (`{username, role, ...}`). `requireAuth(roles)` redirige a `index.html` si el rol no alcanza.
-- **Versionado de caché manual:** cada `<script>`/`<link>` lleva `?v=N`. Al cambiar un JS/CSS hay que **subir N** en los HTML que lo referencian, para que navegadores/tablets recarguen la versión nueva. (Ver Convenciones.) Estado actual de versiones: `pizarra.css` = `v=20`; `pizarra.js` = `v=21`; `juego.js` = `v=5`; `styles2.css` = `v=4`; `auth.js` = `v=6`; `dashboard.js` = `v=4`; resto `v=3`.
+- **Versionado de caché manual:** cada `<script>`/`<link>` lleva `?v=N`. Al cambiar un JS/CSS hay que **subir N** en los HTML que lo referencian, para que navegadores/tablets recarguen la versión nueva. (Ver Convenciones.) Estado actual de versiones: `pizarra.css`/`pizarra.js` = `v=15`; `styles2.css` = `v=4`; `auth.js` = `v=6`; `dashboard.js` = `v=4`; resto `v=3`.
 - **`data.json` siempre fresco:** se pide con `?t=<timestamp>` único + `cache:"no-store"` → ni el navegador ni el CDN de GitHub Pages sirven copias viejas. Luanna nunca necesita "Ctrl+F5" para ver datos nuevos.
 - **Imágenes remotas conmutables:** `images.js` tiene `USE_REMOTE_IMAGES = true` (repo GitHub) o `false` (carpeta `img/` local).
 - **Pizarra = modelo de objetos sobre `<canvas>`:** todo elemento es un objeto JS (`{id, type, ...}`) renderizado cada frame en un solo canvas, NO pixels. Esto permite mover/editar/sincronizar elementos. La sincronización Firebase es por elemento (`rooms/luanna-pizarra/elements/<id>`).
@@ -308,7 +305,7 @@ python -m http.server 8123     # luego abrir http://localhost:8123
 - Invitado: cualquier nombre
 
 ### Archivos a subir tras la última sesión (si aún no):
-`index.html`, `dashboard.html`, `admin.html`, `pizarra.html`, `guia.html`, `README.md`, `PROJECT_CONTEXT.md`, `libreria_play.txt`, `css/styles.css`, `css/styles2.css`, `css/pizarra.css`, `js/config.js`, `js/auth.js`, `js/data.js`, `js/images.js`, `js/svgs.js`, `js/dashboard.js`, `js/admin.js`, `js/pizarra.js`, `js/juego.js`, `data/data.json`.
+`index.html`, `dashboard.html`, `admin.html`, `pizarra.html`, `guia.html`, `README.md`, `PROJECT_CONTEXT.md`, `libreria_play.txt`, `css/styles.css`, `css/styles2.css`, `css/pizarra.css`, `js/config.js`, `js/auth.js`, `js/data.js`, `js/images.js`, `js/svgs.js`, `js/dashboard.js`, `js/admin.js`, `js/pizarra.js`, `data/data.json`.
 (La carpeta `Diseños/` NO necesita subirse — son mockups de desarrollo.)
 
 ---
