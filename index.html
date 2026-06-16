@@ -147,7 +147,7 @@
   <script>
     // Si ya hay sesión, ir directo a su panel
     const s = getSession();
-    if (s) window.location.href = s.role === "admin" ? "admin.html" : "dashboard.html";
+    if (s) window.location.href = s.role === "admin" ? "admin.html" : (s.role === "guest" ? "pizarra.html" : "dashboard.html");
 
     // Avatares (siempre la versión contenta en el login)
     document.getElementById("imgLuanna").src = IMAGES.avatar_luanna.variants.replace("{n}", 1);
@@ -196,7 +196,7 @@
         const name = guestInput.value.trim();
         if (!name) { err.textContent = "Por favor escribe tu nombre 😊"; return; }
         loginGuest(name);
-        window.location.href = "dashboard.html";
+        window.location.href = "pizarra.html";   // invitado entra directo a la Pizarra
         return;
       }
 
