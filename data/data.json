@@ -1,8 +1,8 @@
 {
   "meta": {
-    "lastUpdate": "2026-06-14",
+    "lastUpdate": "2026-06-15",
     "version": 1,
-    "savedAt": 1781449988428
+    "savedAt": 1781570532354
   },
   "messages": [
     {
@@ -159,6 +159,30 @@
         "done": true
       },
       "note": "Excelente, ya haces tus responsabilidades desde temprano sin que yo te lo esté recordando."
+    },
+    "2026-06-15": {
+      "make_bed": {
+        "done": true
+      },
+      "organize_room": {
+        "done": true
+      },
+      "wash_utensils": {
+        "done": true
+      },
+      "brush_teeth": {
+        "done": true
+      },
+      "reading": {
+        "done": true
+      },
+      "reading_summary": {
+        "done": true
+      },
+      "math": {
+        "done": false
+      },
+      "note": "No quiso hacer matemáticas."
     }
   },
   "readings": [
