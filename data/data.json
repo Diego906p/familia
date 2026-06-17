@@ -1,8 +1,8 @@
 {
   "meta": {
-    "lastUpdate": "2026-06-15",
+    "lastUpdate": "2026-06-17",
     "version": 1,
-    "savedAt": 1781570532354
+    "savedAt": 1781687480392
   },
   "messages": [
     {
@@ -183,6 +183,29 @@
         "done": false
       },
       "note": "No quiso hacer matemáticas."
+    },
+    "2026-06-16": {
+      "make_bed": {
+        "done": true
+      },
+      "organize_room": {
+        "done": true
+      },
+      "wash_utensils": {
+        "done": true
+      },
+      "brush_teeth": {
+        "done": true
+      },
+      "reading": {
+        "done": true
+      },
+      "reading_summary": {
+        "done": true
+      },
+      "math": {
+        "done": true
+      }
     }
   },
   "readings": [
