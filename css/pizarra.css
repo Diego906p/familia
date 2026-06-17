@@ -7,6 +7,7 @@
   --pink: #ff4f9a;
   --text: #3c3160;
   --text-soft: #8d83b5;
+  --green-soft: #d8f6e6;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -104,6 +105,17 @@ body { font-family: "Nunito", "Segoe UI", system-ui, sans-serif; background: #cf
 .pz-tool.active { background: var(--purple); border-color: var(--purple); box-shadow: 0 3px 8px rgba(124,92,255,.4); }
 .pz-tool.active#pzLock, .pz-tool.active#pzLockEl { background: var(--pink); border-color: var(--pink); }
 .pz-tool:disabled, .pz-label-btn.pz-disabled { opacity: .35; pointer-events: none; filter: grayscale(.5); }
+.pz-iconbtn svg { width: 30px; height: 30px; display: block; margin: auto; }
+.pz-tool.pz-iconbtn { display: grid; place-items: center; padding: 0; }
+.pz-chain { position: relative; font-size: 0; }
+.pz-chain::before, .pz-chain::after {
+  content: ""; position: absolute; width: 13px; height: 8px; border: 2px solid currentColor;
+  border-radius: 8px; top: 12px; transform: rotate(-28deg);
+}
+.pz-chain::before { left: 8px; }
+.pz-chain::after { right: 8px; }
+.pz-chain.active::before { left: 10px; }
+.pz-chain.active::after { right: 10px; }
 .pz-sep { width: 1px; height: 30px; background: var(--purple-soft); margin: 0 4px; flex-shrink: 0; }
 
 .pz-select {
@@ -134,10 +146,10 @@ body { font-family: "Nunito", "Segoe UI", system-ui, sans-serif; background: #cf
 
 #pzTextInput {
   position: absolute; z-index: 10; display: none;
-  border: 2px dashed var(--purple); border-radius: 6px;
-  padding: 2px 6px; font-family: "Nunito", sans-serif; outline: none;
+  border: none; border-radius: 6px;
+  padding: 0; font-family: "Nunito", sans-serif;
   background: rgba(255,255,255,.95); min-width: 60px; resize: none; overflow: hidden;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 /* ===== Barra de formato de texto ===== */
@@ -230,6 +242,8 @@ body { font-family: "Nunito", "Segoe UI", system-ui, sans-serif; background: #cf
 .pz-style-row > label:first-child { width: 56px; flex-shrink: 0; }
 .pz-style-row input[type="color"] { width: 44px; height: 32px; border: 2px solid var(--purple-soft); border-radius: 8px; background: none; cursor: pointer; padding: 0; }
 .pz-style-row .pz-select { flex: 1; height: 34px; }
+#pzBrushCap { min-width: 150px; }
+.pz-style-recents { display: none !important; }
 .pz-chk { display: flex; align-items: center; gap: 5px; font-size: .78rem; font-weight: 700; color: var(--text-soft); }
 .pz-chk input { width: 16px; height: 16px; accent-color: var(--purple); }
 .pz-style-recents { border-top: 1px solid var(--purple-soft); padding-top: 10px; }
@@ -454,7 +468,7 @@ input[type="range"] { accent-color: var(--purple); }
   color: #6a4fd8; font-weight: 900;
   background: url("https://raw.githubusercontent.com/Diego906p/imagenes/main/images/star_level.png") center/contain no-repeat;
   filter: drop-shadow(0 12px 30px rgba(255,180,0,.45));
-  padding-bottom: 18px;
+  padding-top: 34px; padding-bottom: 4px;   /* bajar el bloque de texto para centrarlo en la estrella */
 }
 .pz-star-w { font-size: 1.6rem; letter-spacing: 1px; }
 .pz-star-sub { font-size: .85rem; color: #8a5cf0; margin-top: 2px; }
@@ -467,12 +481,20 @@ input[type="range"] { accent-color: var(--purple); }
 .pz-brushcursor.eraser { border-color: rgba(255,79,154,.8); border-style: dashed; }
 .pz-brushcursor.show { display: block; }
 
-/* M8 — editor de texto sin desplazamiento (alinear con el render del canvas) */
-#pzTextInput { padding: 0; border-width: 1px; }
+/* M8 — editor de texto sin desplazamiento (alinear con el render del canvas).
+   outline en vez de border: marco visible sin desplazar el texto 1px. */
+#pzTextInput { padding: 0; border: none; outline: 2px dashed var(--purple); outline-offset: 1px; }
 
-/* M4 — en tablet el panel de juego ocupa todo el ancho (no tapa el chat) */
-@media (max-width: 900px) {
+/* M4 — en tablet (≤1024) el panel de juego ocupa todo el stage: el marcador
+   y el chat quedan en una sola columna desplazable, sin taparse, y el cuadro
+   de texto siempre accesible. */
+@media (max-width: 1024px) {
   .pz-game { width: 100%; max-width: 100%; left: 0; right: 0; top: 0; bottom: 0; border-radius: 0; }
+  /* Espacios optimizados en fullscreen: contenido centrado (no estirado borde a
+     borde en tablet ancho) y paddings más ajustados para que todo entre sin scroll. */
+  .pz-game-inner { max-width: 600px; margin: 0 auto; width: 100%; }
+  .pz-game .pzg-sec { padding: 10px 16px; }
+  .pz-game .pzg-timer { padding-top: 8px; padding-bottom: 8px; }
 }
 
 /* #4 — fila de estrellas (progreso de aciertos) bajo la pizarra */
@@ -492,11 +514,120 @@ input[type="range"] { accent-color: var(--purple); }
 .pz-admin-menu { display: none; }
 .pz-admin-menu.open { display: block; }
 
+/* ===== Controles de Papá reubicados a la barra superior ===== */
+.pz-admin-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.pz-top-select {
+  height: 36px; border: none; border-radius: 12px; padding: 0 10px;
+  font-family: inherit; font-weight: 800; font-size: .8rem;
+  color: var(--purple-dark); background: rgba(255,255,255,.9); cursor: pointer;
+}
+.pz-top-btn.open { background: rgba(255,255,255,.45); }
+
+/* Ventanas flotantes ancladas (Capas / Configuración de Papá) */
+.pz-float {
+  position: fixed; z-index: 60; display: none;
+  width: 250px; max-width: 92vw; max-height: 72vh; overflow-y: auto;
+  background: #fff; border-radius: 16px; box-shadow: var(--shadow-lg);
+  padding: 0 14px 14px;
+}
+.pz-float.open { display: block; }
+.pz-float-head {
+  position: sticky; top: 0; background: #fff; display: flex; align-items: center;
+  justify-content: space-between; padding: 12px 0 8px; margin-bottom: 4px;
+  font-weight: 900; color: var(--purple-dark); border-bottom: 1px solid var(--purple-soft);
+}
+.pz-float-x { background: var(--purple-soft); border: none; color: var(--purple-dark); width: 26px; height: 26px; border-radius: 8px; cursor: pointer; font-weight: 900; }
+.pz-float .pz-layers { max-height: 50vh; margin-top: 6px; }
+.pz-layer .ldel { border: none; background: none; cursor: pointer; font-size: .82rem; opacity: .5; padding: 0 2px; }
+.pz-layer .ldel:hover { opacity: 1; }
+
+/* Flyouts pegados al botón que los activa (esquina sup-izq alineada, vía JS) */
+.pz-shapes, .pz-stickers, .pz-style { position: fixed; left: auto; top: auto; right: auto; }
+
 /* M7 — selector relleno (frente) + borde (atrás) estilo Illustrator */
 .pz-fgbg { position: relative; width: 46px; height: 40px; flex-shrink: 0; }
 .pz-fgbg #pzFbInput { position: absolute; opacity: 0; width: 1px; height: 1px; pointer-events: none; }
 .pz-fb { position: absolute; width: 26px; height: 26px; border-radius: 7px; border: 2px solid #fff; box-shadow: 0 0 0 1px #cfc6e8, var(--shadow-sm); cursor: pointer; padding: 0; }
-.pz-fb-stroke { left: 0; top: 0; }
-.pz-fb-fill { right: 0; bottom: 0; }
-.pz-fb.active { box-shadow: 0 0 0 2px var(--purple); z-index: 2; }
+/* Relleno al FRENTE (sup-izq), borde DETRÁS (inf-der) */
+.pz-fb-fill { left: 0; top: 0; z-index: 2; }
+.pz-fb-stroke { right: 0; bottom: 0; z-index: 1; }
+.pz-fb.active { box-shadow: 0 0 0 2px var(--purple); z-index: 3; }
 .pz-fb.none { background-image: linear-gradient(45deg, transparent 44%, #ff4f9a 44%, #ff4f9a 56%, transparent 56%) !important; background-color: #fff !important; }
+
+/* Botón "Sin color": cuadro con contorno + línea diagonal roja */
+#pzFbNone { font-size: 0; position: relative; }
+#pzFbNone::before {
+  content: ""; position: absolute; inset: 8px; border: 2px solid #b9b0d6; border-radius: 3px;
+  background-image: linear-gradient(45deg, transparent 43%, #ff2d2d 43%, #ff2d2d 57%, transparent 57%);
+}
+
+/* ============================================================
+   MODO "PINTURILLO" — juego activo en móvil/tablet (≤1024px)
+   ------------------------------------------------------------
+   Activado por JS (juego.js → updateMobileGameMode) con las clases
+   en <body>: .pz-game-mobile (panel de juego abierto en pantalla
+   chica) + .pz-drawing (es tu turno de dibujar) / .pz-guessing
+   (estás adivinando o no hay turno de dibujo en curso).
+   El panel #pzGamePanel se reubica por JS para ser HERMANO de
+   #pzStage (en vez de hijo suyo): así ambos pueden apilarse en
+   columna sin que el panel tape el lienzo, y resizeCanvas() ajusta
+   automáticamente la resolución del canvas al nuevo tamaño real.
+   ============================================================ */
+@media (max-width: 1024px) {
+
+  /* ---- Barra superior: solo Volver, Jugar y usuarios conectados ---- */
+  body.pz-game-mobile .pz-topbar h1,
+  body.pz-game-mobile #pzLayersBtn,
+  body.pz-game-mobile #pzLaserTop,
+  body.pz-game-mobile .pz-admin-top { display: none !important; }
+
+  /* ---- Reestructura: canvas arriba, panel del juego abajo (apilados) ---- */
+  body.pz-game-mobile .pz-body { flex-direction: column; }
+  body.pz-game-mobile .pz-center { flex: 1; min-height: 0; }
+  body.pz-game-mobile .pz-stage { flex: 1 1 0; min-height: 0; }
+  body.pz-game-mobile .pz-game {
+    position: relative; top: auto; right: auto; bottom: auto; left: auto;
+    width: 100%; max-width: 100%; flex: 0 0 42%; min-height: 0; max-height: 48vh;
+    border-radius: 0; box-shadow: none; border-top: 3px solid var(--purple-soft);
+  }
+  /* El panel ya no es un overlay que se cierra: es parte fija del layout */
+  body.pz-game-mobile.pz-drawing .pzg-head .x,
+  body.pz-game-mobile.pz-guessing .pzg-head .x { display: none !important; }
+
+  /* ---- Adivinando (o eligiendo palabra / fin de ronda): sin herramientas ---- */
+  body.pz-game-mobile.pz-guessing .pz-sidebar,
+  body.pz-game-mobile.pz-guessing .pz-subbar { display: none !important; }
+
+  /* ---- Dibujando: solo Lápiz + Borrador en la barra lateral ---- */
+  body.pz-game-mobile.pz-drawing .pz-sidebar .pz-tool:not([data-tool="pencil"]):not([data-tool="eraser"]),
+  body.pz-game-mobile.pz-drawing .pz-sidebar .pz-sep-h,
+  body.pz-game-mobile.pz-drawing .pz-sidebar label[data-perm="image"] { display: none !important; }
+
+  /* ---- Dibujando: solo un selector de color + Limpiar todo en la subbarra ---- */
+  body.pz-game-mobile.pz-drawing .pz-subbar #pzUndo,
+  body.pz-game-mobile.pz-drawing .pz-subbar #pzRedo,
+  body.pz-game-mobile.pz-drawing .pz-subbar .pz-sep,
+  body.pz-game-mobile.pz-drawing .pz-subbar #pzFbFill,
+  body.pz-game-mobile.pz-drawing .pz-subbar #pzFbSwap,
+  body.pz-game-mobile.pz-drawing .pz-subbar #pzFbNone,
+  body.pz-game-mobile.pz-drawing .pz-subbar #pzSwatches,
+  body.pz-game-mobile.pz-drawing .pz-subbar #pzStyleBtn,
+  body.pz-game-mobile.pz-drawing .pz-subbar .pz-size,
+  body.pz-game-mobile.pz-drawing .pz-subbar #pzLock,
+  body.pz-game-mobile.pz-drawing .pz-subbar #pzZoomOut,
+  body.pz-game-mobile.pz-drawing .pz-subbar #pzZoomReset,
+  body.pz-game-mobile.pz-drawing .pz-subbar #pzZoomIn,
+  body.pz-game-mobile.pz-drawing .pz-subbar .spacer { display: none !important; }
+
+  /* Reubica el sidebar (lápiz+borrador) como una fila compacta arriba del canvas
+     en vez de columna lateral, para no robarle ancho al lienzo */
+  body.pz-game-mobile .pz-sidebar { width: 100%; flex-direction: row; height: auto; padding: 6px 8px; }
+}
+
+/* Indicador de progreso (estrellas grandes) que reemplaza al chat mientras
+   el dibujante está en modo Pinturillo móvil */
+.pzg-drawindicator { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+.pzg-bigstars { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.pzg-bigstars span { font-size: 2rem; color: #d9d0ec; line-height: 1; }
+.pzg-bigstars span.on { color: #ffc01f; text-shadow: 0 0 8px rgba(255,192,31,.6); }
+.pzg-progresstext { font-weight: 800; color: var(--text-soft); font-size: .85rem; }

@@ -401,3 +401,21 @@ Claves de actividad (en `config.js`): responsabilidades `make_bed, organize_room
 | `Shift+L` | Puntero láser | Botón central + arrastrar | Pan temporal |
 
 Transformaciones: `Shift` al dibujar/redimensionar = mantener proporción (cuadrado/círculo perfecto) · `Alt`+arrastrar = duplicar al mover · `Shift`+clic = sumar/quitar de la selección múltiple.
+
+---
+
+## 13. Última actualización Codex - 2026-06-16
+
+Archivos activos: `pizarra.html` carga `css/pizarra.css?v=21`, `js/pizarra.js?v=22` y `js/juego.js?v=5`.
+
+Cambios aplicados:
+- Chat del modo juego: `Supr`/`Backspace` ya no son interceptados cuando el foco está en el input del chat o cualquier campo de texto.
+- Juego: el borrador queda bloqueado para usuarios que están adivinando, también durante el arrastre.
+- Color: el selector muestra relleno al frente y borde detrás; el botón "sin color" usa cuadrado con diagonal roja; al seleccionar un objeto se reflejan borde/relleno del objeto.
+- Portapapeles: `Ctrl+V` pega desplazado; `Ctrl+Shift+V` pega en el mismo lugar.
+- Selección directa: puede convertir formas comunes a puntos libres (`customPoints`) y mover un único vértice sin desplazar los demás.
+- Permisos: `clear` inicia deshabilitado para no-admin; Config incluye herramientas principales y nuevas (`select`, `directselect`, `pan`, `pencil`, `highlighter`, `eraser`, `fill`, `gradient`, `eyedropper`, `text`, `rotate`, `mirror`, `shapes`, `stickers`, `image`, `calculator`, `laser`, `clear`). Capas queda visible para todos.
+- Herramientas nuevas: Gotero, Degradado, Rotar y Espejo en la barra. El degradado usa relleno como primer color y borde como segundo; "sin color" funciona como transparente.
+- Transformaciones: `Alt`+arrastrar duplica; si se mantiene `Shift`, restringe la trayectoria a horizontal/vertical. Rotar se arrastra con herramienta `R`; `Shift` ajusta a grados enteros.
+- UI: Trazo y pincel abre anclado bajo su botón, sin "Recientes"; el ancho de "Punta" fue corregido. Iconos actualizados para selección directa, pincel, candado de objeto y cadena de proporción.
+- Invitados: entran directo a `pizarra.html` en vez de ver el dashboard de Luanna.

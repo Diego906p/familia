@@ -33,21 +33,45 @@ let zCounter = 0;
 let tool = "select";
 let color = "#3c3160";        // color de borde / trazo
 let fillColor = "#ffd23d";    // color de relleno de figuras
-let fillOn = false;           // ¿las figuras nuevas llevan relleno?
+let fillOn = false;           // ¿Las figuras nuevas llevan relleno?
 let borderStyle = "solid";    // solid | dashed | dotted
 let brushFidelity = "balanced"; // precise | balanced | smooth
+let brushCap = "round";         // round (A) | square (B, proyectada) | taper (C, en punta)
+let gradientA = "#7c5cff";
+let gradientB = "rgba(124,92,255,0)";
 let recentColors = [];
-let lineWidth = 4;
+let lineWidth = 4;            // grosor de pincel/borrador (máx. 200, M12)
 let lockRatio = false;
 let bgType = "white";
-let PERMS = { calculator: true, eraser: true, text: true, image: true, stickers: true, clear: true };
+
+// clear arranca DESHABILITADO para no-admin (Papá lo habilita desde ⚙️ Config)
+let PERMS = {
+  select: true,
+  directselect: true,
+  pan: true,
+  pencil: true,
+  highlighter: true,
+  eraser: true,
+  fill: true,
+  gradient: true,
+  eyedropper: true,
+  text: true,
+  rotate: true,
+  mirror: true,
+  shapes: true,
+  stickers: true,
+  image: true,
+  calculator: true,
+  laser: true,
+  clear: false
+};
 
 let scale = 1, tx = 20, ty = 20;
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
 let drawing = null;
 let selectedIds = new Set();
-let dragMode = null;         // "move" | "resize" | "marquee" | "pan"
+let dragMode = null;         // "move" | "resize" | "rotate" | "marquee" | "pan"
 let dragStart = null;
 let marquee = null;
 let pendingSticker = null;
@@ -113,6 +137,17 @@ function drawBackground() {
   ctx.restore();
 }
 
+function fillPaint(el) {
+  if (el.gradient && el.gradient.a && el.gradient.b) {
+    const b = bounds(el);
+    const g = ctx.createLinearGradient(b.x, b.y, b.x + Math.max(1, b.w), b.y + Math.max(1, b.h));
+    g.addColorStop(0, el.gradient.a);
+    g.addColorStop(1, el.gradient.b);
+    return g;
+  }
+  return el.fill;
+}
+
 function drawElement(el) {
   if (el._hidden) return;
   ctx.save();
@@ -128,28 +163,41 @@ function drawElement(el) {
   else if (el.borderStyle === "dotted") ctx.setLineDash([0.1, lw * 2.2]);
   else ctx.setLineDash([]);
 
-  if (el.type === "path" || el.type === "highlighter") {
-    if (el.type === "highlighter") { ctx.globalAlpha = 0.35 * op; ctx.lineWidth = (el.width || 2) * 3; }
+  if (el.customPoints && el.customPoints.length > 2) {
     ctx.beginPath();
-    el.points.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y));
-    if (el.fill) { ctx.closePath(); ctx.globalAlpha = op; ctx.fillStyle = el.fill; ctx.fill(); ctx.globalAlpha = (el.type === "highlighter" ? 0.35 : 1) * op; ctx.beginPath(); el.points.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)); }
+    el.customPoints.forEach((q, i) => i ? ctx.lineTo(q.x, q.y) : ctx.moveTo(q.x, q.y));
+    ctx.closePath();
+    if (el.fill || el.gradient) { ctx.fillStyle = fillPaint(el); ctx.fill(); }
     ctx.stroke();
+  } else if (el.type === "path" || el.type === "highlighter") {
+    if (el.type === "highlighter") { ctx.globalAlpha = 0.35 * op; ctx.lineWidth = (el.width || 2) * 3; }
+    // Tipo de punta (M): A=round · B=square (proyecta medio grosor) · C=taper (en punta)
+    if (el.cap === "square") ctx.lineCap = "square"; else if (el.cap === "taper") ctx.lineCap = "butt"; else ctx.lineCap = "round";
+    if (el.cap === "taper" && el.type === "path" && (el.points || []).length > 1 && !el.fill) {
+      drawTaperedStroke(el.points, el.width || 2, el.color === "none" ? "transparent" : (el.color || color));
+    } else {
+      ctx.beginPath();
+      el.points.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y));
+      if (el.fill || el.gradient) { ctx.closePath(); ctx.globalAlpha = op; ctx.fillStyle = fillPaint(el); ctx.fill(); ctx.globalAlpha = (el.type === "highlighter" ? 0.35 : 1) * op; ctx.beginPath(); el.points.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)); }
+      if (el.closed) ctx.closePath();   // trazo convertido a forma cerrada
+      ctx.stroke();
+    }
   } else if (el.type === "line") {
     ctx.beginPath(); ctx.moveTo(el.x1, el.y1); ctx.lineTo(el.x2, el.y2); ctx.stroke();
   } else if (el.type === "arrow") {
     drawArrow(el.x1, el.y1, el.x2, el.y2, el.width || 2);
   } else if (el.type === "rect") {
-    if (el.fill) { ctx.fillStyle = el.fill; ctx.fillRect(el.x, el.y, el.w, el.h); }
+    if (el.fill || el.gradient) { ctx.fillStyle = fillPaint(el); ctx.fillRect(el.x, el.y, el.w, el.h); }
     ctx.strokeRect(el.x, el.y, el.w, el.h);
   } else if (el.type === "triangle" || el.type === "star" || el.type === "polygon") {
     const poly = polyForShape(el);
     ctx.beginPath(); poly.forEach((q, i) => i ? ctx.lineTo(q.x, q.y) : ctx.moveTo(q.x, q.y)); ctx.closePath();
-    if (el.fill) { ctx.fillStyle = el.fill; ctx.fill(); }
+    if (el.fill || el.gradient) { ctx.fillStyle = fillPaint(el); ctx.fill(); }
     ctx.stroke();
   } else if (el.type === "circle") {
     ctx.beginPath();
     ctx.ellipse(el.x + el.w / 2, el.y + el.h / 2, Math.abs(el.w / 2), Math.abs(el.h / 2), 0, 0, Math.PI * 2);
-    if (el.fill) { ctx.fillStyle = el.fill; ctx.fill(); }
+    if (el.fill || el.gradient) { ctx.fillStyle = fillPaint(el); ctx.fill(); }
     ctx.stroke();
   } else if (el.type === "text") {
     ctx.font = textFont(el); ctx.textBaseline = "top";
@@ -176,6 +224,23 @@ function drawElement(el) {
     ctx.fillText("🔒", b.x + b.w - 18, b.y + 2);
   }
   ctx.restore();
+}
+
+// Trazo "en punta" (C): polígono cuyo medio-ancho decrece de w/2 al inicio a 0 al final.
+function drawTaperedStroke(pts, w, col) {
+  const n = pts.length; if (n < 2) return;
+  const left = [], right = [];
+  for (let i = 0; i < n; i++) {
+    const p = pts[i], a = i < n - 1 ? pts[i + 1] : pts[i], b = i > 0 ? pts[i - 1] : pts[i];
+    let dx = a.x - b.x, dy = a.y - b.y; const L = Math.hypot(dx, dy) || 1; dx /= L; dy /= L;
+    const nx = -dy, ny = dx, t = i / (n - 1), hw = Math.max(0.2, (w / 2) * (1 - t));
+    left.push({ x: p.x + nx * hw, y: p.y + ny * hw });
+    right.push({ x: p.x - nx * hw, y: p.y - ny * hw });
+  }
+  ctx.beginPath();
+  left.forEach((q, i) => i ? ctx.lineTo(q.x, q.y) : ctx.moveTo(q.x, q.y));
+  for (let i = right.length - 1; i >= 0; i--) ctx.lineTo(right[i].x, right[i].y);
+  ctx.closePath(); ctx.fillStyle = col; ctx.fill();
 }
 
 function drawArrow(x1, y1, x2, y2, w) {
@@ -223,6 +288,10 @@ function polyForShape(el) {
 }
 const BBOX_SHAPES = ["rect", "circle", "image", "triangle", "star", "polygon"];
 function bounds(el) {
+  if (el.customPoints && el.customPoints.length) {
+    const xs = el.customPoints.map(p => p.x), ys = el.customPoints.map(p => p.y);
+    return { x: Math.min(...xs), y: Math.min(...ys), w: Math.max(...xs) - Math.min(...xs), h: Math.max(...ys) - Math.min(...ys) };
+  }
   if (BBOX_SHAPES.includes(el.type))
     return { x: Math.min(el.x, el.x + el.w), y: Math.min(el.y, el.y + el.h), w: Math.abs(el.w), h: Math.abs(el.h) };
   if (el.type === "line" || el.type === "arrow")
@@ -252,7 +321,7 @@ function drawSelection() {
     const b = bounds(single); ctx.setLineDash([]); ctx.fillStyle = "#7c5cff";
     ctx.fillRect(b.x + b.w - 6, b.y + b.h - 6, 14 / scale + 6, 14 / scale + 6);
   }
-  // Nodos editables (selección directa)
+  // Nodos editables (seleccióndirecta)
   if (single && tool === "directselect" && !single.locked) {
     ctx.setLineDash([]); const r = 5 / scale;
     getNodes(single).forEach(n => {
@@ -303,6 +372,12 @@ function pointInRect(p, b) { return p.x >= b.x && p.x <= b.x + b.w && p.y >= b.y
 // Hit por GEOMETRÍA real: basta tocar el trazo/borde (o relleno) del objeto, no su caja
 function hitElement(el, p) {
   const tol = (el.width || 4) / 2 + 6 / scale;
+  if (el.customPoints && el.customPoints.length > 2) {
+    const poly = el.customPoints;
+    if ((el.fill || el.gradient) && pointInPoly(p, poly)) return true;
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) if (distSeg(p.x, p.y, poly[j].x, poly[j].y, poly[i].x, poly[i].y) <= tol) return true;
+    return false;
+  }
   if (el.type === "path" || el.type === "highlighter") {
     const pts = el.points || []; const r = (el.type === "highlighter" ? (el.width || 2) * 1.5 : tol);
     if (el.fill && pts.length > 2 && pointInPoly(p, pts)) return true;
@@ -344,16 +419,32 @@ function pointInPoly(p, pts) {
   return c;
 }
 
-// --- Nodos editables (selección directa) ---
+// --- Nodos editables (seleccióndirecta) ---
 function getNodes(el) {
   if (!el) return [];
+  if (el.customPoints) return el.customPoints.map((p, i) => ({ x: p.x, y: p.y, i }));
   if (el.type === "path" || el.type === "highlighter") return el.points.map((p, i) => ({ x: p.x, y: p.y, i }));
   if (el.type === "line" || el.type === "arrow") return [{ x: el.x1, y: el.y1, i: 0 }, { x: el.x2, y: el.y2, i: 1 }];
   if (["rect", "circle", "triangle", "star", "polygon"].includes(el.type)) return [{ x: el.x, y: el.y, i: 0 }, { x: el.x + el.w, y: el.y, i: 1 }, { x: el.x + el.w, y: el.y + el.h, i: 2 }, { x: el.x, y: el.y + el.h, i: 3 }];
   return [];
 }
+function ensureCustomPoints(el) {
+  if (!el || el.customPoints) return;
+  if (["triangle", "star", "polygon"].includes(el.type)) el.customPoints = polyForShape(el);
+  else if (el.type === "rect") {
+    const b = bounds(el);
+    el.customPoints = [{ x: b.x, y: b.y }, { x: b.x + b.w, y: b.y }, { x: b.x + b.w, y: b.y + b.h }, { x: b.x, y: b.y + b.h }];
+  } else if (el.type === "circle") {
+    const b = bounds(el), cx = b.x + b.w / 2, cy = b.y + b.h / 2, rx = b.w / 2, ry = b.h / 2;
+    el.customPoints = Array.from({ length: 8 }, (_, i) => {
+      const a = -Math.PI / 2 + i * Math.PI / 4;
+      return { x: cx + Math.cos(a) * rx, y: cy + Math.sin(a) * ry };
+    });
+  }
+}
 function setNode(el, i, x, y) {
-  if (el.type === "path" || el.type === "highlighter") el.points[i] = { x, y };
+  if (el.customPoints) el.customPoints[i] = { x, y };
+  else if (el.type === "path" || el.type === "highlighter") el.points[i] = { x, y };
   else if (el.type === "line" || el.type === "arrow") { if (i === 0) { el.x1 = x; el.y1 = y; } else { el.x2 = x; el.y2 = y; } }
   else if (["rect", "circle", "triangle", "star", "polygon"].includes(el.type)) {
     // mover una esquina ajustando origen + tamaño
@@ -394,6 +485,7 @@ function down(e) {
     const single = selectedIds.size === 1 && elements.find(el => selectedIds.has(el.id));
     // Selección directa: arrastrar un nodo del elemento seleccionado
     if (tool === "directselect" && single && !single.locked) {
+      ensureCustomPoints(single);
       const ni = hitNode(single, p);
       if (ni >= 0) { dragMode = "node"; dragStart = { id: single.id, idx: ni, before: geom(single) }; return; }
     }
@@ -416,7 +508,7 @@ function down(e) {
       if (e.altKey) duplicateSelection(0, 0);
       const movable = [...selectedIds].map(id => elements.find(el => el.id === id)).filter(el => el && !el.locked);
       dragMode = "move";
-      dragStart = { x: p.x, y: p.y, snaps: movable.map(el => ({ id: el.id, geo: geom(el) })) };
+      dragStart = { x: p.x, y: p.y, altDup: !!e.altKey, snaps: movable.map(el => ({ id: el.id, geo: geom(el) })) };
     } else {
       if (!e.shiftKey) selectedIds.clear();
       dragMode = "marquee"; dragStart = { x: p.x, y: p.y };
@@ -426,14 +518,17 @@ function down(e) {
     return;
   }
 
+  if (tool === "rotate" && selectedIds.size) { beginRotate(p); return; }
+  if (tool === "eyedropper") { pickColorAt(p); return; }
   if (tool === "eraser") { eraseAt(p); return; }
   if (tool === "text") { dragMode = "textbox"; dragStart = { x: p.x, y: p.y }; marquee = { x: p.x, y: p.y, w: 0, h: 0 }; return; }
   if (tool === "sticker") { placeSticker(p); return; }
   if (tool === "fill") { fillAt(p); return; }
+  if (tool === "gradient") { gradientAt(p); return; }
 
   const id = CLIENT_ID + "-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 4);
   if (tool === "pencil" || tool === "highlighter")
-    drawing = { id, type: tool === "highlighter" ? "highlighter" : "path", color, width: lineWidth, points: [p], fidelity: brushFidelity, z: ++zCounter };
+    drawing = { id, type: tool === "highlighter" ? "highlighter" : "path", color, width: lineWidth, points: [p], fidelity: brushFidelity, cap: brushCap, z: ++zCounter };
   else if (tool === "line" || tool === "arrow")
     drawing = { id, type: tool, color, width: lineWidth, borderStyle, x1: p.x, y1: p.y, x2: p.x, y2: p.y, z: ++zCounter };
   else if (["rect", "circle", "triangle", "star", "polygon"].includes(tool))
@@ -447,13 +542,17 @@ function move(e) {
 
   if (dragMode === "pan") { tx = dragStart.tx + (sp.x - dragStart.sx); ty = dragStart.ty + (sp.y - dragStart.sy); clampView(); render(); return; }
   if (dragMode === "node") { const el = elements.find(x => x.id === dragStart.id); if (el) { setNode(el, dragStart.idx, p.x, p.y); render(); } return; }
+  if (dragMode === "rotate") { updateRotate(p, e.shiftKey); return; }
   if (dragMode === "textbox") { marquee = { x: Math.min(dragStart.x, p.x), y: Math.min(dragStart.y, p.y), w: Math.abs(p.x - dragStart.x), h: Math.abs(p.y - dragStart.y) }; render(); return; }
   if (tool === "laser" && (e.buttons || e.touches)) { sendCursor(p.x, p.y, true); return; }
 
   if ((tool === "select" || tool === "directselect") && dragMode) {
     if (dragMode === "marquee") { marquee = { x: Math.min(dragStart.x, p.x), y: Math.min(dragStart.y, p.y), w: Math.abs(p.x - dragStart.x), h: Math.abs(p.y - dragStart.y) }; render(); return; }
     if (dragMode === "move") {
-      const dx = p.x - dragStart.x, dy = p.y - dragStart.y;
+      let dx = p.x - dragStart.x, dy = p.y - dragStart.y;
+      if (dragStart.altDup && e.shiftKey) {
+        if (Math.abs(dx) >= Math.abs(dy)) dy = 0; else dx = 0;
+      }
       dragStart.snaps.forEach(s => { const el = elements.find(x => x.id === s.id); if (el) applyGeom(el, s.geo, dx, dy); });
       render(); return;
     }
@@ -473,7 +572,7 @@ function move(e) {
     }
   }
 
-  if (tool === "eraser" && (e.buttons || e.touches)) { eraseAt(p); return; }
+  if (tool === "eraser" && (e.buttons || e.touches)) { if (boardLocked()) return; eraseAt(p); return; }
   if (!drawing) return;
   if (drawing.points) drawing.points.push(p);
   else if (drawing.type === "line" || drawing.type === "arrow") { drawing.x2 = p.x; drawing.y2 = p.y; }
@@ -487,6 +586,7 @@ function move(e) {
 
 function up() {
   if (dragMode === "pan") { dragMode = null; return; }
+  if (dragMode === "rotate") { finishRotate(); return; }
   if (dragMode === "node") {
     const el = elements.find(x => x.id === dragStart.id);
     if (el) {
@@ -587,12 +687,77 @@ function smoothPath(pts, fidelity) {
   return catmullRom(rdpSimplify(pts, eps), seg);
 }
 
-function geom(el) { return JSON.parse(JSON.stringify({ points: el.points, x: el.x, y: el.y, x1: el.x1, y1: el.y1, x2: el.x2, y2: el.y2, w: el.w, h: el.h })); }
-function setGeom(el, g) { ["points", "x", "y", "x1", "y1", "x2", "y2", "w", "h"].forEach(k => { if (g[k] !== undefined) el[k] = JSON.parse(JSON.stringify(g[k])); }); }
+function geom(el) { return JSON.parse(JSON.stringify({ points: el.points, customPoints: el.customPoints, x: el.x, y: el.y, x1: el.x1, y1: el.y1, x2: el.x2, y2: el.y2, w: el.w, h: el.h })); }
+function setGeom(el, g) { ["points", "customPoints", "x", "y", "x1", "y1", "x2", "y2", "w", "h"].forEach(k => { if (g[k] !== undefined) el[k] = JSON.parse(JSON.stringify(g[k])); }); }
 function applyGeom(el, g, dx, dy) {
-  if (g.points) el.points = g.points.map(p => ({ x: p.x + dx, y: p.y + dy }));
+  if (g.customPoints) el.customPoints = g.customPoints.map(p => ({ x: p.x + dx, y: p.y + dy }));
+  else if (g.points) el.points = g.points.map(p => ({ x: p.x + dx, y: p.y + dy }));
   else if (el.type === "line" || el.type === "arrow") { el.x1 = g.x1 + dx; el.y1 = g.y1 + dy; el.x2 = g.x2 + dx; el.y2 = g.y2 + dy; }
   else { el.x = g.x + dx; el.y = g.y + dy; }
+}
+
+function selectionCenter(els) {
+  const bs = els.map(bounds);
+  const x1 = Math.min(...bs.map(b => b.x)), y1 = Math.min(...bs.map(b => b.y));
+  const x2 = Math.max(...bs.map(b => b.x + b.w)), y2 = Math.max(...bs.map(b => b.y + b.h));
+  return { x: (x1 + x2) / 2, y: (y1 + y2) / 2 };
+}
+function rotatePoint(pt, c, a) {
+  const dx = pt.x - c.x, dy = pt.y - c.y, ca = Math.cos(a), sa = Math.sin(a);
+  return { x: c.x + dx * ca - dy * sa, y: c.y + dx * sa + dy * ca };
+}
+function ensureRotatable(el) {
+  if (["rect", "circle", "triangle", "star", "polygon"].includes(el.type)) ensureCustomPoints(el);
+}
+function rotateGeomTo(el, g, c, a) {
+  if (g.customPoints) el.customPoints = g.customPoints.map(p => rotatePoint(p, c, a));
+  else if (g.points) el.points = g.points.map(p => rotatePoint(p, c, a));
+  else if (el.type === "line" || el.type === "arrow") {
+    const p1 = rotatePoint({ x: g.x1, y: g.y1 }, c, a), p2 = rotatePoint({ x: g.x2, y: g.y2 }, c, a);
+    el.x1 = p1.x; el.y1 = p1.y; el.x2 = p2.x; el.y2 = p2.y;
+  } else {
+    const p = rotatePoint({ x: g.x, y: g.y }, c, a);
+    el.x = p.x; el.y = p.y;
+  }
+}
+function beginRotate(p) {
+  const els = selectedElements().filter(e => !e.locked);
+  if (!els.length) return;
+  els.forEach(ensureRotatable);
+  const center = selectionCenter(els);
+  dragMode = "rotate";
+  dragStart = { center, startAng: Math.atan2(p.y - center.y, p.x - center.x), snaps: els.map(e => ({ id: e.id, geo: geom(e) })) };
+}
+function updateRotate(p, snap) {
+  const c = dragStart.center;
+  let a = Math.atan2(p.y - c.y, p.x - c.x) - dragStart.startAng;
+  if (snap) a = Math.round(a * 180 / Math.PI) * Math.PI / 180;
+  dragStart.snaps.forEach(s => { const el = elements.find(x => x.id === s.id); if (el) rotateGeomTo(el, s.geo, c, a); });
+  render();
+}
+function finishRotate() {
+  const afters = dragStart.snaps.map(s => { const el = elements.find(x => x.id === s.id); return el ? { id: s.id, before: s.geo, after: geom(el) } : null; }).filter(Boolean);
+  afters.forEach(a => { const el = elements.find(x => x.id === a.id); if (el) SYNC.setElement(serialize(el)); });
+  history.push({ undo: () => afters.forEach(a => { const el = elements.find(x => x.id === a.id); if (el) { setGeom(el, a.before); SYNC.setElement(serialize(el)); render(); } }), redo: () => afters.forEach(a => { const el = elements.find(x => x.id === a.id); if (el) { setGeom(el, a.after); SYNC.setElement(serialize(el)); render(); } }) });
+  dragMode = null; dragStart = null; refreshSelBar();
+}
+function mirrorSelection(axis) {
+  if (boardLocked()) return;
+  const els = selectedElements().filter(e => !e.locked);
+  if (!els.length) return;
+  els.forEach(ensureRotatable);
+  const c = selectionCenter(els), before = els.map(e => ({ id: e.id, geo: geom(e) }));
+  function mirrorPoint(p) { return axis === "y" ? { x: 2 * c.x - p.x, y: p.y } : { x: p.x, y: 2 * c.y - p.y }; }
+  els.forEach(el => {
+    if (el.customPoints) el.customPoints = el.customPoints.map(mirrorPoint);
+    else if (el.points) el.points = el.points.map(mirrorPoint);
+    else if (el.type === "line" || el.type === "arrow") { const p1 = mirrorPoint({ x: el.x1, y: el.y1 }), p2 = mirrorPoint({ x: el.x2, y: el.y2 }); el.x1 = p1.x; el.y1 = p1.y; el.x2 = p2.x; el.y2 = p2.y; }
+    else { const p = mirrorPoint({ x: el.x, y: el.y }); el.x = p.x; el.y = p.y; }
+    SYNC.setElement(serialize(el));
+  });
+  const after = els.map(e => ({ id: e.id, geo: geom(e) }));
+  history.push({ undo: () => before.forEach(a => { const el = elements.find(x => x.id === a.id); if (el) { setGeom(el, a.geo); SYNC.setElement(serialize(el)); render(); } }), redo: () => after.forEach(a => { const el = elements.find(x => x.id === a.id); if (el) { setGeom(el, a.geo); SYNC.setElement(serialize(el)); render(); } }) });
+  render(); refreshSelBar();
 }
 
 // Borrador = círculo (radio según grosor). En trazos a mano borra SOLO la parte tocada
@@ -634,11 +799,29 @@ function eraseAt(p) {
 function fillAt(p) {
   const el = topElementAt(p, false);
   if (!el || el.locked) return;
-  if (!["rect", "circle", "path", "highlighter"].includes(el.type)) return;
+  if (!FILLABLE.includes(el.type)) return;
   const before = el.fill;
-  el.fill = fillColor;
+  el.fill = fillColor; delete el.gradient;
   SYNC.setElement(serialize(el)); render();
   history.push({ undo: () => { el.fill = before; SYNC.setElement(serialize(el)); render(); }, redo: () => { el.fill = fillColor; SYNC.setElement(serialize(el)); render(); } });
+}
+function gradientAt(p) {
+  const el = topElementAt(p, false);
+  if (!el || el.locked || !FILLABLE.includes(el.type)) return;
+  const before = serialize(el);
+  const a = fillOn ? fillColor : (color === "none" ? "rgba(0,0,0,0)" : color);
+  const b = color === "none" ? "rgba(0,0,0,0)" : color;
+  el.fill = a;
+  el.gradient = { a, b };
+  SYNC.setElement(serialize(el)); render();
+  history.push({ undo: () => { Object.assign(el, before); SYNC.setElement(serialize(el)); render(); }, redo: () => { el.fill = a; el.gradient = { a, b }; SYNC.setElement(serialize(el)); render(); } });
+}
+function pickColorAt(p) {
+  const el = topElementAt(p, true);
+  if (!el) return;
+  if (el.fill || el.gradient) { fillColor = el.gradient ? el.gradient.a : el.fill; fillOn = true; }
+  if (el.color) color = el.color;
+  updateFgBg();
 }
 
 canvas.addEventListener("mousedown", down);
@@ -664,18 +847,23 @@ canvas.addEventListener("wheel", e => { e.preventDefault(); const s = screenPos(
 // M11 — indicador de tamaño de pincel/borrador siguiendo el cursor
 (function brushCursor() {
   const cur = document.getElementById("pzBrushCursor"), stage = document.getElementById("pzStage");
+  let last = null;             // última posición del puntero (para refrescar al cambiar grosor/zoom)
   function upd(e) {
+    if (e) last = { clientX: (e.touches ? e.touches[0] : e).clientX, clientY: (e.touches ? e.touches[0] : e).clientY };
+    if (!last) return;
     const drawTool = tool === "pencil" || tool === "highlighter" || tool === "eraser";
     if (!drawTool) { cur.classList.remove("show"); return; }
-    const r = stage.getBoundingClientRect(), t = e.touches ? e.touches[0] : e;
+    const r = stage.getBoundingClientRect();
     let d;
     if (tool === "eraser") d = 2 * Math.max(7, lineWidth) * scale;
     else d = Math.max(2, (tool === "highlighter" ? lineWidth * 3 : lineWidth)) * scale;
     cur.style.width = cur.style.height = d + "px";
-    cur.style.left = (t.clientX - r.left) + "px"; cur.style.top = (t.clientY - r.top) + "px";
+    cur.style.left = (last.clientX - r.left) + "px"; cur.style.top = (last.clientY - r.top) + "px";
     cur.classList.toggle("eraser", tool === "eraser");
     cur.classList.add("show");
   }
+  // M11/M12 — refrescar el círculo en vivo al cambiar el grosor con el slider
+  window.refreshBrushCursor = () => upd(null);
   stage.addEventListener("mousemove", upd);
   stage.addEventListener("mouseleave", () => cur.classList.remove("show"));
   canvas.addEventListener("touchmove", upd, { passive: true });
@@ -709,11 +897,18 @@ function serialize(el) { const c = { ...el }; delete c._img; delete c._hidden; r
 // ============================================================
 //  HISTORIAL (deshacer / rehacer)
 // ============================================================
+// M13 — ¿el tablero está bloqueado para mí ahora? (no soy el dibujante activo,
+// o es turno de elegir, o cuenta 3-2-1). Reusa la lógica del juego para un
+// pincel: si dibujar está vetado, TODA mutación del tablero debe vetarse.
+function boardLocked() {
+  return typeof GAME !== "undefined" && GAME.blockPointer ? !!GAME.blockPointer("pencil") : false;
+}
+
 const history = {
   undoStack: [], redoStack: [], busy: false,
   push(cmd) { if (this.busy) return; this.undoStack.push(cmd); if (this.undoStack.length > 60) this.undoStack.shift(); this.redoStack = []; updateUndoRedo(); },
-  undo() { const c = this.undoStack.pop(); if (!c) return; this.busy = true; c.undo(); this.busy = false; this.redoStack.push(c); updateUndoRedo(); },
-  redo() { const c = this.redoStack.pop(); if (!c) return; this.busy = true; c.redo(); this.busy = false; this.undoStack.push(c); updateUndoRedo(); }
+  undo() { if (boardLocked()) return; const c = this.undoStack.pop(); if (!c) return; this.busy = true; c.undo(); this.busy = false; this.redoStack.push(c); updateUndoRedo(); },
+  redo() { if (boardLocked()) return; const c = this.redoStack.pop(); if (!c) return; this.busy = true; c.redo(); this.busy = false; this.undoStack.push(c); updateUndoRedo(); }
 };
 function updateUndoRedo() {
   document.getElementById("pzUndo").disabled = !history.undoStack.length;
@@ -731,7 +926,7 @@ function expandGroup(el) {
   if (el.groupId) return elements.filter(e => e.groupId === el.groupId).map(e => e.id);
   return [el.id];
 }
-function selectedElements() { return [...selectedIds].map(id => elements.find(e => e.id === id)).filter(Boolean); }
+function selectedElements() { if (boardLocked()) return []; return [...selectedIds].map(id => elements.find(e => e.id === id)).filter(Boolean); }
 function syncMany(els) { els.forEach(el => SYNC.setElement(serialize(el))); render(); refreshSelBar(); if (typeof renderLayers === "function") renderLayers(); }
 
 function groupSelection() {
@@ -778,13 +973,14 @@ function offsetGeom(el, dx, dy) {
 
 function copySelection() { clipboard = selectedElements().map(e => JSON.parse(JSON.stringify(serialize(e)))); }
 function cutSelection() { copySelection(); selectedElements().filter(e => !e.locked).forEach(e => removeElement(e.id, true)); }
-function pasteClipboard() {
+function pasteClipboard(inPlace) {
   if (!clipboard.length) return;
+  const d = inPlace ? 0 : 24;   // Ctrl+Shift+V = pegar en el mismo lugar
   const gmap = {};
   const copies = clipboard.map(src => {
     const c = JSON.parse(JSON.stringify(src));
     c.id = CLIENT_ID + "-p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 4);
-    c.z = ++zCounter; offsetGeom(c, 24, 24);
+    c.z = ++zCounter; offsetGeom(c, d, d);
     if (src.groupId) { gmap[src.groupId] = gmap[src.groupId] || ("g-" + Math.random().toString(36).slice(2, 6)); c.groupId = gmap[src.groupId]; }
     if (c.type === "image") loadImg(c);
     return c;
@@ -794,7 +990,7 @@ function pasteClipboard() {
   history.push({ undo: () => copies.forEach(c => removeElement(c.id, false)), redo: () => copies.forEach(c => { elements.push(c); if (c.type === "image") loadImg(c); SYNC.setElement(serialize(c)); render(); }) });
   render(); refreshSelBar();
 }
-function selectAll() { selectedIds = new Set(elements.map(e => e.id)); setTool("select"); render(); refreshSelBar(); }
+function selectAll() { if (boardLocked()) return; selectedIds = new Set(elements.map(e => e.id)); setTool("select"); render(); refreshSelBar(); }
 
 function orderSelection(mode) {
   const els = selectedElements(); if (!els.length) return;
@@ -888,9 +1084,31 @@ function pathfinder(op) {
   img.src = src;
 }
 
+// Convertir trazo(s) a mano en forma cerrada y rellenable (estilo "objeto").
+function convertToShape() {
+  const els = selectedElements().filter(e => e.type === "path" && !e.locked && (e.points || []).length > 2);
+  if (!els.length) return;
+  els.forEach(el => {
+    const before = serialize(el);
+    el.points = rdpSimplify(el.points, 2.2);
+    el.closed = true;
+    el.cap = "round";
+    if (!el.fill) el.fill = fillOn ? fillColor : "#ffd23d";
+    SYNC.setElement(serialize(el));
+    history.push({
+      undo: () => { Object.assign(el, before); delete el.closed; SYNC.setElement(serialize(el)); render(); },
+      redo: () => { el.points = rdpSimplify(el.points, 2.2); el.closed = true; if (!el.fill) el.fill = fillColor; SYNC.setElement(serialize(el)); render(); }
+    });
+  });
+  render(); refreshSelBar();
+}
+
 // Barra contextual de selección
 function refreshSelBar() {
   const bar = document.getElementById("pzSelBar");
+  // M13 — con el tablero bloqueado, no se permite manipular selección: ocultar
+  // la barra contextual y soltar cualquier selecciónheredada de antes del juego.
+  if (boardLocked()) { if (selectedIds.size) selectedIds.clear(); bar.classList.remove("show"); return; }
   const n = selectedIds.size;
   bar.classList.toggle("show", n > 0);
   if (typeof renderLayers === "function") renderLayers();
@@ -901,6 +1119,22 @@ function refreshSelBar() {
   document.getElementById("pzOpacity").value = op;
   document.getElementById("pzOpacityVal").textContent = op + "%";
   document.querySelectorAll(".pz-multi").forEach(b => b.style.display = n >= 2 ? "" : "none");
+  if (typeof refreshLockElIcon === "function") refreshLockElIcon();
+  // Reflejar en los selectores el color de borde/relleno del objeto seleccionado
+  if (els.length === 1) reflectColorsFrom(els[0]);
+}
+// Lee borde/relleno del elemento y los muestra en el widget (sin re-aplicarlos)
+function reflectColorsFrom(el) {
+  if (el.color !== undefined) {
+    color = el.color;
+    document.querySelectorAll("#pzSwatches .pz-swatch").forEach(x => x.classList.toggle("active", x.dataset.c === color));
+  }
+  if (FILLABLE.includes(el.type)) {
+    fillOn = !!(el.fill || el.gradient);
+    if (el.gradient && el.gradient.a) fillColor = el.gradient.a;
+    else if (fillOn) fillColor = el.fill;
+  }
+  if (typeof updateFgBg === "function") updateFgBg();
 }
 (function wireSelBar() {
   const op = document.getElementById("pzOpacity");
@@ -913,6 +1147,7 @@ function refreshSelBar() {
   document.getElementById("pzGroup").onclick = () => groupSelection();
   document.getElementById("pzUngroup").onclick = () => ungroupSelection();
   document.getElementById("pzDup").onclick = () => duplicateSelection(24, 24);
+  document.getElementById("pzToShape").onclick = () => convertToShape();
   document.getElementById("pzDel").onclick = () => { [...selectedIds].forEach(id => { const el = elements.find(e => e.id === id); if (el && !el.locked) removeElement(id, true); }); refreshSelBar(); };
   document.getElementById("pzAlignL").onclick = () => alignSel("left");
   document.getElementById("pzAlignCH").onclick = () => alignSel("centerH");
@@ -929,17 +1164,27 @@ function refreshSelBar() {
 })();
 
 // ---- Atajos de teclado ----
-const TOOL_KEYS = { v: "select", a: "directselect", b: "pencil", t: "text", m: "rect", l: "circle", e: "eraser", h: "pan", z: "zoomtool" };
+const TOOL_KEYS = { v: "select", a: "directselect", b: "pencil", t: "text", m: "rect", l: "circle", e: "eraser", h: "pan", i: "eyedropper", r: "rotate", z: "zoomtool" };
 window.addEventListener("keydown", e => {
-  if (document.activeElement === textInput) return;
+  // Si se está escribiendo en un campo (chat del juego, etc.), no interceptar:
+  // Supr/Backspace y demás teclas deben editar el texto del campo con normalidad.
+  const ae = document.activeElement;
+  if (ae === textInput || (ae && (ae.tagName === "INPUT" || ae.tagName === "TEXTAREA" || ae.isContentEditable))) return;
   const k = e.key.toLowerCase(), ctrl = e.ctrlKey || e.metaKey;
+
+  // M13 — tablero bloqueado: vetar atajos que mutan el lienzo (borrar, cortar,
+  // pegar, duplicar, agrupar, deshacer/rehacer). Copiar/seleccionar son inocuos.
+  if (boardLocked()) {
+    const mut = (e.key === "Delete" || e.key === "Backspace") || (ctrl && ["z", "y", "x", "v", "d", "g"].includes(k));
+    if (mut) { e.preventDefault(); return; }
+  }
 
   if (ctrl) {
     if (k === "z") { e.preventDefault(); e.shiftKey ? history.redo() : history.undo(); return; }
     if (k === "y") { e.preventDefault(); history.redo(); return; }
     if (k === "c") { e.preventDefault(); copySelection(); return; }
     if (k === "x") { e.preventDefault(); cutSelection(); return; }
-    if (k === "v") { e.preventDefault(); pasteClipboard(); return; }
+    if (k === "v") { e.preventDefault(); pasteClipboard(e.shiftKey); return; }   // Shift = pegar en el mismo lugar
     if (k === "d") { e.preventDefault(); duplicateSelection(24, 24); return; }
     if (k === "a") { e.preventDefault(); selectAll(); return; }
     if (k === "g") { e.preventDefault(); e.shiftKey ? ungroupSelection() : groupSelection(); return; }
@@ -951,8 +1196,11 @@ window.addEventListener("keydown", e => {
     return;
   }
 
+  // X — intercambiar color de borde ↔ relleno (estilo Illustrator), en cualquier herramienta
+  if (k === "x" && !ctrl && !e.shiftKey && !e.altKey) { const sw = document.getElementById("pzFbSwap"); if (sw) sw.click(); return; }
+
   // Atajos de herramienta
-  if (e.altKey && k === "e") { setTool("eraser"); return; }      // borrador en línea (mismo borrador)
+  if (e.altKey && k === "e") { setTool("eraser"); return; }      // borrador en lÍ­nea (mismo borrador)
   if (e.shiftKey && k === "l") { setTool("laser"); return; }     // puntero láser
   if (TOOL_KEYS[k] && !e.shiftKey && !e.altKey) {
     const t = TOOL_KEYS[k];
@@ -997,11 +1245,18 @@ function applyEditorStyle() {
   textInput.style.color = f.color;
 }
 function positionEditor() {
-  const r = canvas.getBoundingClientRect();
-  textInput.style.left = (r.left + txtEdit.x * scale + tx) + "px";
-  textInput.style.top = (r.top + txtEdit.y * scale + ty) + "px";
-  textBar.style.left = (r.left + txtEdit.x * scale + tx) + "px";
-  textBar.style.top = Math.max(56, r.top + txtEdit.y * scale + ty - 46) + "px";
+  // El textarea y la barra son hijos de #pzStage (offsetParent), y el canvas
+  // llena el stage (inset:0). Por eso las coords son relativas al stage:
+  // punto-mundo → pantalla-en-stage = mundo*scale + t (NO sumar canvasRect).
+  const left = txtEdit.x * scale + tx;
+  // Compensa el medio-interlineado del textarea (line-height 1.25) para que el
+  // glifo arranque a la misma altura que el canvas (textBaseline "top").
+  const lead = 0.125 * ((txtEdit.fmt && txtEdit.fmt.size) || 24) * scale;
+  const top = txtEdit.y * scale + ty - lead;
+  textInput.style.left = left + "px";
+  textInput.style.top = top + "px";
+  textBar.style.left = left + "px";
+  textBar.style.top = Math.max(6, top - 46) + "px";
 }
 function autoGrow() { textInput.style.height = "auto"; textInput.style.height = textInput.scrollHeight + "px"; }
 textInput.addEventListener("input", autoGrow);
@@ -1108,7 +1363,7 @@ function addImageFromSrc(src, idx, total) {
 (function dndImages() {
   const stage = document.getElementById("pzStage");
   let overlay = document.getElementById("pzDrop");
-  if (!overlay) { overlay = document.createElement("div"); overlay.id = "pzDrop"; overlay.className = "pz-drop"; overlay.innerHTML = "📷 Suelta aquí para insertar imagen"; stage.appendChild(overlay); }
+  if (!overlay) { overlay = document.createElement("div"); overlay.id = "pzDrop"; overlay.className = "pz-drop"; overlay.innerHTML = "📷· Suelta aquí­ para insertar imagen"; stage.appendChild(overlay); }
   let depth = 0;
   const hasFiles = e => e.dataTransfer && [...(e.dataTransfer.types || [])].includes("Files");
   stage.addEventListener("dragenter", e => { if (!hasFiles(e)) return; e.preventDefault(); depth++; overlay.classList.add("show"); });
@@ -1134,9 +1389,17 @@ function loadImg(el) {
 //  STICKERS
 // ============================================================
 const STICKERS = [
-  { emoji: "⭐", label: "Excelente" }, { emoji: "🎉", label: "Muy bien" }, { emoji: "🏆", label: "Logrado" },
-  { emoji: "✅", label: "Correcto" }, { emoji: "💪", label: "Sigue así" }, { emoji: "🌟", label: "Estrella" },
-  { emoji: "❤️", label: "Me encanta" }, { emoji: "👏", label: "Bravo" }, { emoji: "🧠", label: "Genial" }
+{ emoji: "⭐", label: "Excelente" },
+{ emoji: "🎉", label: "Muy bien" },
+{ emoji: "🏆", label: "Logrado" },
+
+{ emoji: "✅", label: "Correcto" },
+{ emoji: "💪", label: "Sigue así" },
+{ emoji: "🌟", label: "Estrella" },
+
+{ emoji: "❤️", label: "Me encanta" },
+{ emoji: "👏", label: "Bravo" },
+{ emoji: "🧠", label: "Genial" }
 ];
 (function buildStickers() {
   const pal = document.getElementById("pzStickerPalette");
@@ -1148,7 +1411,15 @@ const STICKERS = [
     pal.appendChild(b);
   });
 })();
-document.getElementById("pzStickerBtn").addEventListener("click", () => document.getElementById("pzStickerPalette").classList.toggle("open"));
+document.getElementById("pzStickerBtn").addEventListener("click", e => {
+  const pal = document.getElementById("pzStickerPalette");
+  anchorFlyout(pal, e.currentTarget);
+  pal.classList.toggle("open");
+});
+document.addEventListener("click", e => {
+  const pal = document.getElementById("pzStickerPalette");
+  if (pal.classList.contains("open") && !pal.contains(e.target) && e.target.id !== "pzStickerBtn") pal.classList.remove("open");
+});
 function placeSticker(p) {
   if (typeof GAME !== "undefined" && GAME.blockTool("sticker")) return;
   if (!pendingSticker) return;
@@ -1159,6 +1430,7 @@ function placeSticker(p) {
 //  LIMPIAR TODO
 // ============================================================
 document.getElementById("pzClear").addEventListener("click", () => {
+  if (boardLocked()) return;                 // M13 — no limpiar durante el turno ajeno
   if (!elements.length) return;
   if (!confirm("¿Borrar toda la pizarra?")) return;
   const snap = elements.map(serialize);
@@ -1172,25 +1444,40 @@ document.getElementById("pzClear").addEventListener("click", () => {
 function setTool(t) {
   tool = t;
   document.querySelectorAll("[data-tool]").forEach(b => b.classList.toggle("active", b.dataset.tool === t));
-  const sb = document.getElementById("pzShapeBtn"); if (sb) sb.classList.toggle("active", ["rect", "circle", "triangle", "star", "polygon"].includes(t));
-  if (t !== "select" && t !== "directselect") selectedIds.clear();
+  const sb = document.getElementById("pzShapeBtn"); if (sb) sb.classList.toggle("active", ["rect", "circle", "triangle", "star", "polygon", "line", "arrow"].includes(t));
+  if (!["select", "directselect", "rotate"].includes(t)) selectedIds.clear();
   canvas.style.cursor = t === "pan" ? "grab" : ((t === "select" || t === "directselect") ? "default" : "crosshair");
   render(); refreshSelBar();
 }
 document.querySelectorAll("[data-tool]").forEach(btn => btn.addEventListener("click", () => setTool(btn.dataset.tool)));
 
+// Ancla un menú emergente pegado a su botón: esquina sup-izq del panel junto al
+// botón (a su derecha, mismo alto). Posición fija → coords de viewport.
+function anchorFlyout(panel, btn) {
+  const r = btn.getBoundingClientRect();
+  panel.style.left = (r.right + 6) + "px";
+  panel.style.top = r.top + "px";
+}
+
 // Submenú de formas
 (function shapeFly() {
   const btn = document.getElementById("pzShapeBtn"), fly = document.getElementById("pzShapeFly");
-  const ICON = { rect: "▭", circle: "◯", triangle: "△", star: "★", polygon: "⬡" };
+const ICON = {
+  rect: "▢",
+  circle: "◯",
+  triangle: "△",
+  star: "⭐",
+  polygon: "⬢",
+  line: "／",
+  arrow: "➡️"
+};
   btn.addEventListener("click", e => {
     e.stopPropagation();
-    const r = btn.getBoundingClientRect(), st = document.getElementById("pzStage").getBoundingClientRect();
-    fly.style.top = (r.top - st.top) + "px";
+    anchorFlyout(fly, btn);
     fly.classList.toggle("open");
   });
   fly.querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
-    btn.textContent = ICON[b.dataset.tool] || "▭"; btn.classList.add("active");
+    btn.textContent = ICON[b.dataset.tool] || "▢"; btn.classList.add("active");
     fly.classList.remove("open");
   }));
   document.addEventListener("click", e => { if (!fly.contains(e.target) && e.target !== btn) fly.classList.remove("open"); });
@@ -1203,7 +1490,7 @@ const swatches = document.getElementById("pzSwatches");
   swatches.appendChild(s);
 });
 
-// Aplica color de borde: a la selección si la hay, y como color por defecto
+// Aplica color de borde: a la selecciónsi la hay, y como color por defecto
 const FILLABLE = ["rect", "circle", "triangle", "star", "polygon", "path", "highlighter"];
 function setStrokeColor(c) {
   color = c;
@@ -1219,7 +1506,7 @@ function setFillColorVal(c) {
   const fo = document.getElementById("pzFillOn"); if (fo) fo.checked = false;
   pushRecent(c);
   const els = selectedElements().filter(e => FILLABLE.includes(e.type));
-  if (els.length) { els.forEach(e => { e.fill = c; SYNC.setElement(serialize(e)); }); render(); }
+  if (els.length) { els.forEach(e => { e.fill = c; delete e.gradient; SYNC.setElement(serialize(e)); }); render(); }
   updateFgBg();
 }
 // M7 — refresca las dos muestras (relleno frente / borde atrás)
@@ -1257,12 +1544,12 @@ function pushRecent(c) {
   document.getElementById("pzFbSwap").addEventListener("click", () => {
     const t = color; color = fillOn ? fillColor : "none"; fillColor = (t === "none" ? fillColor : t); fillOn = (t !== "none");
     const els = selectedElements();
-    els.forEach(e => { e.color = color; if (FILLABLE.includes(e.type)) e.fill = fillOn ? fillColor : null; SYNC.setElement(serialize(e)); });
+    els.forEach(e => { e.color = color; if (FILLABLE.includes(e.type)) { e.fill = fillOn ? fillColor : null; delete e.gradient; } SYNC.setElement(serialize(e)); });
     if (els.length) render();
     updateFgBg();
   });
   document.getElementById("pzFbNone").addEventListener("click", () => {
-    if (fgbgActive === "fill") { fillOn = false; const els = selectedElements().filter(e => FILLABLE.includes(e.type)); els.forEach(e => { e.fill = null; SYNC.setElement(serialize(e)); }); if (els.length) render(); }
+    if (fgbgActive === "fill") { fillOn = false; const els = selectedElements().filter(e => FILLABLE.includes(e.type)); els.forEach(e => { e.fill = null; delete e.gradient; SYNC.setElement(serialize(e)); }); if (els.length) render(); }
     else { color = "none"; const els = selectedElements(); els.forEach(e => { e.color = "none"; SYNC.setElement(serialize(e)); }); if (els.length) render(); }
     updateFgBg();
   });
@@ -1272,25 +1559,24 @@ function pushRecent(c) {
 // Panel de color y estilo
 (function wireStyle() {
   const panel = document.getElementById("pzStylePanel");
-  document.getElementById("pzStyleBtn").addEventListener("click", () => panel.classList.toggle("open"));
+  document.getElementById("pzStyleBtn").addEventListener("click", e => { anchorFlyout(panel, e.currentTarget); panel.classList.toggle("open"); });
   document.getElementById("pzStyleClose").addEventListener("click", () => panel.classList.remove("open"));
-  document.getElementById("pzStrokeColor").addEventListener("input", e => setStrokeColor(e.target.value));
-  document.getElementById("pzFillColor").addEventListener("input", e => setFillColorVal(e.target.value));
-  document.getElementById("pzFillOn").addEventListener("change", e => {
-    fillOn = !e.target.checked;   // casilla "Sin relleno"
-    const els = selectedElements().filter(x => ["rect", "circle", "path", "highlighter"].includes(x.type));
-    if (els.length) { els.forEach(x => { x.fill = fillOn ? fillColor : null; SYNC.setElement(serialize(x)); }); render(); }
-  });
   document.getElementById("pzBorderStyle").addEventListener("change", e => {
     borderStyle = e.target.value;
     const els = selectedElements().filter(x => ["rect", "circle", "line", "arrow"].includes(x.type));
     if (els.length) { els.forEach(x => { x.borderStyle = borderStyle; SYNC.setElement(serialize(x)); }); render(); }
   });
   document.getElementById("pzFidelity").addEventListener("change", e => brushFidelity = e.target.value);
+  document.getElementById("pzBrushCap").addEventListener("change", e => {
+    brushCap = e.target.value;
+    const els = selectedElements().filter(x => x.type === "path");
+    if (els.length) { els.forEach(x => { x.cap = brushCap; SYNC.setElement(serialize(x)); }); render(); }
+  });
 })();
 
 document.getElementById("pzSize").addEventListener("input", e => {
   lineWidth = +e.target.value;
+  if (window.refreshBrushCursor) window.refreshBrushCursor();   // M11 — círculo en vivo
   const els = selectedElements();
   if (els.length) { els.forEach(x => { x.width = lineWidth; SYNC.setElement(serialize(x)); }); render(); }
 });
@@ -1299,17 +1585,26 @@ document.getElementById("pzZoomOut").addEventListener("click", () => zoomCenter(
 document.getElementById("pzZoomReset").addEventListener("click", zoomReset);
 
 document.getElementById("pzLock").addEventListener("click", () => {
-  lockRatio = !lockRatio; const b = document.getElementById("pzLock");
-  b.classList.toggle("active", lockRatio); b.textContent = lockRatio ? "🔒" : "🔓";
+  lockRatio = !lockRatio;
+  document.getElementById("pzLock").classList.toggle("active", lockRatio);
 });
 
 // Bloquear / liberar elemento seleccionado
+function refreshLockElIcon() {
+  const b = document.getElementById("pzLockEl");
+  if (!b) return;
+  const els = [...selectedIds].map(id => elements.find(e => e.id === id)).filter(Boolean);
+  const allLocked = els.length && els.every(e => e.locked);
+  b.textContent = allLocked ? "🔓" : "🔒";
+  b.title = allLocked ? "Desbloquear elemento" : "Bloquear elemento";
+}
 document.getElementById("pzLockEl").addEventListener("click", () => {
+  if (boardLocked()) return;
   if (!selectedIds.size) return;
   selectedIds.forEach(id => { const el = elements.find(e => e.id === id); if (el) { el.locked = !el.locked; SYNC.setElement(serialize(el)); } });
-  render();
+  render(); refreshSelBar();
 });
-
+document.getElementById("pzMirrorBtn").addEventListener("click", e => mirrorSelection(e.shiftKey ? "x" : "y"));
 // Fondo
 document.getElementById("pzBg").addEventListener("change", e => { bgType = e.target.value; SYNC.setBg(bgType); render(); });
 
@@ -1317,31 +1612,133 @@ document.getElementById("pzBg").addEventListener("change", e => { bgType = e.tar
 //  CALCULADORA
 // ============================================================
 (function () {
-  const panel = document.getElementById("pzCalcPanel"), display = document.getElementById("pzCalcDisplay"), keys = document.getElementById("pzCalcKeys");
+  const panel = document.getElementById("pzCalcPanel");
+  const display = document.getElementById("pzCalcDisplay");
+  const keys = document.getElementById("pzCalcKeys");
+
   let expr = "";
-  const layout = [["C", "←", "%", "÷"], ["7", "8", "9", "×"], ["4", "5", "6", "−"], ["1", "2", "3", "+"], ["0", ".", "=", ""]];
-  const cls = { "÷": "op", "×": "op", "−": "op", "+": "op", "%": "op", "C": "clr", "←": "clr", "=": "eq" };
-  layout.flat().forEach(k => { if (!k) { keys.appendChild(document.createElement("span")); return; } const b = document.createElement("button"); b.textContent = k; if (cls[k]) b.className = cls[k]; b.addEventListener("click", () => press(k)); keys.appendChild(b); });
-  function press(k) { if (k === "C") expr = ""; else if (k === "←") expr = expr.slice(0, -1); else if (k === "=") return compute(); else expr += k; display.value = expr || "0"; }
-  function compute() { try { const js = expr.replace(/÷/g, "/").replace(/×/g, "*").replace(/−/g, "-").replace(/%/g, "/100"); if (!/^[-+*/.()0-9\s]+$/.test(js)) throw 0; const r = Function('"use strict";return (' + js + ')')(); expr = (Math.round(r * 1e6) / 1e6).toString(); display.value = expr; } catch { display.value = "Error"; expr = ""; } }
-  document.getElementById("pzCalc").addEventListener("click", () => panel.classList.toggle("open"));
-  document.getElementById("pzCalcClose").addEventListener("click", () => panel.classList.remove("open"));
-  const head = panel.querySelector(".pz-calc-head"); let dx, dy, moving = false;
-  head.addEventListener("mousedown", e => { if (e.target.id === "pzCalcClose") return; moving = true; const r = panel.getBoundingClientRect(); dx = e.clientX - r.left; dy = e.clientY - r.top; panel.style.right = "auto"; panel.style.bottom = "auto"; });
-  window.addEventListener("mousemove", e => { if (!moving) return; panel.style.left = (e.clientX - dx) + "px"; panel.style.top = (e.clientY - dy) + "px"; });
-  window.addEventListener("mouseup", () => moving = false);
+
+  const layout = [
+    ["C", "←", "%", "÷"],
+    ["7", "8", "9", "×"],
+    ["4", "5", "6", "−"],
+    ["1", "2", "3", "+"],
+    ["0", ".", "=", ""]
+  ];
+
+  const cls = {
+    "÷": "op",
+    "×": "op",
+    "−": "op",
+    "+": "op",
+    "%": "op",
+    "C": "clr",
+    "←": "clr",
+    "=": "eq"
+  };
+
+  layout.flat().forEach(k => {
+    if (!k) {
+      keys.appendChild(document.createElement("span"));
+      return;
+    }
+
+    const b = document.createElement("button");
+    b.textContent = k;
+
+    if (cls[k]) b.className = cls[k];
+
+    b.addEventListener("click", () => press(k));
+    keys.appendChild(b);
+  });
+
+  function press(k) {
+    if (k === "C") {
+      expr = "";
+    } else if (k === "←") {
+      expr = expr.slice(0, -1);
+    } else if (k === "=") {
+      compute();
+      return;
+    } else {
+      expr += k;
+    }
+
+    display.value = expr || "0";
+  }
+
+  function compute() {
+    try {
+      const js = expr
+        .replace(/÷/g, "/")
+        .replace(/×/g, "*")
+        .replace(/−/g, "-")
+        .replace(/%/g, "/100");
+
+      if (!/^[-+*/.()0-9\s]+$/.test(js)) {
+        throw new Error("Expresión inválida");
+      }
+
+      const result = Function('"use strict"; return (' + js + ')')();
+
+      expr = (Math.round(result * 1e6) / 1e6).toString();
+      display.value = expr;
+    } catch (err) {
+      display.value = "Error";
+      expr = "";
+    }
+  }
+
+  document.getElementById("pzCalc").addEventListener("click", () => {
+    panel.classList.toggle("open");
+  });
+
+  document.getElementById("pzCalcClose").addEventListener("click", () => {
+    panel.classList.remove("open");
+  });
+
+  const head = panel.querySelector(".pz-calc-head");
+
+  let dx = 0;
+  let dy = 0;
+  let moving = false;
+
+  head.addEventListener("mousedown", e => {
+    if (e.target.id === "pzCalcClose") return;
+
+    moving = true;
+
+    const r = panel.getBoundingClientRect();
+
+    dx = e.clientX - r.left;
+    dy = e.clientY - r.top;
+
+    panel.style.right = "auto";
+    panel.style.bottom = "auto";
+  });
+
+  window.addEventListener("mousemove", e => {
+    if (!moving) return;
+
+    panel.style.left = (e.clientX - dx) + "px";
+    panel.style.top = (e.clientY - dy) + "px";
+  });
+
+  window.addEventListener("mouseup", () => {
+    moving = false;
+  });
 })();
 
 // ============================================================
 //  PERMISOS (rol)
 // ============================================================
-const PERM_LABELS = { calculator: "Calculadora 🧮", eraser: "Borrador 🧽", text: "Texto 🔤", image: "Imágenes 🖼️", stickers: "Stickers 🏷️", clear: "Limpiar todo 🗑️" };
+const PERM_LABELS = { select: "Seleccionar", directselect: "Selección directa", pan: "Mover lienzo", pencil: "Lápiz", highlighter: "Resaltador", eraser: "Borrador", fill: "Bote de relleno", gradient: "Degradado", eyedropper: "Gotero", text: "Texto", rotate: "Rotar", mirror: "Espejo", shapes: "Formas", stickers: "Stickers", image: "Imágenes", calculator: "Calculadora", laser: "Láser", clear: "Limpiar todo" };
 function applyPerms(perms) {
   PERMS = { ...PERMS, ...(perms || {}) };
   if (!IS_ADMIN) {
     document.querySelectorAll("[data-perm]").forEach(el => {
       const allowed = PERMS[el.dataset.perm] !== false;
-      if (el.classList.contains("pz-label-btn")) el.classList.toggle("pz-disabled", !allowed);
+      if (el.classList.contains("pz-label-btn") || el.tagName === "LABEL") el.classList.toggle("pz-disabled", !allowed);
       else el.disabled = !allowed;
     });
     if (tool && document.querySelector(`.pz-tool[data-tool="${tool}"][data-perm]`) && PERMS[tool] === false) setTool("select");
@@ -1349,22 +1746,57 @@ function applyPerms(perms) {
   // reflejar en panel admin
   document.querySelectorAll("#pzPermsBody input").forEach(c => { c.checked = PERMS[c.dataset.perm] !== false; });
 }
+applyPerms(PERMS);
+// Posiciona una ventana flotante DEBAJO de su botón de la barra superior,
+// alineada por la izquierda y sin salirse del borde derecho de la pantalla.
+function anchorFloat(panel, btn) {
+  const r = btn.getBoundingClientRect();
+  panel.style.top = (r.bottom + 6) + "px";
+  const w = panel.offsetWidth || 250;
+  panel.style.left = Math.max(8, Math.min(r.left, window.innerWidth - w - 8)) + "px";
+}
+function toggleFloat(panel, btn) {
+  const willOpen = !panel.classList.contains("open");
+  // cerrar otras flotantes admin
+  document.querySelectorAll(".pz-float.open").forEach(p => { if (p !== panel) p.classList.remove("open"); });
+  document.querySelectorAll(".pz-admin-top .pz-top-btn.open").forEach(b => { if (b !== btn) b.classList.remove("open"); });
+  panel.classList.toggle("open", willOpen);
+  btn.classList.toggle("open", willOpen);
+  if (willOpen) anchorFloat(panel, btn);
+}
+// Capas (📁): ventana flotante visible para TODOS los usuarios.
+(function wireLayers() {
+  const layersBtn = document.getElementById("pzLayersBtn"), layersPanel = document.getElementById("pzLayersPanel");
+  if (!layersBtn) return;
+  layersBtn.addEventListener("click", () => { toggleFloat(layersPanel, layersBtn); renderLayers(); });
+  document.getElementById("pzLayersClose").addEventListener("click", () => { layersPanel.classList.remove("open"); layersBtn.classList.remove("open"); });
+  document.addEventListener("click", e => {
+    if (layersPanel.classList.contains("open") && !layersPanel.contains(e.target) && !layersBtn.contains(e.target)) { layersPanel.classList.remove("open"); layersBtn.classList.remove("open"); }
+  });
+  window.addEventListener("resize", () => { if (layersPanel.classList.contains("open")) anchorFloat(layersPanel, layersBtn); });
+})();
+
 if (IS_ADMIN) {
-  document.getElementById("pzRightPanel").style.display = "";
+  document.getElementById("pzAdminTop").style.display = "";
   document.getElementById("pzRoleBadge").style.display = "";
   const body = document.getElementById("pzPermsBody");
   Object.keys(PERM_LABELS).forEach(k => {
     const row = document.createElement("label"); row.className = "pz-perm-row";
     row.innerHTML = `<span>${PERM_LABELS[k]}</span>`;
-    const c = document.createElement("input"); c.type = "checkbox"; c.checked = true; c.dataset.perm = k;
+    const c = document.createElement("input"); c.type = "checkbox"; c.checked = PERMS[k] !== false; c.dataset.perm = k;
     c.addEventListener("change", () => { PERMS[k] = c.checked; SYNC.setPermissions(PERMS); });
     row.appendChild(c); body.appendChild(row);
   });
-  // M9 — menú desplegable único de configuración
-  const menu = document.getElementById("pzAdminMenu"), abtn = document.getElementById("pzAdminBtn"), endb = document.getElementById("pzAdminEndGame");
-  abtn.addEventListener("click", () => { menu.classList.toggle("open"); abtn.classList.toggle("open"); });
+  // Configuración (⚙️) como ventana flotante anclada a la barra superior
+  const cfgBtn = document.getElementById("pzAdminBtn"), cfgPanel = document.getElementById("pzAdminMenu");
+  cfgBtn.addEventListener("click", () => toggleFloat(cfgPanel, cfgBtn));
+  document.getElementById("pzAdminClose").addEventListener("click", () => { cfgPanel.classList.remove("open"); cfgBtn.classList.remove("open"); });
+  document.addEventListener("click", e => {
+    if (cfgPanel.classList.contains("open") && !cfgPanel.contains(e.target) && !cfgBtn.contains(e.target)) { cfgPanel.classList.remove("open"); cfgBtn.classList.remove("open"); }
+  });
+  window.addEventListener("resize", () => { if (cfgPanel.classList.contains("open")) anchorFloat(cfgPanel, cfgBtn); });
+  const endb = document.getElementById("pzAdminEndGame");
   endb.addEventListener("click", () => { if (typeof GAME !== "undefined" && GAME.endGame) GAME.endGame(); });
-  // mostrar "Terminar partida" solo si hay juego activo
   GAME_endBtn = endb;
 }
 var GAME_endBtn = null;
@@ -1375,7 +1807,10 @@ var GAME_endBtn = null;
 function escapeHtml(t) { const d = document.createElement("div"); d.textContent = t; return d.innerHTML; }
 function renderPresence(data) {
   const box = document.getElementById("pzPresence"), ahora = Date.now();
-  const list = Object.values(data || {}).filter(p => p && p.name && (ahora - (p.t || 0) < 86400000));
+  // En el modo Pinturillo móvil (pz-game-mobile) solo se listan los conectados:
+  // hay menos espacio en la barra superior y los desconectados no aportan nada.
+  const onlyOnline = document.body.classList.contains("pz-game-mobile");
+  const list = Object.values(data || {}).filter(p => p && p.name && (ahora - (p.t || 0) < 86400000) && (!onlyOnline || p.online));
   box.innerHTML = list.sort((a, b) => (b.online ? 1 : 0) - (a.online ? 1 : 0))
     .map(p => `<span class="pz-chip ${p.online ? "online" : "offline"}"><span class="pz-dot"></span>${escapeHtml(p.name)}</span>`).join("");
 }
@@ -1394,10 +1829,23 @@ function moveLayer(from, to) {
   const arr = boardLayers.slice(); const [it] = arr.splice(from, 1); arr.splice(to, 0, it);
   boardLayers = arr; SYNC.setLayers(boardLayers); render(); renderLayers();
 }
+// Eliminar una capa: sus elementos pasan a la capa vecina (nunca se borran).
+// No se puede eliminar la última capa.
+function deleteLayer(idx) {
+  if (boardLayers.length <= 1) { alert("Debe quedar al menos una capa 🙂"); return; }
+  const L = boardLayers[idx];
+  const count = elements.filter(e => (e.layer || "L1") === L.id).length;
+  if (count && !confirm(`La capa "${L.name}" tiene ${count} elemento(s). Se moverán a otra capa. ¿Eliminar la capa?`)) return;
+  const fallback = boardLayers[idx === 0 ? 1 : idx - 1].id;
+  elements.filter(e => (e.layer || "L1") === L.id).forEach(e => { e.layer = fallback; SYNC.setElement(serialize(e)); });
+  boardLayers = boardLayers.filter((_, i) => i !== idx);
+  if (activeLayer === L.id) activeLayer = fallback;
+  SYNC.setLayers(boardLayers); render(); renderLayers();
+}
 let _dragLayer = null;
 function renderLayers() {
   const box = document.getElementById("pzLayers");
-  if (!box || !IS_ADMIN) return;
+  if (!box) return;
   box.innerHTML = "";
   // arriba en la lista = encima en el lienzo (orden inverso al array)
   const order = boardLayers.map((l, i) => i).reverse();
@@ -1407,11 +1855,13 @@ function renderLayers() {
     const row = document.createElement("div");
     row.className = "pz-layer" + (activeLayer === L.id ? " sel" : "");
     row.draggable = true;
-    row.innerHTML = `<span class="lh">⠿</span><span class="lname">${escapeHtml(L.name)}</span><span class="lc">${count}</span>`;
+    row.innerHTML = `<span class="lh">🗂️</span><span class="lname">${escapeHtml(L.name)}</span><span class="lc">${count}</span>` +
+  (boardLayers.length > 1 ? `<button class="ldel" title="Eliminar capa">🗑️</button>` : "");
     row.addEventListener("click", () => { activeLayer = L.id; renderLayers(); });
     row.addEventListener("dragstart", () => _dragLayer = idx);
     row.addEventListener("dragover", e => e.preventDefault());
     row.addEventListener("drop", e => { e.preventDefault(); if (_dragLayer != null) moveLayer(_dragLayer, idx); _dragLayer = null; });
+    const del = row.querySelector(".ldel"); if (del) del.addEventListener("click", e => { e.stopPropagation(); deleteLayer(idx); });
     box.appendChild(row);
   });
   const add = document.createElement("button"); add.className = "pz-addlayer"; add.textContent = "＋ Nueva capa";
@@ -1426,7 +1876,8 @@ const remoteCursors = {};
 function drawCursors() {
   const ahora = Date.now();
   Object.entries(remoteCursors).forEach(([k, c]) => {
-    if (k === MY_KEY || !c) return;
+    if (!c) return;
+    if (k === MY_KEY && !c.laser) return;   // mí propio puntero-flecha no, pero mí láser sí lo veo
     const age = ahora - (c.t || 0);
     if (age > 8000) return;
     ctx.save();
@@ -1497,7 +1948,7 @@ const SYNC = (function () {
     firebase.database().ref(".info/connected").on("value", s => {
       if (s.val() !== true) return;
       const register = () => {
-        // Los invitados liberan su lugar al salir (removidos); Papá/Luanna quedan "offline".
+      // Los invitados liberan su lugar al salir (removidos); Papá/Luanna quedan "offline".
         if (IS_GUEST) meRef.onDisconnect().remove();
         else meRef.onDisconnect().update({ online: false, t: Date.now() });
         meRef.set({ name: MY_NAME, online: true, role: SESSION.role, t: Date.now() });
@@ -1548,326 +1999,11 @@ const SYNC = (function () {
 
 // ============================================================
 //  MODO JUEGO · ADIVINA EL DIBUJO
+//  → movido a js/juego.js (módulo independiente, se carga
+//    DESPUÉS de pizarra.js). La pizarra es dibujo puro; el
+//    juego se acopla por GAME.blockPointer()/GAME.blockTool()
+//    y por onPresence(), ambos con guardas typeof.
 // ============================================================
-const GAME = (function () {
-  const ROOM = "luanna-pizarra";
-  let WORDS = [
-    "gato", "perro", "elefante", "casa", "sol", "luna", "arbol", "flor", "pez", "pajaro",
-    "manzana", "platano", "auto", "avion", "barco", "tren", "pelota", "globo", "helado", "pastel",
-    "estrella", "corazon", "mariposa", "tortuga", "leon", "jirafa", "oso", "raton", "abeja", "araña",
-    "zapato", "sombrero", "reloj", "lapiz", "libro", "silla", "mesa", "cama", "puerta", "ventana",
-    "montaña", "rio", "nube", "lluvia", "fuego", "robot", "dinosaurio", "unicornio", "fantasma", "corona",
-    "pizza", "queso", "huevo", "zanahoria", "uva", "fresa", "sandia", "galleta", "caramelo", "pinguino"
-  ];
-  // Carga libreria_play.txt: 1 palabra por línea; ignora encabezados (=== · [CAT] · ---- · vacías)
-  (function loadLibrary() {
-    fetch("libreria_play.txt?t=" + Date.now()).then(r => r.ok ? r.text() : null).then(txt => {
-      if (!txt) return;
-      const seen = {}, out = [];
-      txt.split(/\r?\n/).forEach(line => {
-        const w = line.trim();
-        if (!w) return;
-        if (/^[=\-\s]*$/.test(w)) return;          // separadores === o ----
-        if (/^\[.*\]$/.test(w)) return;            // [CATEGORÍA]
-        const key = w.toLowerCase();
-        if (seen[key]) return; seen[key] = 1; out.push(w);
-      });
-      if (out.length >= 10) { WORDS = out; lastWords = []; console.log("libreria_play: " + out.length + " palabras"); }
-    }).catch(() => { });
-  })();
-  let lastWords = [];
-  function pickThree() {
-    const out = []; let t = 0;
-    while (out.length < 3 && t < 80) { const w = WORDS[Math.floor(Math.random() * WORDS.length)]; if (!out.includes(w) && !lastWords.includes(w)) out.push(w); t++; }
-    while (out.length < 3) { const w = WORDS[Math.floor(Math.random() * WORDS.length)]; if (!out.includes(w)) out.push(w); }
-    lastWords.push(...out); while (lastWords.length > 18) lastWords.shift();
-    return out;
-  }
-  function norm(s) { return (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]/g, ""); }
-  function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
-
-  let gameRef = null, state = null, gameOpen = false, muted = false, audioCtx = null, closedByUser = false;
-  if (typeof firebase !== "undefined" && SYNC.ok) {
-    try { gameRef = firebase.database().ref("rooms/" + ROOM + "/game"); gameRef.on("value", s => { state = s.val(); onState(); }); } catch (e) { console.warn("Juego sin Firebase:", e); }
-  }
-
-  // ---- Helpers de jugadores ----
-  function onlineKeys() { return Object.keys(presenceData).filter(k => presenceData[k] && presenceData[k].online); }
-  function isOnline(k) { return !!(presenceData[k] && presenceData[k].online); }
-  function nameOf(k) { return (state && state.names && state.names[k]) || (presenceData[k] && presenceData[k].name) || "Jugador"; }
-  function actingHost(g) { if (g && g.host && isOnline(g.host)) return g.host; return onlineKeys().sort()[0]; }
-  function iAmHost(g) { return actingHost(g) === MY_KEY; }
-  function remaining(g) { if (!g.startTs) return g.turnSeconds; const el = (Date.now() - g.startTs) / 1000; return el < 0 ? g.turnSeconds : Math.max(0, Math.round(g.turnSeconds - el)); }
-
-  // ---- Sonido tic ----
-  function tick() {
-    if (muted) return;
-    try {
-      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
-      o.frequency.value = 880; g.gain.value = 0.05; o.connect(g); g.connect(audioCtx.destination);
-      o.start(); o.stop(audioCtx.currentTime + 0.04);
-    } catch (e) {}
-  }
-  function celebrate() {
-    const box = document.getElementById("pzConfetti"); if (!box) return;
-    const cols = ["#ff4f9a", "#7c5cff", "#2eb872", "#ffc83d", "#ff7a3d", "#4d9fff"];
-    box.innerHTML = ""; box.classList.add("show");
-    for (let i = 0; i < 80; i++) { const c = document.createElement("i"); c.style.left = Math.random() * 100 + "%"; c.style.background = cols[i % cols.length]; c.style.animationDuration = (1.5 + Math.random() * 1.5) + "s"; c.style.animationDelay = (Math.random() * .3) + "s"; box.appendChild(c); }
-    setTimeout(() => box.classList.remove("show"), 2800);
-  }
-  // Estrella grande de acierto (solo la ve quien adivinó, ~2s, no bloquea)
-  function showStar(word, pts) {
-    let el = document.getElementById("pzStar");
-    if (!el) { el = document.createElement("div"); el.id = "pzStar"; el.className = "pz-star"; document.getElementById("pzStage").appendChild(el); }
-    el.innerHTML = `<div class="pz-star-shape"><div class="pz-star-w">${escapeHtml((word || "").toUpperCase())}</div><div class="pz-star-sub">¡Adivinaste!</div><div class="pz-star-pts">+${pts}</div><div class="pz-star-pt2">puntos</div></div>`;
-    el.classList.remove("show"); void el.offsetWidth; el.classList.add("show");
-    clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove("show"), 2000);
-    celebrate();
-  }
-
-  const TURN_SECS = 99, LEAD_MS = 3000;
-  // ---- Reparto de puntos (estrellas) ----
-  function guesserStars(order) { return [60, 50, 40, 30, 20, 10][Math.min(order - 1, 5)]; }
-  function drawerStars(frac) { return Math.round(frac * 4) / 4 * 100; }   // 0/25/50/75/100 según %
-  function nonDrawers(g) { return (g.queue || []).filter(k => k !== g.drawer && isOnline(k)); }
-  function allGuessed(g) { const nd = nonDrawers(g); return nd.length > 0 && nd.every(k => g.guessed && g.guessed[k]); }
-  function countdownLeft(g) { return g.startTs ? Math.ceil((g.startTs - Date.now()) / 1000) : 0; } // >0 = cuenta 3-2-1
-
-  // ---- Transiciones ----
-  function startGame() {
-    if (!IS_ADMIN) return;                                   // M14: solo Papá inicia
-    const players = shuffle(onlineKeys());
-    if (players.length < 2) { alert("Se necesitan al menos 2 jugadores conectados 🙂"); return; }
-    const names = {}, scores = {}; players.forEach(k => { names[k] = nameOf(k); scores[k] = 0; });
-    SYNC.clearAll();
-    gameRef.set({ status: "choosing", host: MY_KEY, turnSeconds: TURN_SECS, queue: players, round: 1, drawer: players[0], choices: pickThree(), word: null, startTs: null, guessed: null, scores, names, roundResult: null, chat: null });
-  }
-  function chooseWord(w) {
-    // startTs adelantado: 3s de cuenta regresiva antes de habilitar el dibujo
-    gameRef.update({ status: "playing", word: w, choices: null, startTs: Date.now() + LEAD_MS, guessed: null });
-    gameRef.child("chat").remove();
-  }
-  function nextTurn(g) {
-    let idx = g.queue.indexOf(g.drawer), next = null;
-    for (let i = 1; i <= g.queue.length; i++) { const cand = g.queue[(idx + i) % g.queue.length]; if (isOnline(cand)) { next = cand; break; } }
-    if (!next) next = onlineKeys()[0];
-    if (!next) { gameRef.remove(); return; }
-    // M3: jugadores que entraron durante la partida se suman a la cola y al marcador
-    const queue = g.queue.slice(), names = Object.assign({}, g.names || {}), scores = Object.assign({}, g.scores || {});
-    onlineKeys().forEach(k => { if (!queue.includes(k)) { queue.push(k); names[k] = nameOf(k); if (scores[k] == null) scores[k] = 0; } });
-    SYNC.clearAll();
-    gameRef.update({ status: "choosing", round: (g.round || 1) + 1, drawer: next, queue, names, scores, choices: pickThree(), word: null, startTs: null, guessed: null, roundResult: null });
-    gameRef.child("chat").remove();
-  }
-  function endRound(g) {
-    const nd = nonDrawers(g), got = nd.filter(k => g.guessed && g.guessed[k]).length;
-    const frac = nd.length ? got / nd.length : 0;
-    const elapsed = g.startTs ? (Date.now() - g.startTs) / 1000 : g.turnSeconds;
-    const bonus = (got === nd.length && nd.length > 0 && elapsed < g.turnSeconds / 2) ? 20 : 0;
-    const dpts = drawerStars(frac) + bonus;
-    const scores = Object.assign({}, g.scores || {});
-    scores[g.drawer] = (scores[g.drawer] || 0) + dpts;
-    gameRef.update({ status: "roundEnd", roundEndTs: Date.now(), scores, roundResult: { word: g.word, drawerName: nameOf(g.drawer), got, total: nd.length, dpts, bonus } });
-  }
-
-  // ---- Adivinanzas (chat) ----
-  function sendGuess(text) {
-    const g = state; if (!g || !text.trim() || g.status !== "playing") return;
-    if (MY_KEY === g.drawer) return;                 // dibujante no responde
-    if (g.guessed && g.guessed[MY_KEY]) return;       // ya acertó → bloqueado
-    if (norm(text) === norm(g.word)) {
-      // Acierto: NO se publica el mensaje; aviso sin revelar palabra; bloquea al jugador
-      const order = Object.keys(g.guessed || {}).length + 1, pts = guesserStars(order);
-      const scores = Object.assign({}, g.scores || {}); scores[MY_KEY] = (scores[MY_KEY] || 0) + pts;
-      const guessed = Object.assign({}, g.guessed || {}); guessed[MY_KEY] = order;
-      gameRef.child("chat").push({ system: true, text: "🎉 " + MY_NAME + " adivinó la palabra (+" + pts + ")", t: Date.now() });
-      gameRef.update({ scores, guessed });
-      showStar(g.word, pts);                              // estrella grande, solo la ve quien acertó
-      if (allGuessed(Object.assign({}, g, { guessed }))) endRound(Object.assign({}, g, { guessed }));
-    } else {
-      gameRef.child("chat").push({ key: MY_KEY, name: MY_NAME, text, t: Date.now() });
-    }
-  }
-
-  // ---- Reacción a cada cambio de estado ----
-  let lastStatus = null;
-  function onState() {
-    const g = state;
-    if (g && g.status !== "config" && !gameOpen && !closedByUser) gameOpen = true;
-    if (g && g.status === "roundEnd" && lastStatus !== "roundEnd") celebrate();
-    lastStatus = g ? g.status : null;
-    document.getElementById("pzPlayBtn").classList.toggle("on", !!(g && g.status !== "config"));
-    const sr = document.getElementById("pzStarsRow"); if (sr && (!g || g.status !== "playing")) sr.classList.remove("show");
-    if (typeof GAME_endBtn !== "undefined" && GAME_endBtn) GAME_endBtn.style.display = (g && g.status !== "config") ? "" : "none";
-    renderGame();
-  }
-  function gamePresence() {
-    const g = state; if (!g) return;
-    // M14: si quedan menos de 2 jugadores, cancela y vuelve a espera
-    if (iAmHost(g) && onlineKeys().length < 2) { gameRef.remove(); return; }
-    // Dibujante desconectado → el anfitrión salta al siguiente
-    if ((g.status === "playing" || g.status === "choosing") && iAmHost(g) && !isOnline(g.drawer)) nextTurn(g);
-    if (gameOpen) renderGame();
-  }
-
-  // ---- Bucle de tiempo (1s) ----
-  let lastCd = 0;
-  setInterval(() => {
-    const g = state; if (!g) return;
-    if (g.status === "playing") {
-      const cd = countdownLeft(g);
-      const tEl = document.getElementById("pzgTime");
-      if (cd > 0) {                               // cuenta 3-2-1 antes de dibujar
-        if (tEl) tEl.textContent = "¡" + cd + "!";
-        if (gameOpen && cd !== lastCd) { tick(); lastCd = cd; }
-        return;
-      }
-      const rem = remaining(g);
-      if (tEl) { tEl.textContent = fmt(rem); const bar = document.getElementById("pzgBar"); if (bar) bar.style.width = (rem / g.turnSeconds * 100) + "%"; }
-      // #5 refrescar letras reveladas (solo a quien no es dibujante ni adivinó)
-      const wm = document.getElementById("pzgWordMask");
-      if (wm && g.drawer !== MY_KEY && !(g.guessed && g.guessed[MY_KEY])) wm.innerHTML = maskWord(g);
-      starsRow(g);                                // #4 fila de estrellas
-      if (gameOpen && rem > 0) tick();
-      if (iAmHost(g) && (rem <= 0 || allGuessed(g))) endRound(g);
-    } else if (g.status === "roundEnd" && iAmHost(g)) {
-      if (Date.now() - (g.roundEndTs || 0) > 3000) nextTurn(g);   // ranking ~3s
-    }
-  }, 1000);
-  // #4 — fila de estrellas bajo la pizarra: 1 estrella por jugador, encendida si adivinó
-  function starsRow(g) {
-    const row = document.getElementById("pzStarsRow"); if (!row) return;
-    if (!g || g.status !== "playing") { row.classList.remove("show"); return; }
-    const nd = nonDrawers(g);
-    row.innerHTML = nd.map(k => `<span class="${g.guessed && g.guessed[k] ? "on" : ""}">★</span>`).join("");
-    row.classList.toggle("show", nd.length > 0);
-  }
-  function fmt(s) { const m = Math.floor(s / 60), x = s % 60; return m + ":" + (x < 10 ? "0" : "") + x; }
-
-  // ---- Render del panel ----
-  // Máscara con revelación gradual de letras según el tiempo transcurrido (#5)
-  function maskWord(g) {
-    const w = (g && g.word) || "", letters = [...w];
-    const idxs = letters.map((c, i) => (c === " " ? -1 : i)).filter(i => i >= 0);
-    const total = idxs.length;
-    let k = 0;
-    if (g && g.startTs && total > 1) {
-      const prog = clamp((Date.now() - g.startTs) / 1000 / g.turnSeconds, 0, 1);
-      k = Math.min(total - 1, Math.floor(prog * total));  // nunca todas
-    }
-    // orden determinista (mismo para todos los clientes)
-    const order = idxs.slice().sort((a, b) => ((a * 7 + (w.charCodeAt(a) || 0)) % 101) - ((b * 7 + (w.charCodeAt(b) || 0)) % 101));
-    const show = new Set(order.slice(0, Math.max(0, k)));
-    return letters.map((c, i) => c === " " ? "&nbsp;&nbsp;" : (show.has(i) ? c.toUpperCase() : "_")).join(" ");
-  }
-  function renderGame() {
-    const panel = document.getElementById("pzGamePanel"), body = document.getElementById("pzGameBody");
-    panel.classList.toggle("open", gameOpen);
-    if (!gameOpen) return;
-    const g = state;
-    const online = onlineKeys().length;
-    const head = `<div class="pzg-head">🎮 Adivina el Dibujo <span style="font-size:.72rem;font-weight:700;opacity:.9">· ${online} en línea</span><button class="x" id="pzgClose">✕</button></div>`;
-    if (!gameRef) { body.innerHTML = head + `<div class="pzg-sec">El juego necesita conexión en línea.</div>`; wireClose(); return; }
-
-    // --- Configuración (sin partida) ---
-    if (!g || g.status === "config") {
-      const players = onlineKeys().map(k => `<span class="pzg-pchip">${escapeHtml(nameOf(k))}</span>`).join("") || `<span class="pzg-pchip">Esperando jugadores…</span>`;
-      const ctrl = IS_ADMIN
-        ? `<button class="pzg-btn" id="pzgStart">▶ Iniciar partida</button>
-           <p style="font-size:.76rem;color:var(--text-soft);margin-top:8px">Turno 99s · rondas ilimitadas · rotan turnos. Mínimo 2 jugadores. Termina con ⏹.</p>`
-        : `<p style="font-size:.9rem;font-weight:800;color:var(--purple-dark);text-align:center;padding:6px 0">⏳ Esperando que Papá inicie la partida…</p>`;
-      body.innerHTML = head + `
-        <div class="pzg-sec">${ctrl}</div>
-        <div class="pzg-sec"><div class="pzg-title">Jugadores conectados (${online})</div><div class="pzg-players">${players}</div></div>`;
-      wireClose();
-      const sb = body.querySelector("#pzgStart"); if (sb) sb.onclick = () => startGame();
-      return;
-    }
-
-    const meDrawer = g.drawer === MY_KEY;
-    const rank = Object.keys(g.scores || {}).sort((a, b) => (g.scores[b] || 0) - (g.scores[a] || 0));
-    const stopBtn = iAmHost(g) ? `<button class="pzg-stop" id="pzgStop" title="Terminar juego">⏹</button>` : "";
-    const metaSec = `<div class="pzg-sec"><div class="pzg-meta"><span>✏️ Dibuja: <b>${escapeHtml(nameOf(g.drawer))}</b></span><span>Ronda <b>${g.round}</b> ${stopBtn}</span></div></div>`;
-
-    // --- Elegir palabra ---
-    if (g.status === "choosing") {
-      let mid;
-      if (meDrawer) {
-        mid = `<div class="pzg-sec"><div class="pzg-title">Elige una palabra para dibujar</div>
-          <div class="pzg-choices">${(g.choices || []).map(w => `<button class="pzg-choice" data-w="${escapeHtml(w)}">${escapeHtml(w)}</button>`).join("")}</div></div>`;
-      } else {
-        mid = `<div class="pzg-sec" style="text-align:center"><div class="pzg-word"><small>⏳ ${escapeHtml(nameOf(g.drawer))} está eligiendo palabra…</small></div></div>`;
-      }
-      body.innerHTML = head + metaSec + mid + `<div class="pzg-sec"><div class="pzg-title">⭐ Puntuación</div>${scoreRows(g, rank)}</div>`;
-      wireClose(); wireStop();
-      if (meDrawer) body.querySelectorAll(".pzg-choice").forEach(b => b.onclick = () => chooseWord(b.dataset.w));
-      return;
-    }
-
-    // --- Jugando / fin de ronda ---
-    const guessedMe = !!(g.guessed && g.guessed[MY_KEY]);
-    const wordHtml = meDrawer
-      ? `<div class="pzg-word">${escapeHtml(g.word)}<small>¡Te toca dibujar! No escribas la palabra</small></div>`
-      : `<div class="pzg-word"><span id="pzgWordMask">${maskWord(g)}</span><small>${(g.word || "").replace(/ /g, "").length} letras</small></div>`;
-    const reveal = g.status === "roundEnd"
-      ? `<div class="pzg-reveal"><div class="pzg-reveal-star">⭐</div><div class="pzg-reveal-word">${escapeHtml((g.roundResult && g.roundResult.word) || g.word)}</div>
-         <div class="pzg-reveal-sub">${g.roundResult ? g.roundResult.got + " de " + g.roundResult.total + " adivinaron · ✏️ +" + (g.roundResult.dpts || 0) + (g.roundResult.bonus ? " (bono +20)" : "") : ""}</div></div>` : "";
-    const chatMsgs = g.chat ? Object.values(g.chat).sort((a, b) => a.t - b.t).slice(-40) : [];
-    const chatHtml = chatMsgs.map(m => m.system
-      ? `<div class="pzg-msg correct">${escapeHtml(m.text)}</div>`
-      : `<div class="pzg-msg"><span class="who" style="color:${m.key === g.drawer ? "#999" : "var(--purple)"}">${escapeHtml(m.name)}:</span> ${escapeHtml(m.text)}</div>`).join("");
-    const canGuess = g.status === "playing" && !meDrawer && !guessedMe;
-
-    body.innerHTML = head + metaSec + `
-      <div class="pzg-sec pzg-timer">
-        <div class="pzg-title" style="display:flex;justify-content:center;gap:8px;align-items:center">Tiempo restante <button class="pzg-mute" id="pzgMute" title="Silenciar">${muted ? "🔇" : "🔊"}</button></div>
-        <div class="pzg-time" id="pzgTime">${fmt(remaining(g))}</div>
-        <div class="pzg-bar"><div id="pzgBar" style="width:${remaining(g) / g.turnSeconds * 100}%"></div></div>
-        ${reveal || wordHtml}
-      </div>
-      <div class="pzg-sec grow">
-        <div class="pzg-title">Chat — escribe tu respuesta</div>
-        <div class="pzg-chat" id="pzgChat">${chatHtml}</div>
-        <div class="pzg-chatform">
-          <input id="pzgInput" placeholder="${meDrawer ? "Tú dibujas 🎨" : (guessedMe ? "¡Ya adivinaste! 🌟" : (canGuess ? "Escribe tu respuesta…" : "Espera…"))}" ${canGuess ? "" : "disabled"}>
-          <button id="pzgSend" ${canGuess ? "" : "disabled"}>➤</button>
-        </div>
-      </div>
-      <div class="pzg-sec"><div class="pzg-title">⭐ Puntuación</div>${scoreRows(g, rank)}</div>`;
-    wireClose(); wireStop();
-    const chatBox = document.getElementById("pzgChat"); if (chatBox) chatBox.scrollTop = chatBox.scrollHeight;
-    const mb = document.getElementById("pzgMute"); if (mb) mb.onclick = () => { muted = !muted; renderGame(); };
-    const inp = document.getElementById("pzgInput"), snd = document.getElementById("pzgSend");
-    if (snd && !snd.disabled) {
-      const go = () => { if (inp.value.trim()) { sendGuess(inp.value); inp.value = ""; inp.focus(); } };
-      snd.onclick = go;
-      inp.onkeydown = e => { if (e.key === "Enter") { e.preventDefault(); go(); } };
-    }
-  }
-  function wireStop() { const s = document.getElementById("pzgStop"); if (s) s.onclick = () => { if (confirm("¿Terminar el juego para todos?")) gameRef.remove(); }; }
-  function scoreRows(g, rank) {
-    const medals = ["🥇", "🥈", "🥉"];
-    return rank.map((k, i) => `<div class="pzg-score${k === MY_KEY ? " me" : ""}"><span class="medal">${medals[i] || ""}</span><span class="nm">${escapeHtml(nameOf(k))}${k === g.drawer ? " ✏️" : ""}</span><span class="st">⭐ ${g.scores[k] || 0}</span></div>`).join("");
-  }
-  function wireClose() { const c = document.getElementById("pzgClose"); if (c) c.onclick = () => { gameOpen = false; closedByUser = true; renderGame(); document.getElementById("pzPlayBtn").classList.remove("on"); }; }
-
-  // Botón JUGAR
-  document.getElementById("pzPlayBtn").addEventListener("click", () => {
-    gameOpen = !gameOpen; closedByUser = !gameOpen;
-    if (gameOpen) { try { audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)(); } catch (e) {} }
-    renderGame();
-  });
-
-  return {
-    presence: gamePresence,
-    endGame: () => { if (gameRef) gameRef.remove(); },
-    blockPointer(t) { const g = state; if (!g || (g.status !== "playing" && g.status !== "choosing")) return false; if (g.status === "choosing" || g.drawer !== MY_KEY) return !(t === "pan" || t === "laser"); if (countdownLeft(g) > 0) return !(t === "pan" || t === "laser"); return t === "text" || t === "sticker"; },
-    blockTool(kind) { const g = state; if (!g || (g.status !== "playing" && g.status !== "choosing")) return false; if (g.status === "choosing" || g.drawer !== MY_KEY) return true; return ["text", "sticker", "image"].includes(kind); }
-  };
-})();
-// Hook llamado desde la capa de sincronización cuando cambia la presencia
-function onPresence() { if (typeof GAME !== "undefined" && GAME.presence) GAME.presence(); }
 
 // ---------- Arranque ----------
 updateUndoRedo();
