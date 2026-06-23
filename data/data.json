@@ -1,8 +1,8 @@
 {
   "meta": {
-    "lastUpdate": "2026-06-20",
+    "lastUpdate": "2026-06-22",
     "version": 1,
-    "savedAt": 1781980426795
+    "savedAt": 1782182942047
   },
   "messages": [
     {
@@ -282,6 +282,29 @@
         "done": true
       },
       "brush_teeth": {
+        "done": true
+      }
+    },
+    "2026-06-22": {
+      "make_bed": {
+        "done": true
+      },
+      "organize_room": {
+        "done": true
+      },
+      "wash_utensils": {
+        "done": true
+      },
+      "brush_teeth": {
+        "done": true
+      },
+      "reading": {
+        "done": true
+      },
+      "reading_summary": {
+        "done": true
+      },
+      "math": {
         "done": true
       }
     }
