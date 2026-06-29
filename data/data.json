@@ -1,8 +1,8 @@
 {
   "meta": {
-    "lastUpdate": "2026-06-24",
+    "lastUpdate": "2026-06-29",
     "version": 1,
-    "savedAt": 1782284857924
+    "savedAt": 1782750834599
   },
   "messages": [
     {
@@ -342,13 +342,110 @@
         "done": true
       },
       "reading": {
-        "done": false
+        "done": true
       },
       "reading_summary": {
-        "done": false
+        "done": true
       },
       "math": {
-        "done": false
+        "done": true
+      }
+    },
+    "2026-06-24": {
+      "make_bed": {
+        "done": true
+      },
+      "organize_room": {
+        "done": true
+      },
+      "wash_utensils": {
+        "done": true
+      },
+      "brush_teeth": {
+        "done": true
+      },
+      "reading": {
+        "done": true
+      },
+      "reading_summary": {
+        "done": true
+      },
+      "math": {
+        "done": true
+      }
+    },
+    "2026-06-25": {
+      "make_bed": {
+        "done": true
+      },
+      "organize_room": {
+        "done": true
+      },
+      "wash_utensils": {
+        "done": true
+      },
+      "brush_teeth": {
+        "done": true
+      },
+      "reading": {
+        "done": true
+      },
+      "reading_summary": {
+        "done": true
+      },
+      "math": {
+        "done": true
+      }
+    },
+    "2026-06-26": {
+      "make_bed": {
+        "done": true
+      },
+      "organize_room": {
+        "done": true
+      },
+      "wash_utensils": {
+        "done": true
+      },
+      "brush_teeth": {
+        "done": true
+      },
+      "reading": {
+        "done": true
+      },
+      "reading_summary": {
+        "done": true
+      },
+      "math": {
+        "done": true
+      }
+    },
+    "2026-06-27": {
+      "make_bed": {
+        "done": true
+      },
+      "organize_room": {
+        "done": true
+      },
+      "wash_utensils": {
+        "done": true
+      },
+      "brush_teeth": {
+        "done": true
+      }
+    },
+    "2026-06-28": {
+      "make_bed": {
+        "done": true
+      },
+      "organize_room": {
+        "done": true
+      },
+      "wash_utensils": {
+        "done": true
+      },
+      "brush_teeth": {
+        "done": true
       }
     }
   },
