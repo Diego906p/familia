@@ -2,7 +2,7 @@
   "meta": {
     "lastUpdate": "2026-07-16",
     "version": 1,
-    "savedAt": 1784263792820
+    "savedAt": 1784264031486
   },
   "messages": [
     {
@@ -768,7 +768,7 @@
         "done": false
       },
       "brush_teeth": {
-        "done": false
+        "done": true
       },
       "reading": {
         "done": false
